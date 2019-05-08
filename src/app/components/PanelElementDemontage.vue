@@ -1,0 +1,123 @@
+<template>
+    <div id="panel-element-demontage">
+      <div class="element-name has-text-centered has-text-black" style="margin-top: 5px"><b>{{ element.name }}</b></div>
+      <label for="qteElement" style="color: black">Quantité à démonter :</label>
+      <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': quantiteElement == 0 }"><b>-</b></button>
+      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model="quantiteElement">
+      <button class="btn-plus" @click="increaseElementQuantity(element)" v-bind:class="{ 'disableButton': quantiteElement == element.quantity }"><b>+</b></button>
+
+    </div>
+</template>
+
+<script>
+import { store } from '../store.js';
+
+export default {
+    name: 'PanelElementDemontage',
+    props: ['element'],
+    data () {
+      return {
+        quantiteElement: 0
+      }
+    },
+    methods: {
+      increaseElementQuantity(element) {
+        this.quantiteElement++;
+        store.updateElementQuantityDemonter(element, this.quantiteElement);
+        return this.quantiteElement;
+      },
+      decreaseElementQuantity(element) {
+        this.quantiteElement--;
+        store.updateElementQuantityDemonter(element, this.quantiteElement);
+        return this.quantiteElement;
+      },
+    }
+}
+
+</script>
+
+<style lang="scss" scoped>
+
+#panel-element-demontage {
+    background: #f6b26bff;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 180px;
+    max-width: 220px;
+    height: 150px;
+    max-height: 150px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    position: relative;
+
+    input[type=number] {
+      position: absolute;
+      right: 70px;
+      bottom: 8px;
+      border: 2px solid #ccc;
+      border-radius: 4px;
+      font-size: 15px;
+      box-sizing: border-box;
+      width: 40px;
+      text-align:center;
+    }
+
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    label[for="qteElement"] {
+      font-size: 12px;
+      position: absolute;
+      left: 30px;
+      bottom: 33px;
+    }
+
+    .btn-plus {
+      position: absolute;
+      background-color: #4CAF50;
+      font-size: 10px;
+      color: white;
+      right: 45px;
+      bottom: 12px;
+      border-radius: 10px;
+      &:hover {
+        cursor: pointer;
+        background-color: #3e8e41;
+      }
+      &:active {
+        background-color: #3e8e41;
+        transform: translateY(2px);
+      }
+    }
+
+    .btn-minus {
+      position: absolute;
+      background-color: #ff0000ff;
+      font-size: 10px;
+      color: white;
+      left: 45px;
+      bottom: 12px;
+      border-radius: 10px;
+      &:hover {
+        cursor: pointer;
+        background-color: #980000ff;
+      }
+      &:active {
+        background-color: #980000ff;
+        transform: translateY(2px);
+      }
+    }
+
+    .disableButton {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+
+}
+
+</style>
