@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import { config } from '../db/index.js'
+import { seedMonth, seedDay } from '../db/seed.js';
 
 const fb = require('../db/index.js');
 
@@ -7,9 +8,9 @@ export const store = {
     state: {
       isForfait: false,
       isInventaire: false,
+      seedMonth,
+      seedDay,
       seedSize: fb.rootRef.child('taillesLogement'),
-      seedMonth: fb.rootRef.child('mois'),
-      seedDay: fb.rootRef.child('jour'),
       seedElementsInventaire: fb.rootRef.child('meubles'),
       choicesUser: {
         pickupAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
@@ -126,54 +127,30 @@ export const store = {
 
     initDayNames(year, activeMonthNumber) {
       let days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-      let seedDay = this.state.seedDay;
-      seedDay.once('value', function(snapshot) {
-        snapshot.forEach(function(child){
-          let d = new Date(year, activeMonthNumber, child.key);
-          let dayName = days[d.getDay()];
-          seedDay.child(child.key).update({name: dayName});
-        });
+      this.state.seedDay.map((dayObj) => {
+        let d = new Date(year, activeMonthNumber, dayObj.number);
+        dayObj.name = days[d.getDay()];
       });
     },
 
     initCurrentMonthCurrentYear(monthNumber, year) {
-      let seedMonth = this.state.seedMonth;
-      let seedDay = this.state.seedDay;
-      seedMonth.once('value', function(snapshot) {
-        snapshot.forEach(function(child) {
-          seedMonth.child(child.key).update({currentYear: year});
-        });
+      this.state.seedDay.map((dayObj) => {
+        dayObj.currentMonth = monthNumber;
+        dayObj.currentYear = year;
       });
-      seedDay.once('value', function(snapshot) {
-        snapshot.forEach(function(child){
-          seedDay.child(child.key).update({currentMonth: monthNumber});
-          seedDay.child(child.key).update({currentYear: year});
-        });
+      this.state.seedMonth.map((monthObj) => {
+        monthObj.currentYear = year;
       });
     },
 
     setActiveMonth (monthNumber) {
-      let seedMonth = this.state.seedMonth;
-      seedMonth.once('value', function(snapshot) {
-        snapshot.forEach(function(child) {
-          seedMonth.child(child.key).update({active: false});
-          if(child.key == monthNumber+1) {
-            seedMonth.child(child.key).update({active: true});
-          }
-        });
+      this.state.seedMonth.map((monthObj) => {
+        monthObj.number === monthNumber ? monthObj.active = true : monthObj.active = false;
       });
     },
 
     getActiveMonth () {
-      let seedMonth = this.state.seedMonth;
-      var activeMonth = { title: '', number: '', currentYear: '' };
-      seedMonth.orderByChild('active').equalTo(true).on('child_added', function(snapshot) {
-        var data = snapshot.val();
-        activeMonth.title = data.title;
-        activeMonth.number = data.number;
-        activeMonth.currentYear = data.currentYear;
-      });
-      return activeMonth;
+      return this.state.seedMonth.find((month) => month.active);
     },
 
 
@@ -192,57 +169,28 @@ export const store = {
     },
 
     setSelectedDay (dayNumber) {
-      let seedDay = this.state.seedDay;
-      seedDay.once('value', function(snapshot) {
-        snapshot.forEach(function(child){
-          seedDay.child(child.key).update({selected: false});
-          if(child.key == dayNumber) {
-            seedDay.child(child.key).update({selected: true});
-          }
-        });
+      this.state.seedDay.map((dayObj) => {
+        dayObj.number === dayNumber ? dayObj.selected = true : dayObj.selected = false;
       });
     },
 
     getSelectedDay () {
-      let seedDay = this.state.seedDay;
-      var selectedDay = { number: '' };
-      seedDay.orderByChild('selected').equalTo(true).on('child_added', function(snapshot) {
-        var data = snapshot.val();
-        selectedDay.number = data.number;
-      });
-      return selectedDay;
+      return this.state.seedDay.find((day) => day.selected);
     },
 
     setActiveDay (dayNumber) {
-      let seedDay = this.state.seedDay;
-      seedDay.once('value', function(snapshot) {
-        snapshot.forEach(function(child){
-          seedDay.child(child.key).update({active: false});
-          if(child.key == dayNumber) {
-            seedDay.child(child.key).update({active: true});
-          }
-        });
+      this.state.seedDay.map((dayObj) => {
+        dayObj.number === dayNumber ? dayObj.active = true : dayObj.active = false;
       });
     },
 
     getActiveDay () {
-      let seedDay = this.state.seedDay;
-      var activeDay = { number: '', currentMonth: '', currentYear: '' };
-      seedDay.orderByChild('active').equalTo(true).on('child_added', function(snapshot) {
-        var data = snapshot.val();
-        activeDay.number = data.number;
-        activeDay.currentMonth = data.currentMonth;
-        activeDay.currentYear = data.currentYear;
-      });
-      return activeDay;
+      return this.state.seedDay.find((day) => day.active);
     },
 
     unselectAllDays () {
-      let seedDay = this.state.seedDay;
-      seedDay.once('value', function(snapshot) {
-        snapshot.forEach(function(child){
-          child.ref.update({selected: false});
-        });
+      this.state.seedDay.map((dayObj) => {
+        dayObj.selected = false;
       });
     },
 

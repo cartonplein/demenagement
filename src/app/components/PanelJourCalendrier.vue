@@ -1,16 +1,16 @@
 <template>
     <div id="panel-jour-calendrier" @click="selectDay"
       v-bind:class="{ 'styleInitialPanel': true,
-                      'styleTodayPanel': day.number == this.$parent.currentDay && day.currentMonth == this.$parent.activeMonth.number && day.currentYear == this.$parent.currentYear,
+                      'styleTodayPanel': day.number == this.$parent.currentDay && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear,
                       'styleSelectedPanel':  day.selected == true,
                       'styleUnselectedPanel': day.selected == false,
                       'styleSelectedTodayPanel': day.active == true && day.selected == true,
-                      'styleInactivePanel': day.number < this.$parent.activeDay.number && day.currentMonth >= this.$parent.activeMonth.number && day.currentYear >= this.$parent.currentYear,
+                      'styleInactivePanel': day.number < this.$parent.getActiveDay().number && day.currentMonth >= this.$parent.getActiveMonth().number && day.currentYear >= this.$parent.currentYear,
                       'styleReservedDatePanel': isReserved == true,
                       'styleClosedDatePanel' : isClosed == true,
                       }"
       >
-      <div class="day-banner has-text-justified has-text-black"><b>{{ day.number }}</b> {{ day.name }}</div>
+      <div class="day-banner has-text-justified has-text-black"><b>{{ day.number }}</b></div>
       <div class="day-banner has-text-centered has-text-danger" v-show="isClosed"><b>FERMÉ</b></div>
       <div class="day-banner has-text-centered has-text-danger" v-show="isReserved"><b>RÉSERVÉ</b></div>
     </div>
@@ -38,7 +38,7 @@ export default {
         store.unselectAllDays();
         //this.day.selected = !this.day.selected;
         store.setSelectedDay(this.dayNumber);
-        let date = ""+this.day.number+" "+this.$parent.activeMonth.title+" "+this.$parent.currentYear+"";
+        let date = ""+this.day.number+" "+this.$parent.getActiveMonth().name+" "+this.$parent.currentYear+"";
         store.selectDateDemenagement(date);
       }
 
@@ -56,15 +56,13 @@ export default {
   border-radius: 0;
 
   padding: 10px;
-  margin-left: 5px;
-  margin-right: 5px;
   overflow: hidden;
-  margin-top: 5px;
+  margin: 1px;
 
-  height: 95px;
-  max-height: 95px;
-  width: 95px;
-  max-width: 95px;
+  height: 75px;
+  max-height: 75px;
+  width: 100px;
+  max-width: 100px;
 
   &:hover {
     background: darken(#e69138ff,1%);

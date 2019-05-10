@@ -2,14 +2,14 @@
     <div id="app-date-demenagement">
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez la date de votre déménagement : </h1>
         <div id="panel-date-demenagement" class="container">
-              <div class="columns" style="width: 1000px; max-width: 850px">
+
                 <PanelDateDemenagement></PanelDateDemenagement>
-              </div>
+
         </div>
         <div class="panel-info-commande">
           <PanelInfoCommande />
         </div>
-        <ButtonSuivant id="button-suivant" :onClick="openPageOptions" v-bind:class="{ 'disableButton': getSelectedDay === '' }"></ButtonSuivant>
+        <ButtonSuivant id="button-suivant" :onClick="openPageOptions"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageBeforeDateDemenagement"></ButtonPrecedent>
     </div>
 </template>
@@ -31,6 +31,7 @@ export default {
   computed: {
     getSelectedDay() {
       return store.getSelectedDay().number;
+      //v-bind:class="{ 'disableButton': getSelectedDay === '' }"
     }
   },
   components: {
