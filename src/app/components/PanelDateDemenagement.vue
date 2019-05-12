@@ -6,7 +6,7 @@
               <th id="month-display" colspan="7">
 
                 <i class="arrow" @click="setActivePreviousMonth(getActiveMonth().number)" v-bind:class="{ 'left': true, 'leftInactive': getActiveMonth().number == currentMonth && getActiveMonth().currentYear == currentYear }"></i>
-                <span style="font-size: 15px"><b>{{ getActiveMonth().name }} {{ titleOfActiveYear }}</b></span>
+                <span style="font-size: 20px"><b>{{ getActiveMonth().name }} {{ titleOfActiveYear }}</b></span>
                 <i class="arrow right" @click="setActiveNextMonth(getActiveMonth().number)"></i>
 
               </th>
@@ -253,6 +253,9 @@
 import { store } from '../store.js';
 import PanelJourCalendrier from './PanelJourCalendrier.vue';
 import ClickOutside from 'vue-click-outside';
+import { config } from '../../db/index.js';
+
+const fb = require('../../db/index.js');
 
 export default {
   name: 'PanelDateDemenagement',
@@ -264,19 +267,20 @@ export default {
       currentYear: new Date().getFullYear(),
       dayNames: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
 
-      closedDates: [],
-      reservedDates: [],
-
-      days: store.state.seedDay
+      days: store.state.seedDay,
+      reservedDates: {0:{}, 1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}, 7:{}, 8:{}, 9:{}, 10:{}, 11:{}},
+      closedDates: {0:{}, 1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}, 7:{}, 8:{}, 9:{}, 10:{}, 11:{}}
     };
   },
   components: {
     PanelJourCalendrier
   },
-  mounted: function () {
-    //initialiser à la date actuelle
+  created() {
     this.setActiveDay(this.currentDay);
     this.setActiveMonth(this.currentMonth);
+  },
+  mounted: function () {
+    //initialiser à la date actuelle
     this.initCurrentMonthCurrentYear(this.currentMonth, this.currentYear);
     this.initDayNames(this.currentYear, this.currentMonth);
     this.getClosedReservedDatesByMonth(this.currentMonth);
@@ -369,10 +373,29 @@ export default {
     },
 
     getClosedReservedDatesByMonth (monthNumber) {
-      this.closedDates = [];
-      this.closedDates = store.getClosedDatesByMonth(monthNumber);
-      this.reservedDates = [];
-      this.reservedDates = store.getReservedDatesByMonth(monthNumber);
+      let agenda = this;
+      fb.backOfficeRef.child('datesReservees').on('child_added', function(snapshot) {
+        agenda.reservedDates[snapshot.key] = snapshot.val();
+      });
+      fb.backOfficeRef.child('datesReservees').on('child_changed', function(snapshot) {
+        agenda.reservedDates[snapshot.key] = snapshot.val();
+      });
+      fb.backOfficeRef.child('datesReservees').on('child_removed', function(snapshot) {
+        //snapshot.forEach(function(child) {
+        agenda.reservedDates[snapshot.key] = {};
+        //});
+      });
+      fb.backOfficeRef.child('datesFermees').on('child_added', function(snapshot) {
+        agenda.closedDates[snapshot.key] = snapshot.val();
+      });
+      fb.backOfficeRef.child('datesFermees').on('child_changed', function(snapshot) {
+        agenda.closedDates[snapshot.key] = snapshot.val();
+      });
+      fb.backOfficeRef.child('datesFermees').on('child_removed', function(snapshot) {
+        //snapshot.forEach(function(child) {
+        agenda.closedDates[snapshot.key] = {};
+        //});
+      });
     },
 
 
@@ -393,8 +416,6 @@ export default {
 <style lang="scss" scoped>
 
 #panel-date-demenagement {
-
-
 
     table {
       border-collapse: collapse;

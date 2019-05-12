@@ -1,18 +1,24 @@
 <template>
     <div id="panel-jour-calendrier" @click="selectDay"
-      v-bind:class="{ 'styleInitialPanel': true,
-                      'styleTodayPanel': day.number == this.$parent.currentDay && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear,
-                      'styleSelectedPanel':  day.selected == true,
-                      'styleUnselectedPanel': day.selected == false,
-                      'styleSelectedTodayPanel': day.active == true && day.selected == true,
-                      'styleInactivePanel': day.number < this.$parent.getActiveDay().number && day.currentMonth >= this.$parent.getActiveMonth().number && day.currentYear >= this.$parent.currentYear,
-                      'styleReservedDatePanel': isReserved == true,
-                      'styleClosedDatePanel' : isClosed == true,
+      v-bind:class="{ 'styleInitial': true,
+                      'styleWeekend' : (day.name == 'Sam' || day.name == 'Dim') && !(day.active && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear),
+                      'styleToday': day.active && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear,
+                      'styleSelected':  day.selected,
+                      'styleUnselected': !day.selected,
+                      'styleSelectedToday': (day.active && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear) && day.selected,
+                      'styleInactive': day.number < this.$parent.getActiveDay().number && day.currentMonth >= this.$parent.getActiveMonth().number && day.currentYear >= this.$parent.currentYear,
+                      'styleSelectedWeekend' : (day.name == 'Sam' || day.name == 'Dim') && day.selected && !(day.active && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear),
+                      'styleReservedDate': this.$parent.reservedDates &&
+                                  this.$parent.reservedDates[this.$parent.getActiveMonth().number] &&
+                                  this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number] &&
+                                  this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear),
+                      'styleClosedDate' : this.$parent.closedDates &&
+                                this.$parent.closedDates[this.$parent.getActiveMonth().number] &&
+                                this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number] &&
+                                this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear),
                       }"
       >
       <div class="day-banner has-text-justified has-text-black"><b>{{ day.number }}</b></div>
-      <div class="day-banner has-text-centered has-text-danger" v-show="isClosed"><b>FERMÉ</b></div>
-      <div class="day-banner has-text-centered has-text-danger" v-show="isReserved"><b>RÉSERVÉ</b></div>
     </div>
 </template>
 
@@ -26,8 +32,6 @@ export default {
       return {
         dayNumber: this.day.number,
         dayName: this.day.name,
-        isClosed: this.$parent.closedDates.includes(this.day.number),
-        isReserved: this.$parent.reservedDates.includes(this.day.number),
       };
     },
     props: {
@@ -50,7 +54,7 @@ export default {
 
 <style lang="scss" scoped>
 
-.styleInitialPanel {
+.styleInitial {
   background: #f6b26bff;
   //border: 2px solid black;
   border-radius: 0;
@@ -73,37 +77,59 @@ export default {
   }
 }
 
-.styleSelectedPanel {
+.styleSelected {
   background-color: #e69138ff;
   border:  4px solid red;
 }
-.styleUnselectedPanel {
+.styleUnselected {
   background-color: #f6b26bff;
   //border:  2px solid black;
 }
 
-.styleTodayPanel {
-  background-color: #E2C96A;
-  //border:  3px solid black;
+.styleToday {
+  background-color: #F1875F;
+  &:hover {
+    background: darken(#E4612F,1%);
+    cursor: pointer;
+  }
+  &:active {
+    background-color: #E4612F;
+  }
 }
 
-.styleSelectedTodayPanel {
-  background-color: #e69138ff;
+.styleSelectedToday {
+  background-color: #E4612F;
   border:  4px solid red;
 }
 
-.styleInactivePanel {
+.styleInactive {
   background-color: #F4DDC3;
   pointer-events: none;
-  opacity: 0.6;
+  opacity: 0.3;
 }
 
-.styleReservedDatePanel {
+.styleWeekend {
+  background-color: #CFA87A;
+  &:hover {
+    background: darken(#BC8544,1%);
+    cursor: pointer;
+  }
+  &:active {
+    background-color: #BC8544;
+  }
+}
+
+.styleSelectedWeekend {
+  background-color: #BC8544;
+  border:  4px solid red;
+}
+
+.styleReservedDate {
   background-color: #5A94B8;
   pointer-events: none;
 }
 
-.styleClosedDatePanel {
+.styleClosedDate {
   background-color: #5AB897;
   pointer-events: none;
 }

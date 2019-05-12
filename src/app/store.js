@@ -194,34 +194,6 @@ export const store = {
       });
     },
 
-    getClosedDatesByMonth (monthNumber) {
-      let seedClosedDates = fb.backOfficeRef.child('datesFermees');
-      var closedDatesByMonth = [];
-      seedClosedDates.orderByKey().on('child_added', function(snapshot) {
-        if(snapshot.key == monthNumber) {
-          snapshot.forEach(function(child){
-            closedDatesByMonth.push(child.val());
-          });
-        }
-      });
-      return closedDatesByMonth;
-
-    },
-
-    getReservedDatesByMonth (monthNumber) {
-      let seedReservedDates = fb.backOfficeRef.child('datesReservees');
-      var reservedDatesByMonth = [];
-      seedReservedDates.orderByKey().once('value', function(snapshot) {
-        if(snapshot.key == monthNumber) {
-          snapshot.forEach(function(child){
-            reservedDatesByMonth.push(child.val());
-          });
-        }
-      });
-      return reservedDatesByMonth;
-
-    },
-
     /* //object to array
     getUnavailableDates() {
       var dates = [];
