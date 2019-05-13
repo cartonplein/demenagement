@@ -374,24 +374,24 @@ export default {
 
     getClosedReservedDatesByMonth (monthNumber) {
       let agenda = this;
-      fb.backOfficeRef.child('datesReservees').on('child_added', function(snapshot) {
+      fb.agendaRef.child('datesReservees').on('child_added', function(snapshot) {
         agenda.reservedDates[snapshot.key] = snapshot.val();
       });
-      fb.backOfficeRef.child('datesReservees').on('child_changed', function(snapshot) {
+      fb.agendaRef.child('datesReservees').on('child_changed', function(snapshot) {
         agenda.reservedDates[snapshot.key] = snapshot.val();
       });
-      fb.backOfficeRef.child('datesReservees').on('child_removed', function(snapshot) {
+      fb.agendaRef.child('datesReservees').on('child_removed', function(snapshot) {
         //snapshot.forEach(function(child) {
         agenda.reservedDates[snapshot.key] = {};
         //});
       });
-      fb.backOfficeRef.child('datesFermees').on('child_added', function(snapshot) {
+      fb.agendaRef.child('datesFermees').on('child_added', function(snapshot) {
         agenda.closedDates[snapshot.key] = snapshot.val();
       });
-      fb.backOfficeRef.child('datesFermees').on('child_changed', function(snapshot) {
+      fb.agendaRef.child('datesFermees').on('child_changed', function(snapshot) {
         agenda.closedDates[snapshot.key] = snapshot.val();
       });
-      fb.backOfficeRef.child('datesFermees').on('child_removed', function(snapshot) {
+      fb.agendaRef.child('datesFermees').on('child_removed', function(snapshot) {
         //snapshot.forEach(function(child) {
         agenda.closedDates[snapshot.key] = {};
         //});

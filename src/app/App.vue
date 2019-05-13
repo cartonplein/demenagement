@@ -4,28 +4,28 @@
       <div id="app-address">
           <AppAddress />
       </div>
-      <div id="app-type-demenagement" style="display:none"> <!--style="display:none"-->
+      <div id="app-type-demenagement"> <!--style="display:none"-->
           <AppTypeDemenagement />
       </div>
-      <div id="app-duree-prestation" style="display:none">
+      <div id="app-duree-prestation">
           <AppDureePrestation />
       </div>
-      <div id="app-taille-logement" style="display:none">
+      <div id="app-taille-logement">
           <AppTailleLogement />
       </div>
-      <div id="app-inventaire" style="display:none">
+      <div id="app-inventaire">
           <AppInventaire />
       </div>
-      <div id="app-demontage" style="display:none">
+      <div id="app-demontage">
           <AppDemontage />
       </div>
       <div id="app-date-demenagement">
           <AppDateDemenagement />
       </div>
-      <div id="app-options" style="display:none">
+      <div id="app-options">
           <AppOptions />
       </div>
-      <div id="app-recapitulatif" style="display:none">
+      <div id="app-recapitulatif">
           <AppRecapitulatif />
       </div>
     </div>

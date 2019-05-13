@@ -19,23 +19,57 @@
                       }"
       >
       <div class="day-banner has-text-justified has-text-black"><b>{{ day.number }}</b></div>
+      <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
+                                                        day.currentMonth >= this.$parent.getActiveMonth().number &&
+                                                        day.currentYear >= this.$parent.currentYear)"><b>{{ tarifDate }}<span v-show="tarif != ''">€</span></b></span>
     </div>
 </template>
 
 
 <script>
 import { store } from '../store.js';
+import { config } from '../../db/index.js';
+
+const fb = require('../../db/index.js');
 
 export default {
     name: 'PanelJourCalendrier',
     data () {
       return {
+        tarif: '',
         dayNumber: this.day.number,
         dayName: this.day.name,
       };
     },
     props: {
       day: Object
+    },
+    mounted() {
+      let panelDay = this;
+      fb.agendaRef.child('tarifParDate').on('child_added', function(snapshot) {
+        fb.agendaRef.child('tarifParDate/tarifParDefaut').on('child_added', function(snapshot) {
+          panelDay.tarif = snapshot.val();
+        });
+        fb.agendaRef.child('tarifParDate/tarifSpecial').on('child_added', function(snapshot) {
+          if(snapshot.key == panelDay.$parent.getActiveMonth().number && snapshot.val().hasOwnProperty(panelDay.$parent.currentYear)) {
+            if(snapshot.val() && snapshot.val()[panelDay.$parent.currentYear].hasOwnProperty(panelDay.day.number)) {
+              panelDay.tarif = snapshot.val()[panelDay.$parent.currentYear][panelDay.day.number].tarif;
+            }
+          }
+        });
+      });
+      fb.agendaRef.child('tarifParDate').on('child_changed', function(snapshot) {
+        fb.agendaRef.child('tarifParDate/tarifParDefaut').on('child_added', function(snapshot) {
+          panelDay.tarif = snapshot.val();
+        });
+        fb.agendaRef.child('tarifParDate/tarifSpecial').on('child_added', function(snapshot) {
+          if(snapshot.key == panelDay.$parent.getActiveMonth().number && snapshot.val().hasOwnProperty(panelDay.$parent.currentYear)) {
+            if(snapshot.val() && snapshot.val()[panelDay.$parent.currentYear].hasOwnProperty(panelDay.day.number)) {
+              panelDay.tarif = snapshot.val()[panelDay.$parent.currentYear][panelDay.day.number].tarif;
+            }
+          }
+        });
+      });
     },
     methods: {
       selectDay() {
@@ -46,6 +80,11 @@ export default {
         store.selectDateDemenagement(date);
       }
 
+    },
+    computed: {
+      tarifDate() {
+        return this.tarif;
+      }
     }
 }
 
@@ -67,6 +106,16 @@ export default {
   max-height: 75px;
   width: 100px;
   max-width: 100px;
+
+  .tarif-date {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 20px;
+    font-size: 20px;
+  }
 
   &:hover {
     background: darken(#e69138ff,1%);
