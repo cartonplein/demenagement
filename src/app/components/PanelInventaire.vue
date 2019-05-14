@@ -28,7 +28,7 @@ export default {
       return {
         searchElement: '',
         showList: false,
-        sharedState: store.state
+        sharedState: store.state,
       }
     },
     firebase: {
@@ -37,6 +37,9 @@ export default {
     components: {
       ElementSearchBar,
       PanelElementInventaire
+    },
+    mounted() {
+
     },
     computed: {
       filteredList() {

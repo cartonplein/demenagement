@@ -17,6 +17,7 @@ let app = Firebase.initializeApp(config);
 const rootRef = app.database().ref();
 
 let agendaRef = rootRef.child('agenda');
+let inventaireRef = rootRef.child('inventaire');
 
 
 // firebase collections
@@ -27,5 +28,6 @@ export {
     auth,
     currentUser,
     rootRef,
-    agendaRef
+    agendaRef,
+    inventaireRef
 }

@@ -11,7 +11,7 @@ export const store = {
       seedMonth,
       seedDay,
       seedSize: fb.rootRef.child('taillesLogement'),
-      seedElementsInventaire: fb.rootRef.child('meubles'),
+      seedElementsInventaire: fb.inventaireRef.child('meubles'),
       choicesUser: {
         pickupAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
         destinationAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },

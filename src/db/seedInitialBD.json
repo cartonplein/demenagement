@@ -1,0 +1,281 @@
+{
+  "agenda": {
+    "reservedDates": {},
+
+    "closedDates": {}
+  },
+
+  "taillesLogement": {
+    "1": {
+      "id": 1,
+      "title": "5m²",
+      "details": "Cette taille est 5m²",
+      "selected": false
+    },
+    "2": {
+      "id": 2,
+      "title": "10m²",
+      "details": "Cette taille est 10m²",
+      "selected": false
+    },
+    "3": {
+      "id": 3,
+      "title": "15m²",
+      "details": "Cette taille est 15m²",
+      "selected": false
+    },
+    "4": {
+      "id": 4,
+      "title": "20m²",
+      "details": "Cette taille est 20m²",
+      "selected": false
+    },
+    "5": {
+      "id": 5,
+      "title": "25m²",
+      "details": "Cette taille est 25m²",
+      "selected": false
+    },
+    "6": {
+      "id": 6,
+      "title": "30m²",
+      "details": "Cette taille est 30m²",
+      "selected": false
+    },
+    "7": {
+      "id": 7,
+      "title": "35m²",
+      "details": "Cette taille est 35m²",
+      "selected": false
+    },
+    "8": {
+      "id": 8,
+      "title": "40m²",
+      "details": "Cette taille est 40m²",
+      "selected": false
+    }
+  },
+
+  "inventaire": {
+    "meubles": {
+      "1": {
+        "number": 1,
+        "name": "Canapé 2 places",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "2": {
+        "number": 2,
+        "name": "Canapé 3 places",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "3": {
+        "number": 3,
+        "name": "Canapé clic-clac",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "4": {
+        "number": 4,
+        "name": "Canapé d'angle",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "5": {
+        "number": 5,
+        "name": "Chaise",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "6": {
+        "number": 6,
+        "name": "Chaise de bureau",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "7": {
+        "number": 7,
+        "name": "Chaise pliante",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "8": {
+        "number": 8,
+        "name": "Commode",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "9": {
+        "number": 9,
+        "name": "Cuisinière",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "10": {
+        "number": 10,
+        "name": "Fauteuil",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "11": {
+        "number": 11,
+        "name": "Frigo-américain",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "12": {
+        "number": 12,
+        "name": "Frigo-congélateur",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "13": {
+        "number": 13,
+        "name": "Frigo-simple",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "14": {
+        "number": 14,
+        "name": "Grande table",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "15": {
+        "number": 15,
+        "name": "Lit bébé",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "16": {
+        "number": 16,
+        "name": "Lit double",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "17": {
+        "number": 17,
+        "name": "Lit simple",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "18": {
+        "number": 18,
+        "name": "Lit superposé",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "19": {
+        "number": 19,
+        "name": "Moyenne table",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "20": {
+        "number": 20,
+        "name": "Petite table",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "21": {
+        "number": 21,
+        "name": "Placard 1 porte",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "22": {
+        "number": 22,
+        "name": "Placard 2 portes",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "23": {
+        "number": 23,
+        "name": "Placard 3 portes",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "24": {
+        "number": 24,
+        "name": "Placard cuisine",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "25": {
+        "number": 25,
+        "name": "Table à langer",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "26": {
+        "number": 26,
+        "name": "Table à repasser",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "27": {
+        "number": 27,
+        "name": "Table basse",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "28": {
+        "number": 28,
+        "name": "Table d'appoint",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "29": {
+        "number": 29,
+        "name": "Table de jardin",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "30": {
+        "number": 30,
+        "name": "Table de nuit",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      },
+      "31": {
+        "number": 31,
+        "name": "Table pliante",
+        "image": "",
+        "tarif": "",
+        "volume": ""
+      }
+    }
+  }
+
+}
