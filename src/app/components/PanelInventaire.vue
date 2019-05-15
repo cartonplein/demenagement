@@ -3,13 +3,13 @@
       <input id="input-search-bar" type="text" v-model="searchElement" placeholder="Cherchez un objet pour l'ajouter" v-on:click="showList=true" v-click-outside="hideList">
       <div id="list-elements-search-bar" v-show="showList">
         <ElementSearchBar id="element-search-bar" v-for="element in filteredList"
-          :key="element.id"
+          :key="element.number"
           :element="element" />
       </div>
       <div class="panel-inventaire-list">
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in sharedState.choicesUser.inventaire"
-            :key="element.id"
+            :key="element.number"
             :element="element" />
         </div>
       </div>

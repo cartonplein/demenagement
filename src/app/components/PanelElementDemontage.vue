@@ -1,6 +1,7 @@
 <template>
     <div id="panel-element-demontage">
       <div class="element-name has-text-centered has-text-black" style="margin-top: 5px"><b>{{ element.name }}</b></div>
+      <img id="element-image" :src="viewElementImage(element)" @click="displayElementImage(element)"/>
       <label for="qteElement" style="color: black">Quantité à démonter :</label>
       <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': quantiteElement == 0 }"><b>-</b></button>
       <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model="quantiteElement">
@@ -31,6 +32,13 @@ export default {
         store.updateElementQuantityDemonter(element, this.quantiteElement);
         return this.quantiteElement;
       },
+      viewElementImage(element) {
+        return element.image;
+      },
+      displayElementImage(element) {
+        window.open(element.image);
+        return false;
+      }
     }
 }
 
@@ -44,8 +52,8 @@ export default {
     border-radius: 10px;
     width: 180px;
     max-width: 220px;
-    height: 150px;
-    max-height: 150px;
+    height: 180px;
+    max-height: 180px;
     margin-left: 5px;
     margin-bottom: 5px;
     overflow: hidden;
@@ -115,6 +123,16 @@ export default {
     .disableButton {
       pointer-events: none;
       opacity: 0.3;
+    }
+
+    #element-image {
+      position: absolute;
+      left: 43px;
+      top: 40px;
+      width: 50%;
+      height: 45%;
+      cursor: pointer;
+      border: 1px solid black;
     }
 
 

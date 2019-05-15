@@ -1,6 +1,7 @@
 <template>
     <div id="panel-element-inventaire">
-      <div class="element-name has-text-justified has-text-black"><b>{{ element.name }}</b></div>
+      <img id="element-image" :src="viewElementImage(element)" @click="displayElementImage(element)"/>
+      <div class="element-name has-text-justified has-text-black"><b>{{ element.name }} ({{ element.volume }}m³)</b></div>
       <label for="qteElement" style="color: black; font-size: 15px">Qté.</label>
       <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': quantiteElement == 1 }"><b>-</b></button>
       <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model="quantiteElement">
@@ -33,6 +34,13 @@ export default {
       },
       deleteElementFromInventaire (element) {
         store.deleteElementFromInventaire(element);
+      },
+      viewElementImage(element) {
+        return element.image;
+      },
+      displayElementImage(element) {
+        window.open(element.image);
+        return false;
       }
     }
 }
@@ -78,7 +86,7 @@ export default {
 
     .element-name {
       position: absolute;
-      left: 10px;
+      left: 90px;
       bottom: 23px;
     }
 
@@ -136,6 +144,16 @@ export default {
         color: red;
         transform: translateY(2px);
       }
+    }
+
+    #element-image {
+      position: absolute;
+      left: 10px;
+      top: 5px;
+      width: 10%;
+      height: 85%;
+      cursor: pointer;
+      border: 1px solid black;
     }
 
 }

@@ -1,6 +1,6 @@
 <template>
     <div id="element-search-bar" @click="addElementInInventaire(element)">
-      <div class="element-name has-text-justified has-text-black"><b>{{ element.name }}</b></div>
+      <div class="element-name has-text-justified has-text-black"><b>{{ element.name }} ({{ element.volume }}m³)</b></div>
     </div>
 </template>
 

@@ -242,16 +242,16 @@ export const store = {
     },
 
     addElementInInventaire(element) {
-      this.state.choicesUser.inventaire.push({ id: element.number, name: element.name, icon: element.icon, quantity: 1, quantityDemonter: 0 });
+      this.state.choicesUser.inventaire.push({ number: element.number, name: element.name, image: element.image, volume: element.volume, tarif: element.tarif, quantity: 1, quantityDemonter: 0 });
     },
 
     updateElementQuantity(element, quantity) {
-      const index = this.state.choicesUser.inventaire.findIndex((e) => e.id === element.id);
+      const index = this.state.choicesUser.inventaire.findIndex((e) => e.number === element.number);
       this.state.choicesUser.inventaire[index].quantity = quantity;
     },
 
     updateElementQuantityDemonter(element, quantityDemonter) {
-      const index = this.state.choicesUser.inventaire.findIndex((e) => e.id === element.id);
+      const index = this.state.choicesUser.inventaire.findIndex((e) => e.number === element.number);
       this.state.choicesUser.inventaire[index].quantityDemonter = quantityDemonter;
     },
 
