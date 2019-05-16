@@ -9,7 +9,7 @@
 
         <div class="form-pickup-address-adresse">
             <label for="input-pickup-address-adresse" style="color: black; font-size: 15px">Adresse :</label>
-            <input id= "input-pickup-address-adresse" ref="autocompletePickupAddress" placeholder="Rechercher une adresse" type="text" v-model="value" v-on:change="$emit('update-pickup-address', value)"></input>
+            <input id= "input-pickup-address-adresse" ref="autocompletePickupAddress" placeholder="Rechercher une adresse" type="text" v-model="inputPickupAddress" v-on:change="$emit('update-pickup-address', inputPickupAddress)"></input>
             <p style="color: red; font-size: 10px" v-if="errorPickupAdresse">
                 Ce champ est obligatoire !
             </p>
@@ -32,55 +32,57 @@
             </div>
         </div>
         -->
-        <div class=form-pickup-address-logement>
-            <div class="form-pickup-address-surface">
-                <label for="input-pickup-address-surface" style="color: black; font-size: 15px">Surface (m²) :</label>
-                <select id="input-pickup-address-surface" v-model="choicePickupSurface" ref="pickupSurface">
-                    <option value="" disabled hidden>Selectionner une surface</option>
-                    <option value="5">5m²</option>
-                    <option value="10">10m²</option>
-                    <option value="15">15m²</option>
-                    <option value="20">20m²</option>
-                    <option value="25">25m²</option>
-                    <option value="30">30m²</option>
-                    <option value="35">35m²</option>
-                    <option value="40">40m²</option>
-                    <option value="40+">Plus que 40m²</option>
-                </select>
-            </div>
+        <transition name="fade" mode="out-in">
+          <div id="form-pickup-address-logement" v-show="this.$parent.isTripFeasible && this.$parent.isAddressesValid">
+              <div class="form-pickup-address-surface">
+                  <label for="input-pickup-address-surface" style="color: black; font-size: 15px">Surface (m²) :</label>
+                  <select id="input-pickup-address-surface" v-model="choicePickupSurface" ref="pickupSurface">
+                      <option value="" disabled hidden>Selectionner une surface</option>
+                      <option value="5">5m²</option>
+                      <option value="10">10m²</option>
+                      <option value="15">15m²</option>
+                      <option value="20">20m²</option>
+                      <option value="25">25m²</option>
+                      <option value="30">30m²</option>
+                      <option value="35">35m²</option>
+                      <option value="40">40m²</option>
+                      <option value="40+">Plus que 40m²</option>
+                  </select>
+              </div>
 
-            <div class="form-pickup-address-etage">
-                <label for="input-pickup-address-etage" style="color: black; font-size: 15px">Étage :</label>
-                <select id="input-pickup-address-etage" v-model="choicePickupEtage" ref="pickupEtage">
-                    <option value="" disabled hidden>Selectionner une étage</option>
-                    <option value="rdc">RDC</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="Plus que 4">Plus que 4</option>
-                </select>
-            </div>
+              <div class="form-pickup-address-etage">
+                  <label for="input-pickup-address-etage" style="color: black; font-size: 15px">Étage :</label>
+                  <select id="input-pickup-address-etage" v-model="choicePickupEtage" ref="pickupEtage">
+                      <option value="" disabled hidden>Selectionner une étage</option>
+                      <option value="rdc">RDC</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="Plus que 4">Plus que 4</option>
+                  </select>
+              </div>
 
-            <div id="form-pickup-address-asc-cave">
-                <div class="form-pickup-address-ascenseur">
-                    <label for="input-pickup-address-ascenseur" style="color: black; font-size: 15px">Ascenseur :</label>
-                    <select id="input-pickup-address-ascenseur" v-model="choicePickupAscenseur" ref="pickupAscenseur">
-                        <option value="" disabled hidden>Oui/Non</option>
-                        <option value="Oui">Oui</option>
-                        <option value="Non">Non</option>
-                    </select>
-                </div>
-                <div class="form-pickup-address-cave">
-                    <label for="input-pickup-address-cave" style="color: black; font-size: 15px">Cave :</label>
-                    <select id="input-pickup-address-cave" v-model="choicePickupCave" ref="pickupCave">
-                        <option value="" disabled hidden>Oui/Non</option>
-                        <option value="Oui">Oui</option>
-                        <option value="Non">Non</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+              <div id="form-pickup-address-asc-cave">
+                  <div class="form-pickup-address-ascenseur">
+                      <label for="input-pickup-address-ascenseur" style="color: black; font-size: 15px">Ascenseur :</label>
+                      <select id="input-pickup-address-ascenseur" v-model="choicePickupAscenseur" ref="pickupAscenseur">
+                          <option value="" disabled hidden>Oui/Non</option>
+                          <option value="Oui">Oui</option>
+                          <option value="Non">Non</option>
+                      </select>
+                  </div>
+                  <div class="form-pickup-address-cave">
+                      <label for="input-pickup-address-cave" style="color: black; font-size: 15px">Cave :</label>
+                      <select id="input-pickup-address-cave" v-model="choicePickupCave" ref="pickupCave">
+                          <option value="" disabled hidden>Oui/Non</option>
+                          <option value="Oui">Oui</option>
+                          <option value="Non">Non</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+        </transition>
 
     </div>
 </template>
@@ -92,12 +94,12 @@ export default {
     name: 'FormPickupAddress',
     data () {
         return {
-            value: '',
+            inputPickupAddress: '',
             choicePickupSurface: '',
             choicePickupEtage: '',
             choicePickupAscenseur: '',
             choicePickupCave: '',
-            errorPickupAdresse: false
+            errorPickupAdresse: false,
         }
     },
     methods: {
@@ -132,6 +134,7 @@ export default {
     margin: 0 auto;
     padding: 20px;
     overflow: hidden;
+
 
     #input-pickup-address-adresse {
       width: 260px;
@@ -169,6 +172,17 @@ export default {
     }
     */
 
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 1.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to
+    {
+      opacity: 0
+    }
+
     #form-pickup-address-asc-cave {
         background: inherit;
         margin: auto;
@@ -190,10 +204,6 @@ export default {
             position: static;
             display: block;
         }
-    }
-
-    .form-pickup-address-logement {
-    /*  display: none;*/
     }
 
     input[type=text] {

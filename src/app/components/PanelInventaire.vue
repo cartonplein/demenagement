@@ -39,7 +39,7 @@ export default {
       PanelElementInventaire
     },
     mounted() {
-
+      //&& !store.state.choicesUser.inventaire.includes(element)
     },
     computed: {
       filteredList() {

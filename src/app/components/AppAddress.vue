@@ -2,7 +2,7 @@
     <div id="app-address">
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px">Saisissez vos adresses de départ et de destination : </h1>
         <FormAddress id="form-address" ref="formAddress"></FormAddress>
-        <ButtonSuivant id="button-suivant" :onClick="openPageTypeDemenagement"></ButtonSuivant>
+        <ButtonSuivant id="button-suivant" :onClick="openPageTypeDemenagement" v-show="true"></ButtonSuivant>
     </div>
 </template>
 
@@ -14,6 +14,10 @@ import ButtonSuivant from './ButtonSuivant.vue';
 
 export default {
   name: 'AppAddress',
+  data () {
+    return {
+    }
+  },
   components: {
     LogoCartonPlein,
     FormAddress,
@@ -64,6 +68,7 @@ html, body {
   h1 {
     margin-top: 70px;
   }
+
 }
 
 </style>

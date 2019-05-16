@@ -44,10 +44,6 @@ export const store = {
       return this.state.choicesUser.dateDemenagement;
     },
 
-    googleMapsData: {
-      urlMap: "https://www.google.com/maps/embed/v1/directions?key=AIzaSyBcc_IiK7JtWDhD9jm20HHjDaduqKHkcNg"
-    },
-
     openNextPage (currentPageId, nextPageId) {
       var nextPage = document.getElementById(nextPageId);
       var currentPage = document.getElementById(currentPageId);
@@ -268,6 +264,6 @@ export const store = {
     },
 
     getDirection (origin, destination) {
-      return this.googleMapsData.urlMap+="&origin="+origin+"&destination="+destination+"&mode=bicycling";
+      return "https://www.google.com/maps/embed/v1/directions?key=AIzaSyBcc_IiK7JtWDhD9jm20HHjDaduqKHkcNg&origin="+origin+"&destination="+destination+"&mode=bicycling";
     }
 }

@@ -9,7 +9,7 @@
 
         <div class="form-destination-address-adresse">
             <label for="input-destination-address-adresse" style="color: black; font-size: 15px">Adresse :</label>
-            <input id="input-destination-address-adresse" v-model.lazy="inputDestinationAdresse" ref="destinationAdresse" type="text" placeholder="Rechercher une adresse"></input>
+            <input id="input-destination-address-adresse" ref="autocompleteDestinationAddress" placeholder="Rechercher une adresse" type="text" v-model="inputDestinationAddress" v-on:change="$emit('update-destination-address', inputDestinationAddress)"></input>
             <p style="color: red; font-size: 10px" v-if="errorDestinationAdresse">
                 Ce champ est obligatoire !
             </p>
@@ -32,55 +32,57 @@
             </div>
         </div>
         -->
-        <div class=form-destination-address-logement>
-            <div class="form-destination-address-surface">
-                <label for="input-destination-address-surface" style="color: black; font-size: 15px">Surface (m²) :</label>
-                <select id="input-destination-address-surface" v-model="choiceDestinationSurface">
-                    <option value="" disabled hidden>Selectionner une surface</option>
-                    <option value="5">5m²</option>
-                    <option value="10">10m²</option>
-                    <option value="15">15m²</option>
-                    <option value="20">20m²</option>
-                    <option value="25">25m²</option>
-                    <option value="30">30m²</option>
-                    <option value="35">35m²</option>
-                    <option value="40">40m²</option>
-                    <option value="40p">Plus que 40m²</option>
-                </select>
-            </div>
+        <transition name="fade" mode="out-in">
+          <div class="form-destination-address-logement" v-show="this.$parent.isTripFeasible && this.$parent.isAddressesValid">
+              <div class="form-destination-address-surface">
+                  <label for="input-destination-address-surface" style="color: black; font-size: 15px">Surface (m²) :</label>
+                  <select id="input-destination-address-surface" v-model="choiceDestinationSurface">
+                      <option value="" disabled hidden>Selectionner une surface</option>
+                      <option value="5">5m²</option>
+                      <option value="10">10m²</option>
+                      <option value="15">15m²</option>
+                      <option value="20">20m²</option>
+                      <option value="25">25m²</option>
+                      <option value="30">30m²</option>
+                      <option value="35">35m²</option>
+                      <option value="40">40m²</option>
+                      <option value="40p">Plus que 40m²</option>
+                  </select>
+              </div>
 
-            <div class="form-destination-address-etage">
-                <label for="input-destination-address-etage" style="color: black; font-size: 15px">Étage :</label>
-                <select id="input-destination-address-etage" v-model="choiceDestinationEtage">
-                    <option value="" disabled hidden>Selectionner une étage</option>
-                    <option value="rdc">RDC</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="Pq4">Plus que 4</option>
-                </select>
-            </div>
+              <div class="form-destination-address-etage">
+                  <label for="input-destination-address-etage" style="color: black; font-size: 15px">Étage :</label>
+                  <select id="input-destination-address-etage" v-model="choiceDestinationEtage">
+                      <option value="" disabled hidden>Selectionner une étage</option>
+                      <option value="rdc">RDC</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="Pq4">Plus que 4</option>
+                  </select>
+              </div>
 
-            <div id="form-destination-address-asc-cave">
-                <div class="form-destination-address-ascenseur">
-                    <label for="input-destination-address-ascenseur" style="color: black; font-size: 15px">Ascenseur :</label>
-                    <select id="input-destination-address-ascenseur" v-model="choiceDestinationAscenseur">
-                        <option value="" disabled hidden>Oui/Non</option>
-                        <option value="oui">Oui</option>
-                        <option value="non">Non</option>
-                    </select>
-                </div>
-                <div class="form-destination-address-cave">
-                    <label for="input-destination-address-cave" style="color: black; font-size: 15px">Cave :</label>
-                    <select id="input-destination-address-cave" v-model="choiceDestinationCave">
-                        <option value="" disabled hidden>Oui/Non</option>
-                        <option value="oui">Oui</option>
-                        <option value="non">Non</option>
-                    </select>
-                </div>
-            </div>
-        </div>
+              <div id="form-destination-address-asc-cave">
+                  <div class="form-destination-address-ascenseur">
+                      <label for="input-destination-address-ascenseur" style="color: black; font-size: 15px">Ascenseur :</label>
+                      <select id="input-destination-address-ascenseur" v-model="choiceDestinationAscenseur">
+                          <option value="" disabled hidden>Oui/Non</option>
+                          <option value="oui">Oui</option>
+                          <option value="non">Non</option>
+                      </select>
+                  </div>
+                  <div class="form-destination-address-cave">
+                      <label for="input-destination-address-cave" style="color: black; font-size: 15px">Cave :</label>
+                      <select id="input-destination-address-cave" v-model="choiceDestinationCave">
+                          <option value="" disabled hidden>Oui/Non</option>
+                          <option value="oui">Oui</option>
+                          <option value="non">Non</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+        </transition>
     </div>
 </template>
 
@@ -90,29 +92,21 @@ import { store } from '../store.js';
 
 export default {
     name: 'FormDestinationAddress',
-    props: ['valueDestinationAdresse'],
     data () {
         return {
-          inputDestinationAdresse: this.valueDestinationAdresse,
+          inputDestinationAddress: '',
           choiceDestinationSurface: '',
           choiceDestinationEtage: '',
           choiceDestinationAscenseur: '',
           choiceDestinationCave: '',
-          errorDestinationAdresse: false
+          errorDestinationAdresse: false,
         };
     },
     watch: {
-      inputDestinationAdresse(val) {
-        this.$emit('change', val);
-      }
     },
     methods: {
-        getInputDestinationAdresse () {
-          return this.inputDestinationAdresse;
-        },
-
-        sendInputDestinationAddress () {
-          this.$parent.setDestination(this.inputDestinationAdresse);
+        getInputDestinationAddress () {
+          return this.inputDestinationAddress;
         },
 
         submitFormDestinationAddress () {
@@ -178,6 +172,17 @@ export default {
         }
     }
     */
+
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 1.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to
+    {
+      opacity: 0
+    }
 
     #form-destination-address-asc-cave {
         background: inherit;
