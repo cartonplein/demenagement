@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 import PanelRecapitulatif from './PanelRecapitulatif.vue';
 import FormContact from './FormContact.vue';
@@ -30,7 +29,6 @@ export default {
   name: 'AppRecapitulatif',
   data () {
     return {
-      sharedState: store.state,
       errorMsg: '',
       errorForm: false,
       isPrenomEmpty: false,

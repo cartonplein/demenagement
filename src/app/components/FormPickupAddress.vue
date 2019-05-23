@@ -7,11 +7,21 @@
             </p>
         </div>
 
+
         <div class="form-pickup-address-adresse">
-            <label for="input-pickup-address-adresse" style="color: black; font-size: 15px">Adresse :</label>
-            <input id= "input-pickup-address-adresse" ref="autocompletePickupAddress" placeholder="Rechercher une adresse" type="text" v-model="inputPickupAddress" v-on:change="$emit('update-pickup-address', inputPickupAddress)"></input>
+            <vue-google-autocomplete
+              ref="pickupAddress"
+              id="input-pickup-address-adresse"
+              classname="form-control"
+              placeholder="Rechercher une adresse"
+              v-on:placechanged="getPickupAddressData"
+              v-on:no-results-found="displayError"
+              v-on:focus="onInputFocus"
+              country="fr"
+            >
+            </vue-google-autocomplete>
             <p style="color: red; font-size: 10px" v-if="errorPickupAdresse">
-                Ce champ est obligatoire !
+                Adresse introuvable !
             </p>
         </div>
         <!--
@@ -33,28 +43,28 @@
         </div>
         -->
         <transition name="fade" mode="out-in">
-          <div id="form-pickup-address-logement" v-show="this.$parent.isTripFeasible && this.$parent.isAddressesValid">
+          <div id="form-pickup-address-logement" style="margin-top: 20px" v-show="isAddressAvailable">
               <div class="form-pickup-address-surface">
-                  <label for="input-pickup-address-surface" style="color: black; font-size: 15px">Surface (m²) :</label>
-                  <select id="input-pickup-address-surface" v-model="choicePickupSurface" ref="pickupSurface">
-                      <option value="" disabled hidden>Selectionner une surface</option>
-                      <option value="5">5m²</option>
-                      <option value="10">10m²</option>
-                      <option value="15">15m²</option>
-                      <option value="20">20m²</option>
-                      <option value="25">25m²</option>
-                      <option value="30">30m²</option>
-                      <option value="35">35m²</option>
-                      <option value="40">40m²</option>
-                      <option value="40+">Plus que 40m²</option>
+                  <label for="input-pickup-address-surface">Surface (m²)<span style="color:red">*</span> :</label>
+                  <select id="input-pickup-address-surface" ref="pickupSurface" @change="isFormCompleted">
+                      <option value="" disabled selected>Selectionner une surface</option>
+                      <option value="5m²">5m²</option>
+                      <option value="10m²">10m²</option>
+                      <option value="15m²">15m²</option>
+                      <option value="20m²">20m²</option>
+                      <option value="25m²">25m²</option>
+                      <option value="30m²">30m²</option>
+                      <option value="35m²">35m²</option>
+                      <option value="40m²">40m²</option>
+                      <option value="Plus que 40m²">Plus que 40m²</option>
                   </select>
               </div>
 
               <div class="form-pickup-address-etage">
-                  <label for="input-pickup-address-etage" style="color: black; font-size: 15px">Étage :</label>
-                  <select id="input-pickup-address-etage" v-model="choicePickupEtage" ref="pickupEtage">
-                      <option value="" disabled hidden>Selectionner une étage</option>
-                      <option value="rdc">RDC</option>
+                  <label for="input-pickup-address-etage">Étage<span style="color:red">*</span> :</label>
+                  <select id="input-pickup-address-etage" ref="pickupEtage" @change="isFormCompleted">
+                      <option value="" disabled selected>Selectionner une étage</option>
+                      <option value="RDC">RDC</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
@@ -65,17 +75,17 @@
 
               <div id="form-pickup-address-asc-cave">
                   <div class="form-pickup-address-ascenseur">
-                      <label for="input-pickup-address-ascenseur" style="color: black; font-size: 15px">Ascenseur :</label>
-                      <select id="input-pickup-address-ascenseur" v-model="choicePickupAscenseur" ref="pickupAscenseur">
-                          <option value="" disabled hidden>Oui/Non</option>
+                      <label for="input-pickup-address-ascenseur">Ascenseur<span style="color:red">*</span> :</label>
+                      <select id="input-pickup-address-ascenseur" ref="pickupAscenseur" @change="isFormCompleted">
+                          <option value="" disabled selected>Oui/Non</option>
                           <option value="Oui">Oui</option>
                           <option value="Non">Non</option>
                       </select>
                   </div>
                   <div class="form-pickup-address-cave">
-                      <label for="input-pickup-address-cave" style="color: black; font-size: 15px">Cave :</label>
-                      <select id="input-pickup-address-cave" v-model="choicePickupCave" ref="pickupCave">
-                          <option value="" disabled hidden>Oui/Non</option>
+                      <label for="input-pickup-address-cave">Cave<span style="color:red">*</span> :</label>
+                      <select id="input-pickup-address-cave" ref="pickupCave" @change="isFormCompleted">
+                          <option value="" disabled selected>Oui/Non</option>
                           <option value="Oui">Oui</option>
                           <option value="Non">Non</option>
                       </select>
@@ -89,35 +99,66 @@
 
 <script>
 import { store } from '../store.js';
+import VueGoogleAutocomplete from 'vue-google-autocomplete';
 
 export default {
     name: 'FormPickupAddress',
     data () {
-        return {
-            inputPickupAddress: '',
-            choicePickupSurface: '',
-            choicePickupEtage: '',
-            choicePickupAscenseur: '',
-            choicePickupCave: '',
-            errorPickupAdresse: false,
-        }
+      return {
+        inputPickupAddress: '',
+        errorPickupAdresse: false,
+
+        isAddressAvailable: false
+      }
+    },
+    components: {
+      VueGoogleAutocomplete
     },
     methods: {
 
-        getInputPickupAdresse () {
-          return this.inputPickupAdresse;
+        getPickupAddressData (addressData, placeResultData, id) {
+          this.$parent.$options.methods.updateOrigin(addressData, placeResultData, id);
+          this.inputPickupAddress = placeResultData.formatted_address;
+          if(this.$parent.getAvailablePostalCodes().includes(addressData.postal_code)) {
+            this.isAddressAvailable = true;
+          }
+          this.isFormCompleted();
+        },
+
+        displayError() {
+          this.errorPickupAdresse = true;
+          this.$refs.pickupAddress.blur();
+        },
+
+        onInputFocus() {
+          if(this.errorPickupAdresse == true) {
+            this.errorPickupAdresse = false;
+          }
+          this.$refs.pickupAddress.clear();
+          this.$parent.$options.methods.initializePickupAddress();
+          this.inputPickupAddress = '';
+          this.isAddressAvailable = false;
+          this.isFormCompleted();
         },
 
         submitFormPickupAddress () {
-            //if (inputPickupAdresse === '') return this.errorPickupAdresse = true;
-            store.updatePickupAddressChoicesUser(this.inputPickupAdresse, this.choicePickupSurface, this.choicePickupEtage, this.choicePickupAscenseur, this.choicePickupCave);
-
-            this.inputPickupAdresse = '';
-            this.choicePickupSurface = '';
-            this.choicePickupEtage = '';
-            this.choicePickupAscenseur = '';
-            this.choicePickupCave = '';
+            console.log(this.$refs.pickupSurface.value);
+            this.$store.commit('setPickupAddressUser', [this.inputPickupAddress, this.$refs.pickupSurface.value, this.$refs.pickupEtage.value, this.$refs.pickupAscenseur.value, this.$refs.pickupCave.value]);
             this.errorPickupAdresse = false;
+        },
+
+        isFormCompleted() {
+          let choicePickupSurface = this.$refs.pickupSurface.value;
+          let choicePickupEtage = this.$refs.pickupEtage.value;
+          let choicePickupAscenseur = this.$refs.pickupAscenseur.value;
+          let choicePickupCave = this.$refs.pickupCave.value;
+
+          if(this.inputPickupAddress == '' || choicePickupSurface == '' || choicePickupEtage == '' || choicePickupAscenseur == '' || choicePickupCave == '') {
+            this.$parent.setPickupAddressCompleted(false);
+          }
+          else {
+            this.$parent.setPickupAddressCompleted(true);
+          }
         }
     }
 }
@@ -142,7 +183,6 @@ export default {
       height: 30px;
       max-height: 30px;
       margin-top: 5px;
-      margin-bottom: 30px;
       padding: 5px;
       border-radius: 5px;
     }
@@ -201,8 +241,8 @@ export default {
         }
 
         label, select, p {
-            position: static;
-            display: block;
+          position: static;
+          display: block;
         }
     }
 
@@ -228,6 +268,12 @@ export default {
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+    }
+
+    label {
+      color: black;
+      font-size: 12px;
+      font-weight: bold;
     }
 
 

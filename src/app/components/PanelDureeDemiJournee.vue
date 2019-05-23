@@ -1,6 +1,6 @@
 <template>
     <div id="panel-duree-demi-journee" @click="onClick">
-      <h1 style="color:black; font-size: 20px"><b>Formule démi-journée</b></h1>
+      <h1 style="color:black; font-size: 20px"><b>Formule demi-journée</b></h1>
       <h2 style="color:black; font-size: 15px">Détails...</h2>
     </div>
 </template>

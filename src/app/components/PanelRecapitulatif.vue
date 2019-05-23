@@ -23,15 +23,15 @@
             </tr>
             <tr>
               <th scope="row">Votre type de déménagement</th>
-              <td>{{ displayChoiceUserByIndex(typeDemenagement) }}</td>
-            </tr>
-            <tr v-show="isForfait">
-              <th scope="row">Votre durée de prestation</th>
-              <td>{{ displayChoiceUserByIndex(dureePrestation) }}</td>
+              <td>{{ getTypeDemenagementUser() }}</td>
             </tr>
             <tr v-show="isForfait">
               <th scope="row">Votre taille de logement</th>
-              <td>{{ displayChoiceUserByIndex(tailleLogement) }}</td>
+              <td>{{ getTailleLogementUser() }}</td>
+            </tr>
+            <tr v-show="isForfait">
+              <th scope="row">Votre durée de prestation</th>
+              <td>{{ getDureePrestationUser() }}</td>
             </tr>
             <tr v-show="isInventaire">
               <th scope="row">Votre inventaire</th>
@@ -75,7 +75,7 @@
             </tr>
             <tr>
               <th scope="row">Votre date de déménagement</th>
-              <td>{{ displayChoiceUserByIndex(dateDemenagement) }}</td>
+              <td>{{ getDateDemenagementUser() }}</td>
             </tr>
             <tr>
               <th scope="row">Vos options</th>
@@ -110,7 +110,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 export default {
     name: 'PanelRecapitulatif',
@@ -120,21 +119,30 @@ export default {
         dureePrestation: 'dureePrestation',
         tailleLogement: 'tailleLogement',
         dateDemenagement: 'dateDemenagement',
-        inventaire: store.getInventaireUser(),
-        options: store.getOptionsUser()
+        inventaire: this.$store.getters.getInventaireUser,
+        options: this.$store.getters.getOptionsUser
       }
     },
     methods: {
-      displayChoiceUserByIndex(index) {
-        return store.displayChoiceUserByIndex(index);
+      getTypeDemenagementUser() {
+        return this.$store.getters.getTypeDemenagementUser;
+      },
+      getTailleLogementUser() {
+        return this.$store.getters.getTailleLogementUser;
+      },
+      getDureePrestationUser() {
+        return this.$store.getters.getDureePrestationUser;
+      },
+      getDateDemenagementUser() {
+        return this.$store.getters.getDateDemenagementUser;
       }
     },
     computed: {
         isForfait () {
-          return store.state.isForfait;
+          return this.$store.state.isForfait;
         },
         isInventaire () {
-          return store.state.isInventaire;
+          return this.$store.state.isInventaire;
         }
     }
 }

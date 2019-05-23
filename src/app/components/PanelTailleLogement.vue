@@ -2,12 +2,12 @@
     <div id="panel-taille-logement" @click="selectSize">
       <div class="size-banner has-text-centered has-text-black"><b>{{ size.title }}</b></div>
       <h2 style="color:black; font-size: 12px">{{ size.details }}</h2>
+      <!--<div class="size-banner has-text-centered has-text-black"><b>{{ size.tarif }}</b></div>-->
     </div>
 </template>
 
 
 <script>
-import { store } from '../store.js';
 
 export default {
     name: 'PanelTailleLogement',
@@ -21,9 +21,9 @@ export default {
     },
     methods: {
       selectSize() {
-        store.setSelectedSizeLogement(this.sizeId);
-        store.selectTailleLogement(this.size.title);
-        this.$parent.$parent.$options.methods.openPageDateDemenagement();
+        this.$parent.selectSizeLogement(this.sizeId);
+        this.$store.commit('setTailleLogement', this.size.title);
+        this.$parent.$parent.$options.methods.openPageDureePrestation();
       }
     },
 }

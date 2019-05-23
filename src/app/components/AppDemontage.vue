@@ -3,7 +3,7 @@
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Vos meubles, on les démonte ou pas ?  </h1>
         <div class="panel-demontage">
           <div class="columns is-multiline">
-            <PanelElementDemontage id="panel-element-demontage" v-for="element in sharedState.choicesUser.inventaire"
+            <PanelElementDemontage id="panel-element-demontage" v-for="element in inventaire"
               :key="element.id"
               :element="element" />
           </div>
@@ -17,7 +17,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 import PanelElementDemontage from './PanelElementDemontage.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
@@ -29,7 +28,7 @@ export default {
   data () {
     return {
       isPageDemontage: true,
-      sharedState: store.state
+      inventaire: this.$store.getters.getInventaireUser
     }
   },
   components: {

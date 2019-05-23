@@ -250,7 +250,7 @@
 
 
 <script>
-import { store } from '../store.js';
+
 import PanelJourCalendrier from './PanelJourCalendrier.vue';
 import ClickOutside from 'vue-click-outside';
 import { config } from '../../db/index.js';
@@ -261,13 +261,12 @@ export default {
   name: 'PanelDateDemenagement',
   data () {
     return {
-      displayDatesKey: 0,
       currentDay: new Date().getDate(),
       currentMonth: new Date().getMonth(),
       currentYear: new Date().getFullYear(),
       dayNames: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
 
-      days: store.state.seedDay,
+      days: this.$store.getters.getDays,
       reservedDates: {0:{}, 1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}, 7:{}, 8:{}, 9:{}, 10:{}, 11:{}},
       closedDates: {0:{}, 1:{}, 2:{}, 3:{}, 4:{}, 5:{}, 6:{}, 7:{}, 8:{}, 9:{}, 10:{}, 11:{}}
     };
@@ -282,37 +281,27 @@ export default {
   mounted: function () {
     //initialiser à la date actuelle
     this.initCurrentMonthCurrentYear(this.currentMonth, this.currentYear);
-    this.initDayNames(this.currentYear, this.currentMonth);
+    console.log("Aujourd'hui : "+this.currentDay+"/"+(this.currentMonth+1)+"/"+this.currentYear);
+    this.initDayNames(this.currentMonth, this.currentYear);
+    console.log(this.getActiveDay());
     this.getClosedReservedDatesByMonth(this.currentMonth);
   },
   methods: {
     setActiveMonth(monthNumber) {
-      this.displayDatesKey += 1;
-      store.unselectAllDays();
-      store.setActiveMonth(monthNumber);
-      //console.log(this.closedDates);
+      this.$store.commit('unselectAllDays');
+      this.$store.commit('setActiveMonth', monthNumber);
     },
 
     getActiveMonth() {
-      return store.getActiveMonth();
+      return this.$store.getters.getActiveMonth;
     },
 
     getActiveDay() {
-      return store.getActiveDay();
+      return this.$store.getters.getActiveDay;
     },
 
-    unselectAllDays() {
-      store.unselectAllDays();
-    },
     setActiveDay(dayNumber) {
-      store.setActiveDay(dayNumber);
-    },
-    initCurrentMonthCurrentYear(monthNumber, year) {
-      store.initCurrentMonthCurrentYear(monthNumber, year);
-      console.log("Aujourd'hui : "+this.currentDay+"/"+this.currentMonth+"/"+this.currentYear);
-    },
-    initDayNames(year, monthNumber) {
-      store.initDayNames(year, monthNumber);
+      this.$store.commit('setActiveDay', dayNumber);
     },
 
     setActiveNextMonth(monthNumber) {
@@ -322,7 +311,7 @@ export default {
         this.currentYear = this.currentYear + 1;
       }
       this.setActiveMonth(monthNumber);
-      this.initDayNames(this.currentYear, monthNumber);
+      this.initDayNames(monthNumber, this.currentYear);
       this.getClosedReservedDatesByMonth(monthNumber);
     },
 
@@ -335,24 +324,40 @@ export default {
         this.currentYear = this.currentYear - 1;
       }
       this.setActiveMonth(monthNumber);
-      this.initDayNames(this.currentYear, monthNumber);
+
+      this.initDayNames(monthNumber, this.currentYear);
       this.getClosedReservedDatesByMonth(monthNumber);
     },
 
+    initDayNames(monthNumber, year) {
+      let monthAndYear = [monthNumber, year];
+      this.$store.commit('initDayNames', monthAndYear);
+    },
+
+    initCurrentMonthCurrentYear(monthNumber, year) {
+      let monthAndYear = [monthNumber, year];
+      this.$store.commit('initCurrentMonthCurrentYear', monthAndYear);
+    },
+
     getNumberDaysInActiveMonth () {
-      var numberDaysInActiveMonth = store.getNumberDaysInMonth(this.getActiveMonth().number, this.currentYear);
-      return numberDaysInActiveMonth;
+      return new Date(this.currentYear, this.getActiveMonth().number+1, 0).getDate();
+    },
+
+    getDayName (year, month, day) {
+      var days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+      var d = new Date(year, month, day);
+      return days[d.getDay()];
     },
 
     getLastDateByWeek(week) {
       let lastDateByWeek = 7;
 
-      if(store.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Mar') { lastDateByWeek = 6; }
-      if(store.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Mer') { lastDateByWeek = 5; }
-      if(store.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Jeu') { lastDateByWeek = 4; }
-      if(store.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Ven') { lastDateByWeek = 3; }
-      if(store.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Sam') { lastDateByWeek = 2; }
-      if(store.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Dim') { lastDateByWeek = 1; }
+      if(this.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Mar') { lastDateByWeek = 6; }
+      if(this.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Mer') { lastDateByWeek = 5; }
+      if(this.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Jeu') { lastDateByWeek = 4; }
+      if(this.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Ven') { lastDateByWeek = 3; }
+      if(this.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Sam') { lastDateByWeek = 2; }
+      if(this.getDayName(this.currentYear, this.getActiveMonth().number, 1) == 'Dim') { lastDateByWeek = 1; }
 
       if(week == 1) { return lastDateByWeek; }
       if(week == 2) { return lastDateByWeek + 7; }

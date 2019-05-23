@@ -1,6 +1,6 @@
 <template>
     <div id="app-type-demenagement">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez votre type de déménagement : </h1>
+        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez votre type de déménagement :</h1>
         <div id="panel-type-demenagement" class="container">
           <div class="columns is-mobile">
             <div class="columns is-multiline">
@@ -14,14 +14,14 @@
           </div>
         </div>
         <div class="panel-info-commande">
-          <PanelInfoCommande :currentTarif=tarif />
+          <PanelInfoCommande :currentTarif="tarif" />
         </div>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageAddress"></ButtonPrecedent>
     </div>
 </template>
 
 <script>
-import { store } from '../store.js';
+
 import PanelDemenagementForfait from './PanelDemenagementForfait.vue';
 import PanelDemenagementInventaire from './PanelDemenagementInventaire.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
@@ -34,7 +34,6 @@ export default {
       isPageTypeDemenagement: true,
       typeForfait: 'Déménagement au forfait',
       typeInventaire: 'Déménagement sur inventaire',
-      tarif: 200
     }
   },
   components: {
@@ -45,15 +44,20 @@ export default {
   },
   methods: {
     selectTypeDemenagementForfait() {
-      store.selectTypeDemenagement(this.typeForfait);
-      this.$parent.$options.methods.openPageDureePrestation();
+      this.$store.commit('setTypeDemenagement', this.typeForfait);
+      this.$parent.$options.methods.openPageTailleLogement();
     },
     selectTypeDemenagementInventaire() {
-      store.selectTypeDemenagement(this.typeInventaire);
+      this.$store.commit('setTypeDemenagement', this.typeInventaire);
       this.$parent.$options.methods.openPageInventaire();
     },
     returnPageAddress() {
       this.$parent.$options.methods.returnPageAddress();
+    },
+  },
+  computed: {
+    tarif() {
+      return this.$store.state.tarif;
     }
   }
 }

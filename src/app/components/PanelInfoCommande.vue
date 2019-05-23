@@ -14,31 +14,81 @@
               <b>Vos choix :</b>
           </p>
           <ul style="color: #E85029; font-size: 11px">
-            <li><b>Adresse de départ :</b><br/>{{ choicePickupAddress }}</li>
-            <li>Surface - {{ choicePickupSurface }}</li>
-            <li>Étage - <br/>{{ choicePickupEtage }}</li>
-            <li>Ascenseur - {{ choicePickupAscenseur }}</li>
-            <li>Cave - {{ choicePickupCave }}</li>
-            <li><br/><b>Adresse de destination :</b><br/> {{ choiceDestinationAddress }}</li>
-            <li>Surface - {{ choiceDestinationSurface }}</li>
-            <li>Étage - <br/>{{ choiceDestinationEtage }}</li>
-            <li>Ascenseur - {{ choiceDestinationAscenseur }}</li>
-            <li>Cave - {{ choiceDestinationCave }}</li>
-            <li><br/><b>Distance : </b>{{ distancePickupDestination }}</li>
+            <li>
+              <b><br/>Adresse de départ :</b><br/>
+                <div class="tooltipAdresse">
+                  <i><ins>Placez le curseur ici pour voir</ins></i>
+                  <span class="tooltipDetailsAdresse">
+                    <table style="width:100%">
+                      <tr>
+                        <th>Adresse</th>
+                        <td>{{ getPickupAddressUser().adresse }}</td>
+                      </tr>
+                      <tr>
+                        <th>Surface</th>
+                        <td>{{ getPickupAddressUser().surface }}</td>
+                      </tr>
+                      <tr>
+                        <th>Étage</th>
+                        <td>{{ getPickupAddressUser().etage }}</td>
+                      </tr>
+                      <tr>
+                        <th>Ascenseur</th>
+                        <td>{{ getPickupAddressUser().ascenseur }}</td>
+                      </tr>
+                      <tr>
+                        <th>Cave</th>
+                        <td>{{ getPickupAddressUser().cave }}</td>
+                      </tr>
+                    </table>
+                  </span>
+                </div>
+            </li>
+            <li>
+              <b><br/>Adresse de destination :</b><br/>
+                <div class="tooltipAdresse">
+                  <i><ins>Placez le curseur ici pour voir</ins></i>
+                  <span class="tooltipDetailsAdresse">
+                    <table style="width:100%">
+                      <tr>
+                        <th>Adresse</th>
+                        <td>{{ getDestinationAddressUser().adresse }}</td>
+                      </tr>
+                      <tr>
+                        <th>Surface</th>
+                        <td>{{ getDestinationAddressUser().surface }}</td>
+                      </tr>
+                      <tr>
+                        <th>Étage</th>
+                        <td>{{ getDestinationAddressUser().etage }}</td>
+                      </tr>
+                      <tr>
+                        <th>Ascenseur</th>
+                        <td>{{ getDestinationAddressUser().ascenseur }}</td>
+                      </tr>
+                      <tr>
+                        <th>Cave</th>
+                        <td>{{ getDestinationAddressUser().cave }}</td>
+                      </tr>
+                    </table>
+                  </span>
+                </div>
+            </li>
+            <li><br/><b>Distance : </b>{{ getDistanceAdressesUser().text }}</li>
             <li v-bind:class="{ 'hideElement': true,
                                 'displayElement': isPageDureePrestation || isPageTailleLogement || isPageInventaire || isPageDemontage || isPageDateDemenagement || isPageOptions }">
-                                <b><br/>Type de déménagement :</b><br/> {{ displayChoiceUserByIndex(typeDemenagement) }}
+                                <b><br/>Type de déménagement :</b><br/> {{ getTypeDemenagementUser() }}
             </li>
             <li v-bind:class="{ 'hideElement': true,
-                                'displayElement': isPageTailleLogement || (isPageDateDemenagement || isPageOptions) && isForfait }">
-                                <b><br/>Durée de prestation :</b><br/> {{ displayChoiceUserByIndex(dureePrestation) }}
+                                'displayElement': isPageDureePrestation || (isPageDateDemenagement || isPageOptions) && isForfait }">
+                                <b><br/>Taille de logement :</b><br/> {{ getTailleLogementUser() }}
             </li>
             <li v-bind:class="{ 'hideElement': true,
                                 'displayElement': (isPageDateDemenagement || isPageOptions) && isForfait }">
-                                <b><br/>Taille de logement :</b><br/> {{ displayChoiceUserByIndex(tailleLogement) }}
+                                <b><br/>Durée de prestation :</b><br/> {{ getDureePrestationUser() }}
             </li>
             <li v-bind:class="{ 'hideElement': true,
-                                'displayElement': isPageDemontage || (isPageDateDemenagement || isPageOptions) && isInventaire }">
+                                'displayElement': isPageInventaire || isPageDemontage || (isPageDateDemenagement || isPageOptions) && isInventaire }">
                                 <b><br/>Inventaire :</b><br/>
                                 <div class="tooltipInventaire">
                                   <i><ins>Placez le curseur ici pour voir</ins></i>
@@ -57,7 +107,7 @@
                                 </div>
             </li>
             <li v-bind:class="{ 'hideElement': true,
-                                'displayElement': (isPageDateDemenagement || isPageOptions) && isInventaire }">
+                                'displayElement': isPageDemontage || (isPageDateDemenagement || isPageOptions) && isInventaire }">
                                 <b><br/>Meubles à démonter :</b><br/>
                                 <div class="tooltipDemontage">
                                   <i><ins>Placez le curseur ici pour voir</ins></i>
@@ -76,8 +126,8 @@
                                 </div>
             </li>
             <li v-bind:class="{ 'hideElement': true,
-                                'displayElement': isPageOptions }">
-                                <b><br/>Date de déménagement :</b><br/> {{ displayChoiceUserByIndex(dateDemenagement) }}
+                                'displayElement': isPageDateDemenagement || isPageOptions }">
+                                <b><br/>Date de déménagement :</b><br/> {{ getDateDemenagementUser() }}
             </li>
           </ul>
 
@@ -87,14 +137,13 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 export default {
     name: 'PanelInfoCommande',
     data () {
       return {
-        isPageDureePrestation: this.$parent.isPageDureePrestation,
         isPageTailleLogement: this.$parent.isPageTailleLogement,
+        isPageDureePrestation: this.$parent.isPageDureePrestation,
         isPageInventaire: this.$parent.isPageInventaire,
         isPageDemontage: this.$parent.isPageDemontage,
         isPageDateDemenagement: this.$parent.isPageDateDemenagement,
@@ -103,34 +152,41 @@ export default {
         dureePrestation: 'dureePrestation',
         tailleLogement: 'tailleLogement',
         dateDemenagement: 'dateDemenagement',
-        inventaire: store.getInventaireUser()
+        inventaire: this.$store.getters.getInventaireUser
       }
     },
     computed: {
         isForfait () {
-          return store.state.isForfait;
+          return this.$store.state.isForfait;
         },
         isInventaire () {
-          return store.state.isInventaire;
+          return this.$store.state.isInventaire;
         }
     },
     props: {
       currentTarif: Number,
-      choicePickupAddress: String,
-      choicePickupSurface: String,
-      choicePickupEtage: String,
-      choicePickupAscenseur: String,
-      choicePickupCave: String,
-      choiceDestinationAddress: String,
-      choiceDestinationSurface: String,
-      choiceDestinationEtage: String,
-      choiceDestinationAscenseur: String,
-      choiceDestinationCave: String,
-      distancePickupDestination: String,
     },
     methods: {
-      displayChoiceUserByIndex(index) {
-        return store.displayChoiceUserByIndex(index);
+      getPickupAddressUser() {
+        return this.$store.getters.getPickupAddressUser;
+      },
+      getDestinationAddressUser() {
+        return this.$store.getters.getDestinationAddressUser;
+      },
+      getDistanceAdressesUser() {
+        return this.$store.getters.getDistanceAdressesUser;
+      },
+      getTypeDemenagementUser() {
+        return this.$store.getters.getTypeDemenagementUser;
+      },
+      getTailleLogementUser() {
+        return this.$store.getters.getTailleLogementUser;
+      },
+      getDureePrestationUser() {
+        return this.$store.getters.getDureePrestationUser;
+      },
+      getDateDemenagementUser() {
+        return this.$store.getters.getDateDemenagementUser;
       }
     }
 }
@@ -157,6 +213,30 @@ export default {
 
     .displayElement {
       display: block;
+    }
+
+    .tooltipAdresse {
+      position: relative;
+      .tooltipDetailsAdresse {
+        opacity: 0.9;
+        visibility: hidden;
+        width: 200px;
+        background-color: #E85029;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 5px;
+        position: absolute;
+        z-index: 1;
+        top: -10px;
+        right: 105%;
+      }
+      &:hover {
+        cursor: context-menu;
+        .tooltipDetailsAdresse {
+          visibility: visible;
+        }
+      }
     }
 
     .tooltipInventaire {

@@ -8,11 +8,20 @@
         </div>
 
         <div class="form-destination-address-adresse">
-            <label for="input-destination-address-adresse" style="color: black; font-size: 15px">Adresse :</label>
-            <input id="input-destination-address-adresse" ref="autocompleteDestinationAddress" placeholder="Rechercher une adresse" type="text" v-model="inputDestinationAddress" v-on:change="$emit('update-destination-address', inputDestinationAddress)"></input>
-            <p style="color: red; font-size: 10px" v-if="errorDestinationAdresse">
-                Ce champ est obligatoire !
-            </p>
+          <vue-google-autocomplete
+            ref="destinationAddress"
+            id="input-destination-address-adresse"
+            classname="form-control"
+            placeholder="Rechercher une adresse"
+            v-on:placechanged="getDestinationAddressData"
+            v-on:no-results-found="displayError"
+            v-on:focus="onInputFocus"
+            country="fr"
+          >
+          </vue-google-autocomplete>
+          <p style="color: red; font-size: 10px" v-if="errorDestinationAdresse">
+              Adresse introuvable !
+          </p>
         </div>
         <!--
         <div id="form-destination-address-codepostal-ville">
@@ -33,51 +42,51 @@
         </div>
         -->
         <transition name="fade" mode="out-in">
-          <div class="form-destination-address-logement" v-show="this.$parent.isTripFeasible && this.$parent.isAddressesValid">
+          <div class="form-destination-address-logement" style="margin-top: 20px" v-show="isAddressAvailable">
               <div class="form-destination-address-surface">
-                  <label for="input-destination-address-surface" style="color: black; font-size: 15px">Surface (m²) :</label>
-                  <select id="input-destination-address-surface" v-model="choiceDestinationSurface">
-                      <option value="" disabled hidden>Selectionner une surface</option>
-                      <option value="5">5m²</option>
-                      <option value="10">10m²</option>
-                      <option value="15">15m²</option>
-                      <option value="20">20m²</option>
-                      <option value="25">25m²</option>
-                      <option value="30">30m²</option>
-                      <option value="35">35m²</option>
-                      <option value="40">40m²</option>
-                      <option value="40p">Plus que 40m²</option>
+                  <label for="input-destination-address-surface">Surface (m²)<span style="color:red">*</span> :</label>
+                  <select id="input-destination-address-surface" ref="destinationSurface" @change="isFormCompleted">
+                      <option value="" disabled selected>Selectionner une surface</option>
+                      <option value="5m²">5m²</option>
+                      <option value="10m²">10m²</option>
+                      <option value="15m²">15m²</option>
+                      <option value="20m²">20m²</option>
+                      <option value="25m²">25m²</option>
+                      <option value="30m²">30m²</option>
+                      <option value="35m²">35m²</option>
+                      <option value="40m²">40m²</option>
+                      <option value="Plus que 40m²">Plus que 40m²</option>
                   </select>
               </div>
 
               <div class="form-destination-address-etage">
-                  <label for="input-destination-address-etage" style="color: black; font-size: 15px">Étage :</label>
-                  <select id="input-destination-address-etage" v-model="choiceDestinationEtage">
-                      <option value="" disabled hidden>Selectionner une étage</option>
-                      <option value="rdc">RDC</option>
+                  <label for="input-destination-address-etage">Étage<span style="color:red">*</span> :</label>
+                  <select id="input-destination-address-etage" ref="destinationEtage" @change="isFormCompleted">
+                      <option value="" disabled selected>Selectionner une étage</option>
+                      <option value="RDC">RDC</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
                       <option value="4">4</option>
-                      <option value="Pq4">Plus que 4</option>
+                      <option value="Plus que 4">Plus que 4</option>
                   </select>
               </div>
 
               <div id="form-destination-address-asc-cave">
                   <div class="form-destination-address-ascenseur">
-                      <label for="input-destination-address-ascenseur" style="color: black; font-size: 15px">Ascenseur :</label>
-                      <select id="input-destination-address-ascenseur" v-model="choiceDestinationAscenseur">
-                          <option value="" disabled hidden>Oui/Non</option>
-                          <option value="oui">Oui</option>
-                          <option value="non">Non</option>
+                      <label for="input-destination-address-ascenseur">Ascenseur<span style="color:red">*</span> :</label>
+                      <select id="input-destination-address-ascenseur" ref="destinationAscenseur" @change="isFormCompleted">
+                          <option value="" disabled selected>Oui/Non</option>
+                          <option value="Oui">Oui</option>
+                          <option value="Non">Non</option>
                       </select>
                   </div>
                   <div class="form-destination-address-cave">
-                      <label for="input-destination-address-cave" style="color: black; font-size: 15px">Cave :</label>
-                      <select id="input-destination-address-cave" v-model="choiceDestinationCave">
-                          <option value="" disabled hidden>Oui/Non</option>
-                          <option value="oui">Oui</option>
-                          <option value="non">Non</option>
+                      <label for="input-destination-address-cave">Cave<span style="color:red">*</span> :</label>
+                      <select id="input-destination-address-cave" ref="destinationCave" @change="isFormCompleted">
+                          <option value="" disabled selected>Oui/Non</option>
+                          <option value="Oui">Oui</option>
+                          <option value="Non">Non</option>
                       </select>
                   </div>
               </div>
@@ -88,6 +97,7 @@
 
 <script>
 import { store } from '../store.js';
+import VueGoogleAutocomplete from 'vue-google-autocomplete';
 
 
 export default {
@@ -100,25 +110,59 @@ export default {
           choiceDestinationAscenseur: '',
           choiceDestinationCave: '',
           errorDestinationAdresse: false,
+
+          isAddressAvailable: false
         };
     },
-    watch: {
+    components: {
+      VueGoogleAutocomplete
     },
     methods: {
-        getInputDestinationAddress () {
-          return this.inputDestinationAddress;
+
+        getDestinationAddressData (addressData, placeResultData, id) {
+          this.$parent.$options.methods.updateDestination(addressData, placeResultData, id);
+          this.inputDestinationAddress = placeResultData.formatted_address;
+          if(this.$parent.getAvailablePostalCodes().includes(addressData.postal_code)) {
+            this.isAddressAvailable = true;
+          }
+          this.isFormCompleted();
+        },
+
+        displayError() {
+          this.errorDestinationAdresse = true;
+          this.$refs.destinationAddress.blur();
+        },
+
+        onInputFocus() {
+          if(this.errorDestinationAdresse == true) {
+            this.errorDestinationAdresse = false;
+          }
+          this.$refs.destinationAddress.clear();
+          this.$parent.$options.methods.initializeDestinationAddress();
+          this.inputDestinationAddress = '';
+          this.isAddressAvailable = false;
+          this.isFormCompleted();
         },
 
         submitFormDestinationAddress () {
             //if (inputDestinationAdresse === '') return this.errorDestinationAdresse = true;
-            store.updateDestinationAddressChoicesUser(this.inputDestinationAdresse, this.choiceDestinationSurface, this.choiceDestinationEtage, this.choiceDestinationAscenseur, this.choiceDestinationCave);
-
-            this.inputDestinationAdresse = '';
-            this.choiceDestinationSurface = '';
-            this.choiceDestinationEtage = '';
-            this.choiceDestinationAscenseur = '';
-            this.choiceDestinationCave = '';
+            let destinationAddress = [this.inputDestinationAddress, this.$refs.destinationSurface.value, this.$refs.destinationEtage.value, this.$refs.destinationAscenseur.value, this.$refs.destinationCave.value];
+            this.$store.commit('setDestinationAddressUser', destinationAddress);
             this.errorDestinationAdresse = false;
+        },
+
+        isFormCompleted() {
+          let choiceDestinationSurface = this.$refs.destinationSurface.value;
+          let choiceDestinationEtage = this.$refs.destinationEtage.value;
+          let choiceDestinationAscenseur = this.$refs.destinationAscenseur.value;
+          let choiceDestinationCave = this.$refs.destinationCave.value;
+
+          if(this.inputDestinationAddress == '' || choiceDestinationSurface == '' || choiceDestinationEtage == '' || choiceDestinationAscenseur == '' || choiceDestinationCave == '') {
+            this.$parent.setDestinationAddressCompleted(false);
+          }
+          else {
+            this.$parent.setDestinationAddressCompleted(true);
+          }
         }
     }
 }
@@ -143,7 +187,6 @@ export default {
       height: 30px;
       max-height: 30px;
       margin-top: 5px;
-      margin-bottom: 30px;
       padding: 5px;
       border-radius: 5px;
     }
@@ -233,6 +276,12 @@ export default {
       border: 1px solid #ccc;
       border-radius: 4px;
       box-sizing: border-box;
+    }
+
+    label {
+      color: black;
+      font-size: 12px;
+      font-weight: bold;
     }
 
 

@@ -11,18 +11,20 @@
             </div>
         </div>
         <div class="panel-info-commande">
-          <PanelInfoCommande />
+          <PanelInfoCommande :currentTarif="tarif" />
         </div>
-        <ButtonPrecedent id="button-precedent" :onClick="returnPageDureePrestation"></ButtonPrecedent>
+        <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
     </div>
 </template>
 
 <script>
-import { store } from '../store.js';
 
 import PanelTailleLogement from './PanelTailleLogement.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
 import ButtonPrecedent from './ButtonPrecedent.vue';
+
+import { config } from '../../db/index.js'
+const fb = require('../../db/index.js');
 
 export default {
   name: 'AppTailleLogement',
@@ -32,7 +34,7 @@ export default {
     }
   },
   firebase: {
-    sizes: store.state.seedSize
+    sizes: fb.rootRef.child('taillesLogement'),
   },
   components: {
     PanelTailleLogement,
@@ -40,8 +42,25 @@ export default {
     ButtonPrecedent
   },
   methods: {
-    returnPageDureePrestation() {
-      this.$parent.$options.methods.returnPageDureePrestation();
+
+    selectSizeLogement (sizeId) {
+      fb.rootRef.child('taillesLogement').once('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+          fb.rootRef.child('taillesLogement').child(child.key).update({selected: false});
+          if(child.key == sizeId) {
+            fb.rootRef.child('taillesLogement').child(child.key).update({selected: true});
+          }
+        });
+      });
+    },
+
+    returnPageTypeDemenagement() {
+      this.$parent.$options.methods.returnPageTypeDemenagement();
+    }
+  },
+  computed: {
+    tarif() {
+      return this.$store.state.tarif;
     }
   }
 }

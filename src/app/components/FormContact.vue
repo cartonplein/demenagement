@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 export default {
     name: 'FormContact',
@@ -99,7 +98,7 @@ export default {
     },
     methods: {
       submitContactInformation (inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail) {
-        store.submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
+        //store.submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
         this.inputContactPrenom = '';
         this.inputContactNom = '';
         this.inputContactTelephone = '';

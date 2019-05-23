@@ -21,13 +21,12 @@
       <div class="day-banner has-text-justified has-text-black"><b>{{ day.number }}</b></div>
       <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
                                                         day.currentMonth >= this.$parent.getActiveMonth().number &&
-                                                        day.currentYear >= this.$parent.currentYear)"><b>{{ tarifDate }}<span v-show="tarif != ''">€</span></b></span>
+                                                        day.currentYear >= this.$parent.currentYear)"><b>{{ tarifDate }}€</b></span>
     </div>
 </template>
 
 
 <script>
-import { store } from '../store.js';
 import { config } from '../../db/index.js';
 
 const fb = require('../../db/index.js');
@@ -73,11 +72,11 @@ export default {
     },
     methods: {
       selectDay() {
-        store.unselectAllDays();
+        this.$store.commit('unselectAllDays');
         //this.day.selected = !this.day.selected;
-        store.setSelectedDay(this.dayNumber);
+        this.$store.commit('setSelectedDay', this.dayNumber);
         let date = ""+this.day.number+" "+this.$parent.getActiveMonth().name+" "+this.$parent.currentYear+"";
-        store.selectDateDemenagement(date);
+        this.$store.commit('setDateDemenagement', date);
       }
 
     },

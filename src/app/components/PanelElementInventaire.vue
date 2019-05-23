@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 export default {
     name: 'PanelElementInventaire',
@@ -22,18 +21,22 @@ export default {
       }
     },
     methods: {
+      updateElementQuantity(element, quantity) {
+        let elementAndQuantity = [element, quantity];
+        this.$store.commit('updateElementQuantity', elementAndQuantity);
+      },
       increaseElementQuantity(element) {
         this.quantiteElement++;
-        store.updateElementQuantity(element, this.quantiteElement);
+        this.updateElementQuantity(element, this.quantiteElement);
         return this.quantiteElement;
       },
       decreaseElementQuantity(element) {
         this.quantiteElement--;
-        store.updateElementQuantity(element, this.quantiteElement);
+        this.updateElementQuantity(element, this.quantiteElement);
         return this.quantiteElement;
       },
       deleteElementFromInventaire (element) {
-        store.deleteElementFromInventaire(element);
+        this.$store.commit('deleteElementFromInventaire', element);
       },
       viewElementImage(element) {
         return element.image;

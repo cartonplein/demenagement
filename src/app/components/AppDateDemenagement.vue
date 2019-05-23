@@ -2,9 +2,7 @@
     <div id="app-date-demenagement">
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez la date de votre déménagement : </h1>
         <div id="panel-date-demenagement" class="container">
-
-                <PanelDateDemenagement></PanelDateDemenagement>
-
+          <PanelDateDemenagement></PanelDateDemenagement>
         </div>
         <div class="panel-info-commande">
           <PanelInfoCommande />
@@ -15,7 +13,7 @@
 </template>
 
 <script>
-import { store } from '../store.js';
+
 import PanelDateDemenagement from './PanelDateDemenagement.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
@@ -30,7 +28,7 @@ export default {
   },
   computed: {
     getSelectedDay() {
-      return store.getSelectedDay().number;
+      return this.$store.getters.getSelectedDay().number;
       //v-bind:class="{ 'disableButton': getSelectedDay === '' }"
     }
   },

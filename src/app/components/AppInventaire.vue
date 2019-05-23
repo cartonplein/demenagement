@@ -3,7 +3,7 @@
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Créez votre inventaire : </h1>
         <PanelInventaire class="panel-inventaire"></PanelInventaire>
         <div class="panel-info-commande">
-          <PanelInfoCommande />
+          <PanelInfoCommande :currentTarif="tarif" />
         </div>
         <ButtonSuivant id="button-suivant" :onClick="openPageDemontage" v-bind:class="{ 'disableButton': inventaire.length == 0 }"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 import PanelInventaire from './PanelInventaire.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
@@ -23,7 +22,7 @@ export default {
   data () {
     return {
       isPageInventaire: true,
-      inventaire: store.getInventaireUser()
+      inventaire: this.$store.getters.getInventaireUser
     }
   },
   components: {
@@ -39,7 +38,11 @@ export default {
     returnPageTypeDemenagement() {
       this.$parent.$options.methods.returnPageTypeDemenagement();
     }
-
+  },
+  computed: {
+    tarif() {
+      return this.$store.state.tarif;
+    }
   }
 }
 

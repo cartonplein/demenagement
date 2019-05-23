@@ -1,99 +1,100 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { config } from '../db/index.js'
 import { seedMonth, seedDay } from '../db/seed.js';
 
 const fb = require('../db/index.js');
 
-export const store = {
+Vue.use(Vuex);
+
+export const store = new Vuex.Store({
     state: {
       isForfait: false,
       isInventaire: false,
       seedMonth,
       seedDay,
-      seedSize: fb.rootRef.child('taillesLogement'),
-      seedElementsInventaire: fb.inventaireRef.child('meubles'),
       choicesUser: {
         pickupAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
         destinationAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
-        distance: '',
+        distance: { text: '', value: null },
         typeDemenagement: '',
-        dureePrestation: '',
         tailleLogement: '',
+        dureePrestation: '',
         inventaire: [],
         demontageMeubles: [],
         dateDemenagement: '',
         options: [{name: 'option1', quantity: 1}],
-        prix: '',
+        prix: 0,
         contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: '' }
-      }
+      },
+      tarif: 0
     },
 
-    displayChoiceUserByIndex(index) {
-      return this.state.choicesUser[index];
-    },
+    getters: {
 
-    getInventaireUser() {
-      return this.state.choicesUser.inventaire;
-    },
+      getDays () {
+        return store.state.seedDay;
+      },
 
-    getOptionsUser() {
-      return this.state.choicesUser.options;
-    },
+      getActiveMonth () {
+        return store.state.seedMonth.find((month) => month.active);
+      },
 
-    getDateDemenagementUser () {
-      return this.state.choicesUser.dateDemenagement;
-    },
+      getActiveDay () {
+        return store.state.seedDay.find((day) => day.active);
+      },
 
-    openNextPage (currentPageId, nextPageId) {
-      var nextPage = document.getElementById(nextPageId);
-      var currentPage = document.getElementById(currentPageId);
-      if (nextPage.style.display === "none") {
-        nextPage.style.display = "block";
-      }
-      nextPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
-      nextPage.style.opacity = "1";
-      nextPage.style.pointerEvents = "initial";
-      currentPage.style.opacity = "0.4";
-      currentPage.style.pointerEvents = "none";
-    },
+      getSelectedDay () {
+        return store.state.seedDay.find((day) => day.selected);
+      },
 
-    returnPreviousPage (currentPageId, previousPageId) {
-      var previousPage = document.getElementById(previousPageId);
-      var currentPage = document.getElementById(currentPageId);
-      previousPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
-      previousPage.style.opacity = "1";
-      previousPage.style.pointerEvents = "initial";
-      setTimeout(function() { currentPage.style.display = "none"; }, 500)
-    },
+      getTarif() {
+        return store.state.tarif;
+      },
 
+      getPickupAddressUser() {
+        return store.state.choicesUser.pickupAddress;
+      },
+
+      getDestinationAddressUser() {
+        return store.state.choicesUser.destinationAddress;
+      },
+
+      getDistanceAdressesUser() {
+        return store.state.choicesUser.distance;
+      },
+
+      getTypeDemenagementUser() {
+        return store.state.choicesUser.typeDemenagement;
+      },
+
+      getTailleLogementUser() {
+        return store.state.choicesUser.tailleLogement;
+      },
+
+      getDureePrestationUser() {
+        return store.state.choicesUser.dureePrestation;
+      },
+
+      getInventaireUser() {
+        return store.state.choicesUser.inventaire;
+      },
+
+      getDateDemenagementUser () {
+        return store.state.choicesUser.dateDemenagement;
+      },
+
+      getOptionsUser() {
+        return store.state.choicesUser.options;
+      },
+    },
+/*
     submitFormPickupAddress (pickupAdresse, pickupSurface, pickupEtage, pickupAscenseur, pickupCave) {
 
     },
 
     submitFormDestinationAddress (destinationAdresse, destinationSurface, destinationEtage, destinationAscenseur, destinationCave) {
 
-    },
-
-    selectTypeDemenagement (typeDemenagement) {
-      this.state.choicesUser.typeDemenagement = typeDemenagement;
-      console.log(this.state.choicesUser);
-    },
-
-    selectDureePrestation (dureePrestation) {
-      this.state.choicesUser.dureePrestation = dureePrestation;
-      console.log(this.state.choicesUser);
-    },
-
-    setSelectedSizeLogement (sizeId) {
-      let seedSize = this.state.seedSize;
-      seedSize.once('value', function(snapshot) {
-        snapshot.forEach(function(child) {
-          seedSize.child(child.key).update({selected: false});
-          if(child.key == sizeId) {
-            seedSize.child(child.key).update({selected: true});
-          }
-        });
-      });
     },
 
     getSelectedSizeLogement () {
@@ -105,90 +106,131 @@ export const store = {
       });
       return selectedSize;
     },
+    */
 
-    selectTailleLogement (tailleLogement) {
-      this.state.choicesUser.tailleLogement = tailleLogement;
-      console.log(this.state.choicesUser);
+    mutations: {
+
+      setPickupAddressUser (state, pickupAddress) {
+        state.choicesUser.pickupAddress.adresse = pickupAddress[0];
+        state.choicesUser.pickupAddress.surface = pickupAddress[1];
+        state.choicesUser.pickupAddress.etage = pickupAddress[2];
+        state.choicesUser.pickupAddress.ascenseur = pickupAddress[3];
+        state.choicesUser.pickupAddress.cave = pickupAddress[4];
+      },
+
+      setDestinationAddressUser (state, destinationAddress) {
+        state.choicesUser.destinationAddress.adresse = destinationAddress[0];
+        state.choicesUser.destinationAddress.surface = destinationAddress[1];
+        state.choicesUser.destinationAddress.etage = destinationAddress[2];
+        state.choicesUser.destinationAddress.ascenseur = destinationAddress[3];
+        state.choicesUser.destinationAddress.cave = destinationAddress[4];
+      },
+
+      setTypeForfait(state, isForfait) {
+        state.isForfait = isForfait;
+      },
+
+      setTypeInventaire(state, isInventaire) {
+        state.isInventaire = isInventaire;
+      },
+
+      initDayNames(state, monthAndYear) {
+        let days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+        state.seedDay.map((dayObj) => {
+          let d = new Date(monthAndYear[1], monthAndYear[0], dayObj.number);
+          dayObj.name = days[d.getDay()];
+
+        });
+      },
+
+      initCurrentMonthCurrentYear(state, monthAndYear) {
+        state.seedDay.map((dayObj) => {
+          dayObj.currentMonth = monthAndYear[0];
+          dayObj.currentYear = monthAndYear[1];
+        });
+        state.seedMonth.map((monthObj) => {
+          monthObj.currentYear = monthAndYear[1];
+        });
+      },
+
+      setActiveDay (state, dayNumber) {
+        state.seedDay.map((dayObj) => {
+          dayObj.number === dayNumber ? dayObj.active = true : dayObj.active = false;
+        });
+      },
+
+      setSelectedDay (state, dayNumber) {
+        state.seedDay.map((dayObj) => {
+          dayObj.number === dayNumber ? dayObj.selected = true : dayObj.selected = false;
+        });
+      },
+
+      unselectAllDays (state) {
+        state.seedDay.map((dayObj) => {
+          dayObj.selected = false;
+        });
+      },
+
+      setActiveMonth (state, monthNumber) {
+        state.seedMonth.map((monthObj) => {
+          monthObj.number === monthNumber ? monthObj.active = true : monthObj.active = false;
+        });
+      },
+
+      setDistanceAdressesUser(state, distance) {
+        console.log(distance);
+        state.choicesUser.distance = distance;
+      },
+
+      setTarif(state, tarif) {
+        state.tarif = state.tarif + tarif;
+      },
+
+      setTypeDemenagement (state, typeDemenagement) {
+        state.choicesUser.typeDemenagement = typeDemenagement;
+        console.log(state.choicesUser.typeDemenagement);
+      },
+
+      setTailleLogement (state, tailleLogement) {
+        state.choicesUser.tailleLogement = tailleLogement;
+        console.log(state.choicesUser.tailleLogement);
+      },
+
+      setDureePrestation (state, dureePrestation) {
+        state.choicesUser.dureePrestation = dureePrestation;
+        console.log(state.choicesUser.dureePrestation);
+      },
+
+      addElementInInventaire(state, element) {
+        state.choicesUser.inventaire.push({ number: element.number, name: element.name, image: element.image, volume: element.volume, tarif: element.tarif, quantity: 1, quantityDemonter: 0 });
+      },
+
+      updateElementQuantity(state, elementAndQuantity) {
+        const index = state.choicesUser.inventaire.findIndex((e) => e.number === elementAndQuantity[0].number);
+        state.choicesUser.inventaire[index].quantity = elementAndQuantity[1];
+      },
+
+      updateElementQuantityDemonter(state, elementAndQuantity) {
+        const index = state.choicesUser.inventaire.findIndex((e) => e.number === elementAndQuantity[0].number);
+        state.choicesUser.inventaire[index].quantityDemonter = elementAndQuantity[1];
+      },
+
+      deleteElementFromInventaire(state, element) {
+        state.choicesUser.inventaire.splice(state.choicesUser.inventaire.indexOf(element), 1);
+      },
+
+      setDateDemenagement (state, dateDemenagement) {
+        state.choicesUser.dateDemenagement = dateDemenagement;
+        console.log(this.state.choicesUser.dateDemenagement);
+      },
+
     },
 
-    selectDateDemenagement (dateDemenagement) {
-      this.state.choicesUser.dateDemenagement = dateDemenagement;
-      console.log(this.state.choicesUser);
-    },
+    actions: {
 
-    getIdCurrentMonth () {
-      var d = new Date();
-      return d.getMonth();
-    },
-
-    initDayNames(year, activeMonthNumber) {
-      let days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-      this.state.seedDay.map((dayObj) => {
-        let d = new Date(year, activeMonthNumber, dayObj.number);
-        dayObj.name = days[d.getDay()];
-      });
-    },
-
-    initCurrentMonthCurrentYear(monthNumber, year) {
-      this.state.seedDay.map((dayObj) => {
-        dayObj.currentMonth = monthNumber;
-        dayObj.currentYear = year;
-      });
-      this.state.seedMonth.map((monthObj) => {
-        monthObj.currentYear = year;
-      });
-    },
-
-    setActiveMonth (monthNumber) {
-      this.state.seedMonth.map((monthObj) => {
-        monthObj.number === monthNumber ? monthObj.active = true : monthObj.active = false;
-      });
-    },
-
-    getActiveMonth () {
-      return this.state.seedMonth.find((month) => month.active);
     },
 
 
-    getCurrentYear () {
-      return new Date().getFullYear();
-    },
-
-    getNumberDaysInMonth (month, year) {
-      return new Date(year, month+1, 0).getDate();
-    },
-
-    getDayName (year, month, day) {
-      var days = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-      var d = new Date(year, month, day);
-      return days[d.getDay()];
-    },
-
-    setSelectedDay (dayNumber) {
-      this.state.seedDay.map((dayObj) => {
-        dayObj.number === dayNumber ? dayObj.selected = true : dayObj.selected = false;
-      });
-    },
-
-    getSelectedDay () {
-      return this.state.seedDay.find((day) => day.selected);
-    },
-
-    setActiveDay (dayNumber) {
-      this.state.seedDay.map((dayObj) => {
-        dayObj.number === dayNumber ? dayObj.active = true : dayObj.active = false;
-      });
-    },
-
-    getActiveDay () {
-      return this.state.seedDay.find((day) => day.active);
-    },
-
-    unselectAllDays () {
-      this.state.seedDay.map((dayObj) => {
-        dayObj.selected = false;
-      });
-    },
 
     /* //object to array
     getUnavailableDates() {
@@ -206,64 +248,11 @@ export const store = {
 
     },*/
 
-    getCurrentTarif() {
-
-    },
-
-
-    updatePickupAddressChoicesUser (pickupAddressAdresse, pickupAddressSurface, pickupAddressEtage, pickupAddressAscenseur, pickupAddressCave) {
-  /*    this.state.seedChoicesUser.map((choicesUserObj) => {
-        choicesUserObj.pickupAddress.push({
-          "adresse": pickupAddressAdresse,
-          "surface": pickupAddressSurface,
-          "etage" : pickupAddressEtage,
-          "ascenseur" : pickupAddressAscenseur,
-          "cave" : pickupAddressCave
-        });
-      });*/
-
-      //alert(pickupAddressAdresse+ ' ' +pickupAddressSurface+ ' ' +pickupAddressEtage+ ' ' +pickupAddressAscenseur+ ' ' +pickupAddressCave);
-
-    },
-    updateDestinationAddressChoicesUser (destinationAddressAdresse, destinationAddressSurface, destinationAddressEtage, destinationAddressAscenseur, destinationAddressCave) {
-    /*  this.state.seedChoicesUser.map((choicesUserObj) => {
-        choicesUserObj.destinationAddress.push({
-          "adresse": destinationAddressAdresse,
-          "surface": destinationAddressSurface,
-          "etage" : destinationAddressEtage,
-          "ascenseur" : destinationAddressAscenseur,
-          "cave" : destinationAddressCave
-        });
-      });*/
-    },
-
-    addElementInInventaire(element) {
-      this.state.choicesUser.inventaire.push({ number: element.number, name: element.name, image: element.image, volume: element.volume, tarif: element.tarif, quantity: 1, quantityDemonter: 0 });
-    },
-
-    updateElementQuantity(element, quantity) {
-      const index = this.state.choicesUser.inventaire.findIndex((e) => e.number === element.number);
-      this.state.choicesUser.inventaire[index].quantity = quantity;
-    },
-
-    updateElementQuantityDemonter(element, quantityDemonter) {
-      const index = this.state.choicesUser.inventaire.findIndex((e) => e.number === element.number);
-      this.state.choicesUser.inventaire[index].quantityDemonter = quantityDemonter;
-    },
-
-    deleteElementFromInventaire(element) {
-      this.state.choicesUser.inventaire.splice(this.state.choicesUser.inventaire.indexOf(element), 1);
-    },
 
     finaliserCommande () {
 
-    },
-
-    submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail) {
-      console.log(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
-    },
-
-    getDirection (origin, destination) {
-      return "https://www.google.com/maps/embed/v1/directions?key=AIzaSyBcc_IiK7JtWDhD9jm20HHjDaduqKHkcNg&origin="+origin+"&destination="+destination+"&mode=bicycling";
     }
-}
+
+
+
+});

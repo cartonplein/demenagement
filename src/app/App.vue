@@ -7,25 +7,25 @@
       <div id="app-type-demenagement"> <!--style="display:none"-->
           <AppTypeDemenagement />
       </div>
-      <div id="app-duree-prestation">
-          <AppDureePrestation />
-      </div>
       <div id="app-taille-logement">
           <AppTailleLogement />
+      </div>
+      <div id="app-duree-prestation">
+          <AppDureePrestation />
       </div>
       <div id="app-inventaire">
           <AppInventaire />
       </div>
-      <div id="app-demontage">
+      <div id="app-demontage" >
           <AppDemontage />
       </div>
       <div id="app-date-demenagement">
           <AppDateDemenagement />
       </div>
-      <div id="app-options">
+      <div id="app-options" >
           <AppOptions />
       </div>
-      <div id="app-recapitulatif">
+      <div id="app-recapitulatif" >
           <AppRecapitulatif />
       </div>
     </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { store } from './store.js';
+
 import LogoCartonPlein from './components/LogoCartonPlein.vue';
 import AppAddress from './components/AppAddress.vue';
 import AppTypeDemenagement from './components/AppTypeDemenagement.vue';
@@ -44,6 +44,7 @@ import AppDemontage from './components/AppDemontage.vue';
 import AppDateDemenagement from './components/AppDateDemenagement.vue';
 import AppOptions from './components/AppOptions.vue';
 import AppRecapitulatif from './components/AppRecapitulatif.vue';
+import { store } from './store.js'
 
 export default {
   name: 'App',
@@ -61,89 +62,113 @@ export default {
   },
   methods: {
 
+    openNextPage (currentPageId, nextPageId) {
+      var nextPage = document.getElementById(nextPageId);
+      var currentPage = document.getElementById(currentPageId);
+      if (nextPage.style.display === "none") {
+        nextPage.style.display = "block";
+      }
+      nextPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+      nextPage.style.opacity = "1";
+      nextPage.style.pointerEvents = "initial";
+      currentPage.style.opacity = "0.4";
+      currentPage.style.pointerEvents = "none";
+    },
+
+    returnPreviousPage (currentPageId, previousPageId) {
+      var previousPage = document.getElementById(previousPageId);
+      var currentPage = document.getElementById(currentPageId);
+      previousPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+      previousPage.style.opacity = "1";
+      previousPage.style.pointerEvents = "initial";
+      setTimeout(function() { currentPage.style.display = "none"; }, 500)
+    },
+
     /* depuis Page Address */
     openPageTypeDemenagement() {
-      store.openNextPage("app-address", "app-type-demenagement");
+      this.openNextPage("app-address", "app-type-demenagement");
     },
 
     /* depuis Page Type Déménagement */
-    openPageDureePrestation() {
-      store.state.isForfait = true;
-      store.state.isInventaire = false;
-      store.openNextPage("app-type-demenagement", "app-duree-prestation");
+    openPageTailleLogement() {
+
+      store.commit('setTypeForfait', true);
+      store.commit('setTypeInventaire', false);
+      this.openNextPage("app-type-demenagement", "app-taille-logement");
     },
     openPageInventaire() {
-      store.state.isInventaire = true;
-      store.state.isForfait = false;
-      store.openNextPage("app-type-demenagement", "app-inventaire");
+      store.commit('setTypeForfait', false);
+      store.commit('setTypeInventaire', true);
+      this.openNextPage("app-type-demenagement", "app-inventaire");
     },
     returnPageAddress() {
-      store.returnPreviousPage("app-type-demenagement", "app-address");
+      this.returnPreviousPage("app-type-demenagement", "app-address");
     },
 
-    /* depuis Page Durée Prestation */
-    openPageTailleLogement() {
-      store.openNextPage("app-duree-prestation", "app-taille-logement");
+    /* depuis Page Taille Logement */
+    openPageDureePrestation() {
+      this.openNextPage("app-taille-logement", "app-duree-prestation");
     },
+
 
     /* depuis Page Inventaire */
     openPageDemontage() {
-      store.openNextPage("app-inventaire", "app-demontage");
+      this.openNextPage("app-inventaire", "app-demontage");
     },
 
     /* depuis Page Duree Prestation ou Page Inventaire */
     returnPageTypeDemenagement() {
       if(store.state.isForfait) {
-        store.returnPreviousPage("app-duree-prestation", "app-type-demenagement");
+        this.returnPreviousPage("app-taille-logement", "app-type-demenagement");
       }
       if(store.state.isInventaire) {
-        store.returnPreviousPage("app-inventaire", "app-type-demenagement");
+        this.returnPreviousPage("app-inventaire", "app-type-demenagement");
       }
-      store.state.isForfait = false;
-      store.state.isInventaire = false;
+      store.commit('setTypeForfait', false);
+      store.commit('setTypeInventaire', false);
     },
 
     /* depuis Page Taille Logement ou Page Demontage */
     openPageDateDemenagement() {
       if(store.state.isForfait) {
-        store.openNextPage("app-taille-logement", "app-date-demenagement");
+        this.openNextPage("app-duree-prestation", "app-date-demenagement");
       }
       if(store.state.isInventaire) {
-        store.openNextPage("app-demontage", "app-date-demenagement");
+        this.openNextPage("app-demontage", "app-date-demenagement");
       }
     },
 
-    returnPageDureePrestation() {
-      store.returnPreviousPage("app-taille-logement", "app-duree-prestation");
+    returnPageTailleLogement() {
+      this.returnPreviousPage("app-duree-prestation", "app-taille-logement");
     },
 
     returnPageInventaire() {
-      store.returnPreviousPage("app-demontage", "app-inventaire");
+      this.returnPreviousPage("app-demontage", "app-inventaire");
     },
 
     openPageOptions () {
-      store.openNextPage("app-date-demenagement", "app-options");
+      this.openNextPage("app-date-demenagement", "app-options");
     },
 
     returnPageBeforeDateDemenagement () {
       if(store.state.isForfait) {
-        store.returnPreviousPage("app-date-demenagement", "app-taille-logement");
+        this.returnPreviousPage("app-date-demenagement", "app-duree-prestation");
       }
       if(store.state.isInventaire) {
-        store.returnPreviousPage("app-date-demenagement", "app-demontage");
+        this.returnPreviousPage("app-date-demenagement", "app-demontage");
       }
     },
 
     returnPageDateDemenagement () {
-      store.returnPreviousPage("app-options", "app-date-demenagement");
+      this.returnPreviousPage("app-options", "app-date-demenagement");
     },
 
     openPageRecapitulatif () {
-      store.openNextPage("app-options", "app-recapitulatif");
+      this.openNextPage("app-options", "app-recapitulatif");
     },
 
     returnPageOptions () {
-      store.returnPreviousPage("app-recapitulatif", "app-options");
+      this.returnPreviousPage("app-recapitulatif", "app-options");
     }
 
   }

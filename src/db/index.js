@@ -18,6 +18,7 @@ const rootRef = app.database().ref();
 
 let agendaRef = rootRef.child('agenda');
 let inventaireRef = rootRef.child('inventaire');
+let addressesRef = rootRef.child('adresses');
 
 
 // firebase collections
@@ -29,5 +30,6 @@ export {
     currentUser,
     rootRef,
     agendaRef,
-    inventaireRef
+    inventaireRef,
+    addressesRef
 }

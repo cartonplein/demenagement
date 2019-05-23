@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 import PanelInfoCommande from './PanelInfoCommande.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
@@ -26,7 +25,7 @@ export default {
   data () {
     return {
       isPageOptions: true,
-      sharedState: store.state
+
     }
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
     <div id="panel-demenagement-forfait" @click="onClick">
       <h1 style="color:black; font-size: 20px"><b>Déménagement au forfait</b></h1>
-      <h2 style="color:black; font-size: 15px">Vous choisissez la durée de la prestation, le nombre de déménageurs, et la date du déménagement.
+      <h2 style="color:black; font-size: 15px">Vous choisissez la durée de la prestation, la surface du logement, et la date du déménagement.
 </h2>
     </div>
 </template>

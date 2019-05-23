@@ -5,14 +5,13 @@
 </template>
 
 <script>
-import { store } from '../store.js';
 
 export default {
     name: 'ElementSearchBar',
     props: ['element'],
     methods: {
       addElementInInventaire(element) {
-        store.addElementInInventaire(element);
+        this.$store.commit('addElementInInventaire', element);
       }
     }
 }

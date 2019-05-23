@@ -16,12 +16,12 @@
         <div class="panel-info-commande">
           <PanelInfoCommande />
         </div>
-        <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
+        <ButtonPrecedent id="button-precedent" :onClick="returnPageTailleLogement"></ButtonPrecedent>
     </div>
 </template>
 
 <script>
-import { store } from '../store.js';
+
 import PanelDureeDemiJournee from './PanelDureeDemiJournee.vue';
 import PanelDureeUneJournee from './PanelDureeUneJournee.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
@@ -34,7 +34,6 @@ export default {
       isPageDureePrestation: true,
       dureeDemiJournee: 'Démi-journée',
       dureeUneJournee: 'Une journée',
-      tarif: store.getCurrentTarif(),
     }
   },
   components: {
@@ -45,15 +44,15 @@ export default {
   },
   methods: {
     selectDureeDemiJournee() {
-      store.selectDureePrestation(this.dureeDemiJournee);
-      this.$parent.$options.methods.openPageTailleLogement();
+      this.$store.commit('setDureePrestation', this.dureeDemiJournee);
+      this.$parent.$options.methods.openPageDateDemenagement();
     },
     selectDureeUneJournee() {
-      store.selectDureePrestation(this.dureeUneJournee);
-      this.$parent.$options.methods.openPageTailleLogement();
+      this.$store.commit('setDureePrestation', this.dureeUneJournee);
+      this.$parent.$options.methods.openPageDateDemenagement();
     },
-    returnPageTypeDemenagement() {
-      this.$parent.$options.methods.returnPageTypeDemenagement();
+    returnPageTailleLogement() {
+      this.$parent.$options.methods.returnPageTailleLogement();
     }
   }
 }

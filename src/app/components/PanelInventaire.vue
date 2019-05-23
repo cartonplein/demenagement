@@ -8,7 +8,7 @@
       </div>
       <div class="panel-inventaire-list">
         <div class="columns is-multiline">
-          <PanelElementInventaire id="panel-element-inventaire" v-for="element in sharedState.choicesUser.inventaire"
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in this.$store.state.choicesUser.inventaire"
             :key="element.number"
             :element="element" />
         </div>
@@ -17,10 +17,13 @@
 </template>
 
 <script>
-import { store } from '../store.js';
+
 import ElementSearchBar from './ElementSearchBar.vue';
 import PanelElementInventaire from './PanelElementInventaire.vue'
 import ClickOutside from 'vue-click-outside';
+import { config } from '../../db/index.js'
+
+const fb = require('../../db/index.js');
 
 export default {
     name: 'PanelInventaire',
@@ -28,18 +31,15 @@ export default {
       return {
         searchElement: '',
         showList: false,
-        sharedState: store.state,
+        sharedState: this.$store.state,
       }
     },
     firebase: {
-      elementsInventaire: store.state.seedElementsInventaire
+      elementsInventaire: fb.inventaireRef.child('meubles')
     },
     components: {
       ElementSearchBar,
       PanelElementInventaire
-    },
-    mounted() {
-      //&& !store.state.choicesUser.inventaire.includes(element)
     },
     computed: {
       filteredList() {
