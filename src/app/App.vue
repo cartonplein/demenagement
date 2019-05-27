@@ -1,31 +1,32 @@
 <template>
     <div id="app">
-      <LogoCartonPlein />
-      <div id="app-address">
+
+      <div id="app-address" >
+          <LogoCartonPlein />
           <AppAddress />
       </div>
       <div id="app-type-demenagement"> <!--style="display:none"-->
           <AppTypeDemenagement />
       </div>
-      <div id="app-taille-logement">
+      <div id="app-taille-logement" style="display:none">
           <AppTailleLogement />
       </div>
-      <div id="app-duree-prestation">
+      <div id="app-duree-prestation" style="display:none">
           <AppDureePrestation />
       </div>
-      <div id="app-inventaire">
+      <div id="app-inventaire" style="display:none">
           <AppInventaire />
       </div>
-      <div id="app-demontage" >
+      <div id="app-demontage" style="display:none">
           <AppDemontage />
       </div>
-      <div id="app-date-demenagement">
+      <div id="app-date-demenagement" style="display:none">
           <AppDateDemenagement />
       </div>
-      <div id="app-options" >
+      <div id="app-options" style="display:none">
           <AppOptions />
       </div>
-      <div id="app-recapitulatif" >
+      <div id="app-recapitulatif" style="display:none">
           <AppRecapitulatif />
       </div>
     </div>
@@ -71,13 +72,15 @@ export default {
       nextPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
       nextPage.style.opacity = "1";
       nextPage.style.pointerEvents = "initial";
-      currentPage.style.opacity = "0.4";
-      currentPage.style.pointerEvents = "none";
+      setTimeout(function() { currentPage.style.display = "none"; }, 500)
     },
 
     returnPreviousPage (currentPageId, previousPageId) {
       var previousPage = document.getElementById(previousPageId);
       var currentPage = document.getElementById(currentPageId);
+      if (previousPage.style.display === "none") {
+        previousPage.style.display = "block";
+      }
       previousPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
       previousPage.style.opacity = "1";
       previousPage.style.pointerEvents = "initial";
@@ -152,9 +155,16 @@ export default {
 
     returnPageBeforeDateDemenagement () {
       if(store.state.isForfait) {
+        if(store.getters.getDureePrestationUser == 'Une journée') {
+          store.commit('setTarif', store.state.tarifPrec/2);
+        }
+        else {
+          store.commit('setTarif', store.state.tarifPrec);
+        }
         this.returnPreviousPage("app-date-demenagement", "app-duree-prestation");
       }
       if(store.state.isInventaire) {
+        store.commit('setTarif', store.state.tarifPrec);
         this.returnPreviousPage("app-date-demenagement", "app-demontage");
       }
     },

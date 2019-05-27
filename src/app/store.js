@@ -9,6 +9,7 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
+      isAddressAvailable: false,
       isForfait: false,
       isInventaire: false,
       seedMonth,
@@ -18,15 +19,16 @@ export const store = new Vuex.Store({
         destinationAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
         distance: { text: '', value: null },
         typeDemenagement: '',
-        tailleLogement: '',
+        tailleLogement: { title: '', tarif: null },
         dureePrestation: '',
         inventaire: [],
-        demontageMeubles: [],
         dateDemenagement: '',
         options: [{name: 'option1', quantity: 1}],
         prix: 0,
         contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: '' }
       },
+      tarifAddresses: 0,
+      tarifPrec: 0,
       tarif: 0
     },
 
@@ -110,6 +112,10 @@ export const store = new Vuex.Store({
 
     mutations: {
 
+      setAddressAvailable (state, val) {
+        state.isAddressAvailable = val;
+      },
+
       setPickupAddressUser (state, pickupAddress) {
         state.choicesUser.pickupAddress.adresse = pickupAddress[0];
         state.choicesUser.pickupAddress.surface = pickupAddress[1];
@@ -182,8 +188,12 @@ export const store = new Vuex.Store({
         state.choicesUser.distance = distance;
       },
 
+      setTarifAddresses(state, tarif) {
+        state.tarifAddresses = tarif;
+      },
+
       setTarif(state, tarif) {
-        state.tarif = state.tarif + tarif;
+        state.tarif = tarif;
       },
 
       setTypeDemenagement (state, typeDemenagement) {
@@ -205,18 +215,18 @@ export const store = new Vuex.Store({
         state.choicesUser.inventaire.push({ number: element.number, name: element.name, image: element.image, volume: element.volume, tarif: element.tarif, quantity: 1, quantityDemonter: 0 });
       },
 
-      updateElementQuantity(state, elementAndQuantity) {
-        const index = state.choicesUser.inventaire.findIndex((e) => e.number === elementAndQuantity[0].number);
-        state.choicesUser.inventaire[index].quantity = elementAndQuantity[1];
-      },
-
-      updateElementQuantityDemonter(state, elementAndQuantity) {
-        const index = state.choicesUser.inventaire.findIndex((e) => e.number === elementAndQuantity[0].number);
-        state.choicesUser.inventaire[index].quantityDemonter = elementAndQuantity[1];
-      },
-
       deleteElementFromInventaire(state, element) {
         state.choicesUser.inventaire.splice(state.choicesUser.inventaire.indexOf(element), 1);
+      },
+
+      emptyInventaire(state) {
+        for(var i=0; i<state.choicesUser.inventaire.length; i++) {
+          state.choicesUser.inventaire.splice(state.choicesUser.inventaire[i], 1);
+        }
+      },
+
+      setTarifPrec (state, tarif) {
+        state.tarifPrec = tarif;
       },
 
       setDateDemenagement (state, dateDemenagement) {

@@ -7,8 +7,9 @@
               <th scope="row">Votre adresse de départ</th>
               <td>
                 <ul>
-                  <li>Adresse 1 (à remplacer)</li>
-                  <li style="font-size: 11px">Surface :, Etage :, Ascenseur :, Cave : </li>
+                  <li>{{ getPickupAddressUser().adresse }}</li>
+                  <li style="font-size: 11px">Surface : {{ getPickupAddressUser().surface }} | Etage : {{ getPickupAddressUser().etage }} |
+                  Ascenseur : {{ getPickupAddressUser().ascenseur }} | Cave : {{ getPickupAddressUser().cave }}</li>
                 </ul>
               </td>
             </tr>
@@ -16,8 +17,9 @@
               <th scope="row">Votre adresse de destination</th>
               <td>
                 <ul>
-                  <li>Adresse 2 (à remplacer)</li>
-                  <li style="font-size: 11px">Surface :, Etage :, Ascenseur :, Cave : </li>
+                  <li>{{ getDestinationAddressUser().adresse }}</li>
+                  <li style="font-size: 11px">Surface : {{ getDestinationAddressUser().surface }} | Etage : {{ getDestinationAddressUser().etage }} |
+                  Ascenseur : {{ getDestinationAddressUser().ascenseur }} | Cave : {{ getDestinationAddressUser().cave }}</li>
                 </ul>
               </td>
             </tr>
@@ -103,7 +105,7 @@
 
       <div class="panel-recapitulatif-total">
           <p style="color: black; font-size: 25px; font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif">
-              <b>TOTAL :  €</b>
+              <b>TOTAL : {{ tarifTotal }} €</b>
           </p>
       </div>
     </div>
@@ -124,11 +126,17 @@ export default {
       }
     },
     methods: {
+      getPickupAddressUser() {
+        return this.$store.getters.getPickupAddressUser;
+      },
+      getDestinationAddressUser() {
+        return this.$store.getters.getDestinationAddressUser;
+      },
       getTypeDemenagementUser() {
         return this.$store.getters.getTypeDemenagementUser;
       },
       getTailleLogementUser() {
-        return this.$store.getters.getTailleLogementUser;
+        return this.$store.getters.getTailleLogementUser.title;
       },
       getDureePrestationUser() {
         return this.$store.getters.getDureePrestationUser;
@@ -138,12 +146,15 @@ export default {
       }
     },
     computed: {
-        isForfait () {
-          return this.$store.state.isForfait;
-        },
-        isInventaire () {
-          return this.$store.state.isInventaire;
-        }
+      isForfait () {
+        return this.$store.state.isForfait;
+      },
+      isInventaire () {
+        return this.$store.state.isInventaire;
+      },
+      tarifTotal() {
+        return this.$store.state.tarif;
+      }
     }
 }
 

@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="panel-info-commande">
-          <PanelInfoCommande :currentTarif="tarif" />
+          <PanelInfoCommande />
         </div>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
     </div>
@@ -55,14 +55,11 @@ export default {
     },
 
     returnPageTypeDemenagement() {
+      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
       this.$parent.$options.methods.returnPageTypeDemenagement();
     }
   },
-  computed: {
-    tarif() {
-      return this.$store.state.tarif;
-    }
-  }
+
 }
 
 </script>

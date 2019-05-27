@@ -155,17 +155,6 @@ export default {
         inventaire: this.$store.getters.getInventaireUser
       }
     },
-    computed: {
-        isForfait () {
-          return this.$store.state.isForfait;
-        },
-        isInventaire () {
-          return this.$store.state.isInventaire;
-        }
-    },
-    props: {
-      currentTarif: Number,
-    },
     methods: {
       getPickupAddressUser() {
         return this.$store.getters.getPickupAddressUser;
@@ -180,7 +169,7 @@ export default {
         return this.$store.getters.getTypeDemenagementUser;
       },
       getTailleLogementUser() {
-        return this.$store.getters.getTailleLogementUser;
+        return this.$store.getters.getTailleLogementUser.title;
       },
       getDureePrestationUser() {
         return this.$store.getters.getDureePrestationUser;
@@ -188,7 +177,18 @@ export default {
       getDateDemenagementUser() {
         return this.$store.getters.getDateDemenagementUser;
       }
-    }
+    },
+    computed: {
+      isForfait () {
+        return this.$store.state.isForfait;
+      },
+      isInventaire () {
+        return this.$store.state.isInventaire;
+      },
+      currentTarif() {
+        return this.$store.state.tarif;
+      }
+    },
 }
 
 </script>

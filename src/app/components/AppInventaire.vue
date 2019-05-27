@@ -1,12 +1,15 @@
 <template>
     <div id="app-inventaire">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Créez votre inventaire : </h1>
-        <PanelInventaire class="panel-inventaire"></PanelInventaire>
-        <div class="panel-info-commande">
-          <PanelInfoCommande :currentTarif="tarif" />
-        </div>
-        <ButtonSuivant id="button-suivant" :onClick="openPageDemontage" v-bind:class="{ 'disableButton': inventaire.length == 0 }"></ButtonSuivant>
-        <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
+      <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Créez votre inventaire : </h1>
+      <div id="panel-inv" class="container">
+        <PanelInventaire></PanelInventaire>
+      </div>
+      <div class="panel-info-commande">
+        <PanelInfoCommande />
+      </div>
+      <ButtonSuivant id="button-suivant" :onClick="openPageDemontage" v-bind:class="{ 'disableButton': inventaire.length == 0 }"></ButtonSuivant>
+      <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
+
     </div>
 </template>
 
@@ -36,14 +39,11 @@ export default {
       this.$parent.$options.methods.openPageDemontage();
     },
     returnPageTypeDemenagement() {
+      this.$store.commit('emptyInventaire');
+      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
       this.$parent.$options.methods.returnPageTypeDemenagement();
     }
   },
-  computed: {
-    tarif() {
-      return this.$store.state.tarif;
-    }
-  }
 }
 
 </script>

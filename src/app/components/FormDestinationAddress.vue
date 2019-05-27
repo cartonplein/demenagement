@@ -111,7 +111,7 @@ export default {
           choiceDestinationCave: '',
           errorDestinationAdresse: false,
 
-          isAddressAvailable: false
+          //isAddressAvailable: false
         };
     },
     components: {
@@ -122,9 +122,6 @@ export default {
         getDestinationAddressData (addressData, placeResultData, id) {
           this.$parent.$options.methods.updateDestination(addressData, placeResultData, id);
           this.inputDestinationAddress = placeResultData.formatted_address;
-          if(this.$parent.getAvailablePostalCodes().includes(addressData.postal_code)) {
-            this.isAddressAvailable = true;
-          }
           this.isFormCompleted();
         },
 
@@ -140,7 +137,6 @@ export default {
           this.$refs.destinationAddress.clear();
           this.$parent.$options.methods.initializeDestinationAddress();
           this.inputDestinationAddress = '';
-          this.isAddressAvailable = false;
           this.isFormCompleted();
         },
 
@@ -164,6 +160,18 @@ export default {
             this.$parent.setDestinationAddressCompleted(true);
           }
         }
+    },
+    watch: {
+      inputDestinationAddress: function() {
+        if(this.inputDestinationAddress == '') {
+          this.$store.commit('setAddressAvailable', false);
+        }
+      }
+    },
+    computed: {
+      isAddressAvailable() {
+        return this.$store.state.isAddressAvailable;
+      }
     }
 }
 

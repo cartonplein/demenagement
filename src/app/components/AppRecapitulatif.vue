@@ -1,11 +1,13 @@
 <template>
     <div id="app-recapitulatif">
-      <div  v-bind:class="{ 'backgroundDisabled': errorForm }">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Récapitulatif de votre commande : </h1>
-        <PanelRecapitulatif class="panel-recapitulatif"></PanelRecapitulatif>
+      <div v-bind:class="{ 'backgroundDisabled': errorForm }">
+        <div class="container">
+          <!--<div v-bind:class="{ 'backgroundDisabled': errorForm }">-->
+          <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Récapitulatif de votre commande : </h1>
+          <PanelRecapitulatif class="panel-recapitulatif"></PanelRecapitulatif>
+        </div>
         <FormContact class="panel-form-contact" ref="formContact"></FormContact>
-        <ButtonFinaliser id="button-finaliser" :onClick="finaliserCommande"
-          v-bind:class="{ 'disableButton': false }">
+        <ButtonFinaliser id="button-finaliser" :onClick="finaliserCommande" v-bind:class="{ 'disableButton': false }">
         </ButtonFinaliser>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageOptions"></ButtonPrecedent>
       </div>
@@ -15,7 +17,9 @@
         <b>Ce(s) champ(s) est/sont obligatoire(s) :</b><br/>
         {{ errorMsg }}
       </div>
+
     </div>
+
 </template>
 
 <script>
@@ -185,7 +189,7 @@ html, body {
   }
 
   .backgroundDisabled {
-    opacity: 0.3;
+    opacity: 0.2;
     pointer-events: none;
     //background-color: rgba(0, 0, 0, 0.5);
   }

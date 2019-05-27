@@ -45,13 +45,18 @@ export default {
   methods: {
     selectDureeDemiJournee() {
       this.$store.commit('setDureePrestation', this.dureeDemiJournee);
+      this.$store.commit('setTarif', this.$store.state.tarif * 1);
+      this.$store.commit('setTarifPrec', this.$store.state.tarif);
       this.$parent.$options.methods.openPageDateDemenagement();
     },
     selectDureeUneJournee() {
       this.$store.commit('setDureePrestation', this.dureeUneJournee);
+      this.$store.commit('setTarif', this.$store.state.tarif * 2);
+      this.$store.commit('setTarifPrec', this.$store.state.tarif);
       this.$parent.$options.methods.openPageDateDemenagement();
     },
     returnPageTailleLogement() {
+      this.$store.commit('setTarif', this.$store.state.tarif - this.$store.getters.getTailleLogementUser.tarif);
       this.$parent.$options.methods.returnPageTailleLogement();
     }
   }

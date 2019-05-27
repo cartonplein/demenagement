@@ -100,9 +100,10 @@ export default {
         else {
           document.getElementById('feasibility-trip-ko').style.display = "none";
           document.getElementById('iframe-map').src = this.getDirection(this.originCoor, this.destinationCoor);
+          store.commit('setAddressAvailable', true);
           this.calculateDistance(this.originCoor, this.destinationCoor).then( (distance) => {
             store.commit('setDistanceAdressesUser', distance);
-            store.commit('setTarif', this.calculateTarifByDistance(distance.value));
+            store.commit('setTarifAddresses', store.state.tarif + this.calculateTarifByDistance(distance.value));
           });
         }
       }
@@ -172,6 +173,7 @@ export default {
 
     openPageTypeDemenagement() {
       this.submitFormAddress();
+      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
       this.$parent.$options.methods.openPageTypeDemenagement();
     }
   },

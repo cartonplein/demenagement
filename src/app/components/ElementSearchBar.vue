@@ -11,6 +11,7 @@ export default {
     props: ['element'],
     methods: {
       addElementInInventaire(element) {
+        this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
         this.$store.commit('addElementInInventaire', element);
       }
     }

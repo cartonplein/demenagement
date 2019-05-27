@@ -3,9 +3,9 @@
       <div class="element-name has-text-centered has-text-black" style="margin-top: 5px"><b>{{ element.name }}</b></div>
       <img id="element-image" :src="viewElementImage(element)" @click="displayElementImage(element)"/>
       <label for="qteElement" style="color: black">Quantité à démonter :</label>
-      <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': quantiteElement == 0 }"><b>-</b></button>
-      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model="quantiteElement">
-      <button class="btn-plus" @click="increaseElementQuantity(element)" v-bind:class="{ 'disableButton': quantiteElement == element.quantity }"><b>+</b></button>
+      <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantityDemonter == 0 }"><b>-</b></button>
+      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model.number="element.quantityDemonter">
+      <button class="btn-plus" @click="increaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantityDemonter == element.quantity }"><b>+</b></button>
 
     </div>
 </template>
@@ -15,25 +15,18 @@
 export default {
     name: 'PanelElementDemontage',
     props: ['element'],
-    data () {
-      return {
-        quantiteElement: 0
-      }
-    },
     methods: {
       updateElementQuantityDemonter(element, quantity) {
         let elementAndQuantity = [element, quantity];
         this.$store.commit('updateElementQuantityDemonter', elementAndQuantity);
       },
       increaseElementQuantity(element) {
-        this.quantiteElement++;
-        this.updateElementQuantityDemonter(element, this.quantiteElement);
-        return this.quantiteElement;
+        element.quantityDemonter++;
+        this.$store.commit('setTarif', this.$store.state.tarif + element.tarif*0.5);
       },
       decreaseElementQuantity(element) {
-        this.quantiteElement--;
-        this.updateElementQuantityDemonter(element, this.quantiteElement);
-        return this.quantiteElement;
+        element.quantityDemonter--;
+        this.$store.commit('setTarif', this.$store.state.tarif - element.tarif*0.5);
       },
       viewElementImage(element) {
         return element.image;

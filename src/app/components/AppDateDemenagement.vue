@@ -26,12 +26,6 @@ export default {
       isPageDateDemenagement: true
     }
   },
-  computed: {
-    getSelectedDay() {
-      return this.$store.getters.getSelectedDay().number;
-      //v-bind:class="{ 'disableButton': getSelectedDay === '' }"
-    }
-  },
   components: {
     PanelDateDemenagement,
     PanelInfoCommande,
@@ -43,6 +37,8 @@ export default {
       this.$parent.$options.methods.openPageOptions();
     },
     returnPageBeforeDateDemenagement() {
+      this.$store.commit('unselectAllDays');
+      //this.$store.commit('setTarifPrecDate', 0);
       this.$parent.$options.methods.returnPageBeforeDateDemenagement();
     }
   }

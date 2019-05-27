@@ -1,11 +1,13 @@
 <template>
     <div id="app-demontage">
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Vos meubles, on les démonte ou pas ?  </h1>
-        <div class="panel-demontage">
-          <div class="columns is-multiline">
-            <PanelElementDemontage id="panel-element-demontage" v-for="element in inventaire"
-              :key="element.id"
-              :element="element" />
+        <div id="panel-dem" class="container">
+          <div id="panel-demontage">
+            <div class="columns is-multiline">
+              <PanelElementDemontage id="panel-element-demontage" v-for="element in inventaire"
+                :key="element.id"
+                :element="element" />
+            </div>
           </div>
         </div>
         <div class="panel-info-commande">
@@ -39,6 +41,7 @@ export default {
   },
   methods: {
     openPageDateDemenagement() {
+      this.$store.commit('setTarifPrec', this.$store.state.tarif);
       this.$parent.$options.methods.openPageDateDemenagement();
     },
     returnPageInventaire() {
@@ -67,20 +70,22 @@ html, body {
   border-top: 1px solid lightgray;
   position: relative;
 
-  #app-demontage .panel-demontage {
-    background: #E85029;
-    opacity: 0.95;
-    position: absolute;
-    border: 2px solid black;
-    left: 0;
-    bottom: 150px;
-    width: 700px;
-    max-width: 700px;
-    height: 400px;
-    max-height: 400px;
-    overflow-y: scroll;
-    scroll-behavior: smooth;
-    padding: 15px;
+  #panel-dem {
+
+    #panel-demontage {
+      opacity: 0.95;
+      background: #E85029;
+      margin-top: 10px;
+      padding: 15px;
+      border: 2px solid black;
+      width: 760px;
+      max-width: 760px;
+      height: 450px;
+      max-height: 450px;
+      width: 100%;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+    }
   }
 
   #app-demontage .panel-info-commande {

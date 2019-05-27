@@ -14,7 +14,7 @@
           </div>
         </div>
         <div class="panel-info-commande">
-          <PanelInfoCommande :currentTarif="tarif" />
+          <PanelInfoCommande />
         </div>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageAddress"></ButtonPrecedent>
     </div>
@@ -54,11 +54,6 @@ export default {
     returnPageAddress() {
       this.$parent.$options.methods.returnPageAddress();
     },
-  },
-  computed: {
-    tarif() {
-      return this.$store.state.tarif;
-    }
   }
 }
 </script>

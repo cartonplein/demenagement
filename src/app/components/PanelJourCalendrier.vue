@@ -73,10 +73,9 @@ export default {
     methods: {
       selectDay() {
         this.$store.commit('unselectAllDays');
-        //this.day.selected = !this.day.selected;
         this.$store.commit('setSelectedDay', this.dayNumber);
-        let date = ""+this.day.number+" "+this.$parent.getActiveMonth().name+" "+this.$parent.currentYear+"";
-        this.$store.commit('setDateDemenagement', date);
+        this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif);
+        this.$store.commit('setDateDemenagement', ""+this.day.number+" "+this.$parent.getActiveMonth().name+" "+this.$parent.currentYear+"");
       }
 
     },

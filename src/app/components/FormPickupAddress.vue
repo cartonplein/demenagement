@@ -107,8 +107,6 @@ export default {
       return {
         inputPickupAddress: '',
         errorPickupAdresse: false,
-
-        isAddressAvailable: false
       }
     },
     components: {
@@ -119,9 +117,6 @@ export default {
         getPickupAddressData (addressData, placeResultData, id) {
           this.$parent.$options.methods.updateOrigin(addressData, placeResultData, id);
           this.inputPickupAddress = placeResultData.formatted_address;
-          if(this.$parent.getAvailablePostalCodes().includes(addressData.postal_code)) {
-            this.isAddressAvailable = true;
-          }
           this.isFormCompleted();
         },
 
@@ -137,10 +132,9 @@ export default {
           this.$refs.pickupAddress.clear();
           this.$parent.$options.methods.initializePickupAddress();
           this.inputPickupAddress = '';
-          this.isAddressAvailable = false;
+
           this.isFormCompleted();
         },
-
         submitFormPickupAddress () {
             console.log(this.$refs.pickupSurface.value);
             this.$store.commit('setPickupAddressUser', [this.inputPickupAddress, this.$refs.pickupSurface.value, this.$refs.pickupEtage.value, this.$refs.pickupAscenseur.value, this.$refs.pickupCave.value]);
@@ -159,7 +153,19 @@ export default {
           else {
             this.$parent.setPickupAddressCompleted(true);
           }
+        },
+    },
+    watch: {
+      inputPickupAddress: function() {
+        if(this.inputPickupAddress == '') {
+          this.$store.commit('setAddressAvailable', false);
         }
+      }
+    },
+    computed: {
+      isAddressAvailable() {
+        return this.$store.state.isAddressAvailable;
+      }
     }
 }
 
