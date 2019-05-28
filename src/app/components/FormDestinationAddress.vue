@@ -135,6 +135,7 @@ export default {
             this.errorDestinationAdresse = false;
           }
           this.$refs.destinationAddress.clear();
+          this.$store.commit('setTarifAddresses', 0);
           this.$parent.$options.methods.initializeDestinationAddress();
           this.inputDestinationAddress = '';
           this.isFormCompleted();

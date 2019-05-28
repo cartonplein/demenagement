@@ -17,18 +17,20 @@ export const store = new Vuex.Store({
       choicesUser: {
         pickupAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
         destinationAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
+        direction: '',
         distance: { text: '', value: null },
         typeDemenagement: '',
-        tailleLogement: { title: '', tarif: null },
-        dureePrestation: '',
+        tailleLogement: null,
+        dureePrestation: null,
         inventaire: [],
         dateDemenagement: '',
-        options: [{name: 'option1', quantity: 1}],
-        prix: 0,
-        contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: '' }
+        options: [],
+        contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: [] },
+        orderDateTime: ''
       },
       tarifAddresses: 0,
       tarifPrec: 0,
+      tarifOptions: 0,
       tarif: 0
     },
 
@@ -52,6 +54,10 @@ export const store = new Vuex.Store({
 
       getTarif() {
         return store.state.tarif;
+      },
+
+      getTarifAddresses() {
+        return store.state.tarifAddresses;
       },
 
       getPickupAddressUser() {
@@ -90,25 +96,7 @@ export const store = new Vuex.Store({
         return store.state.choicesUser.options;
       },
     },
-/*
-    submitFormPickupAddress (pickupAdresse, pickupSurface, pickupEtage, pickupAscenseur, pickupCave) {
 
-    },
-
-    submitFormDestinationAddress (destinationAdresse, destinationSurface, destinationEtage, destinationAscenseur, destinationCave) {
-
-    },
-
-    getSelectedSizeLogement () {
-      let seedSize = this.state.seedSize;
-      var selectedSize = { title: '' };
-      seedSize.orderByChild('selected').equalTo(true).on('child_added', function(snapshot) {
-        var data = snapshot.val();
-        selectedSize.title = data.title;
-      });
-      return selectedSize;
-    },
-    */
 
     mutations: {
 
@@ -130,6 +118,10 @@ export const store = new Vuex.Store({
         state.choicesUser.destinationAddress.etage = destinationAddress[2];
         state.choicesUser.destinationAddress.ascenseur = destinationAddress[3];
         state.choicesUser.destinationAddress.cave = destinationAddress[4];
+      },
+
+      setDirection (state, direction) {
+        state.choicesUser.direction = direction;
       },
 
       setTypeForfait(state, isForfait) {
@@ -184,7 +176,6 @@ export const store = new Vuex.Store({
       },
 
       setDistanceAdressesUser(state, distance) {
-        console.log(distance);
         state.choicesUser.distance = distance;
       },
 
@@ -198,17 +189,14 @@ export const store = new Vuex.Store({
 
       setTypeDemenagement (state, typeDemenagement) {
         state.choicesUser.typeDemenagement = typeDemenagement;
-        console.log(state.choicesUser.typeDemenagement);
       },
 
       setTailleLogement (state, tailleLogement) {
         state.choicesUser.tailleLogement = tailleLogement;
-        console.log(state.choicesUser.tailleLogement);
       },
 
       setDureePrestation (state, dureePrestation) {
         state.choicesUser.dureePrestation = dureePrestation;
-        console.log(state.choicesUser.dureePrestation);
       },
 
       addElementInInventaire(state, element) {
@@ -231,38 +219,53 @@ export const store = new Vuex.Store({
 
       setDateDemenagement (state, dateDemenagement) {
         state.choicesUser.dateDemenagement = dateDemenagement;
-        console.log(this.state.choicesUser.dateDemenagement);
       },
+
+      addOption(state, element) {
+        state.choicesUser.options.push({ number: element.number, name: element.name, tarif: element.tarif, quantity: 1});
+      },
+
+      setTarifOptions (state, tarif) {
+        state.tarifOptions = tarif;
+      },
+
+      deleteOption(state, element) {
+        state.choicesUser.options.splice(state.choicesUser.options.indexOf(element), 1);
+      },
+
+      emptyOptions(state) {
+        for(var i=0; i<state.choicesUser.options.length; i++) {
+          state.choicesUser.options.splice(state.choicesUser.options[i], 1);
+        }
+      },
+
+      saveContactUser(state, contact) {
+        state.choicesUser.contact.prenom = contact[0];
+        state.choicesUser.contact.nom = contact[1];
+        state.choicesUser.contact.telephone = contact[2];
+        state.choicesUser.contact.email = contact[3];
+        state.choicesUser.contact.reponseEnquete = contact[4];
+      },
+
+      setOrderDateTime(state, orderDateTime) {
+        state.choicesUser.orderDateTime = orderDateTime;
+      }
 
     },
 
     actions: {
-
-    },
-
-
-
-    /* //object to array
-    getUnavailableDates() {
-      var dates = [];
-      let seedUnavailableDates = this.state.seedUnavailableDates;
-      seedUnavailableDates.orderByChild('day').on('child_added', function(snapshot) {
-        var date = snapshot.val();
-        dates.push({
-          day: date.day,
-          month: date.month,
-          year: date.year
-        });
-      });
-      console.log(dates);
-
-    },*/
-
-
-    finaliserCommande () {
-
+      resetChoicesUser(context) {
+        context.commit('setTypeDemenagement', '');
+        context.commit('setTailleLogement', null);
+        context.commit('setDureePrestation', null);
+        context.commit('emptyInventaire');
+        context.commit('setDateDemenagement', '');
+        context.commit('emptyOptions');
+        context.commit('setTarif', context.getters.getTarifAddresses);
+        context.commit('setTarifPrec', 0);
+        context.commit('setTarifOptions', 0);
+      }
     }
-
 
 
 });

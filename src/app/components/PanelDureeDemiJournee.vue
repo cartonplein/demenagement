@@ -24,7 +24,7 @@ export default {
 <style lang="scss" scoped>
 
 #panel-duree-demi-journee {
-  background: #f6b26bff;
+  background: #FFF;
   opacity: 0.95;
   border: 1px solid black;
   border-radius: 10px;
@@ -38,12 +38,8 @@ export default {
   margin-left: 7px;
   overflow: hidden;
   &:hover {
-    background: darken(#e69138ff,1%);
+    transform: translateY(5px);
     cursor: pointer;
-  }
-  &:active {
-    background-color: #e69138ff;
-    transform: translateY(4px);
   }
 }
 </style>

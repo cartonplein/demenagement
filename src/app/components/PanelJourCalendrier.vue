@@ -8,20 +8,52 @@
                       'styleSelectedToday': (day.active && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear) && day.selected,
                       'styleInactive': day.number < this.$parent.getActiveDay().number && day.currentMonth >= this.$parent.getActiveMonth().number && day.currentYear >= this.$parent.currentYear,
                       'styleSelectedWeekend' : (day.name == 'Sam' || day.name == 'Dim') && day.selected && !(day.active && day.currentMonth == this.$parent.getActiveMonth().number && day.currentYear == this.$parent.currentYear),
-                      'styleReservedDate': this.$parent.reservedDates &&
+                      'styleReservedDate': (this.$parent.reservedDates &&
                                   this.$parent.reservedDates[this.$parent.getActiveMonth().number] &&
                                   this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number] &&
-                                  this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear),
-                      'styleClosedDate' : this.$parent.closedDates &&
+                                  this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear)) &&
+                                  !(day.number < this.$parent.getActiveDay().number &&
+                                    day.currentMonth >= this.$parent.getActiveMonth().number &&
+                                    day.currentYear >= this.$parent.currentYear),
+                      'styleClosedDate' : (this.$parent.closedDates &&
                                 this.$parent.closedDates[this.$parent.getActiveMonth().number] &&
                                 this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number] &&
-                                this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear),
+                                this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear)) &&
+                                !(day.number < this.$parent.getActiveDay().number &&
+                                  day.currentMonth >= this.$parent.getActiveMonth().number &&
+                                  day.currentYear >= this.$parent.currentYear),
                       }"
       >
       <div class="day-banner has-text-justified has-text-black"><b>{{ day.number }}</b></div>
       <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
                                                         day.currentMonth >= this.$parent.getActiveMonth().number &&
-                                                        day.currentYear >= this.$parent.currentYear)"><b>{{ tarifDate }}€</b></span>
+                                                        day.currentYear >= this.$parent.currentYear) &&
+                                                        !((this.$parent.closedDates &&
+                                                           this.$parent.closedDates[this.$parent.getActiveMonth().number] &&
+                                                           this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number] &&
+                                                           this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear))
+                                                          ||
+                                                         (this.$parent.reservedDates &&
+                                                           this.$parent.reservedDates[this.$parent.getActiveMonth().number] &&
+                                                           this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number] &&
+                                                           this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear))
+                                                         )"><b>{{ tarifDate }}€</b></span>
+      <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
+                                                        day.currentMonth >= this.$parent.getActiveMonth().number &&
+                                                        day.currentYear >= this.$parent.currentYear) &&
+                                                        (this.$parent.closedDates &&
+                                                           this.$parent.closedDates[this.$parent.getActiveMonth().number] &&
+                                                           this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number] &&
+                                                           this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear)
+                                                        )"><b>FERMÉ</b></span>
+      <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
+                                                        day.currentMonth >= this.$parent.getActiveMonth().number &&
+                                                        day.currentYear >= this.$parent.currentYear) &&
+                                                        (this.$parent.closedDates &&
+                                                          this.$parent.reservedDates[this.$parent.getActiveMonth().number] &&
+                                                          this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number] &&
+                                                          this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear)
+                                                        )"><b>RÉSERVÉ</b></span>
     </div>
 </template>
 
@@ -74,7 +106,7 @@ export default {
       selectDay() {
         this.$store.commit('unselectAllDays');
         this.$store.commit('setSelectedDay', this.dayNumber);
-        this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif);
+        this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif + this.$store.state.tarifOptions);
         this.$store.commit('setDateDemenagement', ""+this.day.number+" "+this.$parent.getActiveMonth().name+" "+this.$parent.currentYear+"");
       }
 
@@ -111,8 +143,8 @@ export default {
     margin-right: auto;
     text-align: center;
     vertical-align: middle;
-    line-height: 20px;
-    font-size: 20px;
+    line-height: 16px;
+    font-size: 16px;
   }
 
   &:hover {

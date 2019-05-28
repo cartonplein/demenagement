@@ -99,11 +99,12 @@ export default {
         }
         else {
           document.getElementById('feasibility-trip-ko').style.display = "none";
+          store.commit('setDirection', this.getDirection(this.originCoor, this.destinationCoor));
           document.getElementById('iframe-map').src = this.getDirection(this.originCoor, this.destinationCoor);
           store.commit('setAddressAvailable', true);
           this.calculateDistance(this.originCoor, this.destinationCoor).then( (distance) => {
             store.commit('setDistanceAdressesUser', distance);
-            store.commit('setTarifAddresses', store.state.tarif + this.calculateTarifByDistance(distance.value));
+            store.commit('setTarifAddresses', store.state.tarifAddresses + this.calculateTarifByDistance(distance.value));
           });
         }
       }

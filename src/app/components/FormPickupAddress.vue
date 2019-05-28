@@ -130,9 +130,9 @@ export default {
             this.errorPickupAdresse = false;
           }
           this.$refs.pickupAddress.clear();
+          this.$store.commit('setTarifAddresses', 0);
           this.$parent.$options.methods.initializePickupAddress();
           this.inputPickupAddress = '';
-
           this.isFormCompleted();
         },
         submitFormPickupAddress () {

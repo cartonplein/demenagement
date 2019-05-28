@@ -7,7 +7,7 @@
         <div class="panel-info-commande">
           <PanelInfoCommande />
         </div>
-        <ButtonSuivant id="button-suivant" :onClick="openPageOptions"></ButtonSuivant>
+        <ButtonSuivant id="button-suivant" :onClick="openPageOptions" v-bind:class="{ 'disableButton': this.$store.getters.getDateDemenagementUser == '' }"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageBeforeDateDemenagement"></ButtonPrecedent>
     </div>
 </template>
@@ -38,6 +38,9 @@ export default {
     },
     returnPageBeforeDateDemenagement() {
       this.$store.commit('unselectAllDays');
+      this.$store.commit('setDateDemenagement', '');
+      this.$store.commit('emptyOptions');
+      this.$store.commit('setTarifOptions', 0);
       //this.$store.commit('setTarifPrecDate', 0);
       this.$parent.$options.methods.returnPageBeforeDateDemenagement();
     }

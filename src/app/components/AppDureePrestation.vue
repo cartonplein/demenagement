@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       isPageDureePrestation: true,
-      dureeDemiJournee: 'Démi-journée',
+      dureeDemiJournee: 'Demi-journée',
       dureeUneJournee: 'Une journée',
     }
   },
@@ -56,7 +56,7 @@ export default {
       this.$parent.$options.methods.openPageDateDemenagement();
     },
     returnPageTailleLogement() {
-      this.$store.commit('setTarif', this.$store.state.tarif - this.$store.getters.getTailleLogementUser.tarif);
+      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
       this.$parent.$options.methods.returnPageTailleLogement();
     }
   }

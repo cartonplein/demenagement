@@ -1,0 +1,38 @@
+
+{
+    "1": {
+      "number": 1,
+      "name": "PACK DÉMÉNAGEMENT 10m²",
+      "image": "",
+      "tarif": 16.5,
+      "details": "Parfait pour un studio !"
+    },
+    "2": {
+      "number": 2,
+      "name": "PACK DÉMÉNAGEMENT 20m²",
+      "image": "",
+      "tarif": 39,
+      "details": "Le juste nécessaire pour un F1 !"
+    },
+    "3": {
+      "number": 3,
+      "name": "PACK DÉMÉNAGEMENT 30m²",
+      "image": "",
+      "tarif": 69,
+      "details": "Le juste nécessaire pour un F2 !"
+    },
+    "4": {
+      "number": 4,
+      "name": "PACK DÉMÉNAGEMENT 40m²",
+      "image": "",
+      "tarif": 80,
+      "details": "Le juste nécessaire pour un F3 !"
+    },
+    "5": {
+      "number": 5,
+      "name": "PACK DÉMÉNAGEMENT 50m²",
+      "image": "",
+      "tarif": 112.5,
+      "details": "Le juste nécessaire pour un palace parisien !"
+    }
+}

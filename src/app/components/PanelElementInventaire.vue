@@ -2,9 +2,8 @@
     <div id="panel-element-inventaire">
       <img id="element-image" :src="viewElementImage(element)" @click="displayElementImage(element)"/>
       <div class="element-name has-text-justified has-text-black"><b>{{ element.name }} ({{ element.volume }}m³)</b></div>
-      <label for="qteElement" style="color: black; font-size: 15px">Qté.</label>
       <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantity == 1 }"><b>-</b></button>
-      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model.number="element.quantity">
+      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model.number="element.quantity" disabled>
       <button class="btn-plus" @click="increaseElementQuantity(element)"><b>+</b></button>
       <i class="fa fa-trash fa-lg" @click="deleteElementFromInventaire(element)"></i>
     </div>
@@ -79,12 +78,6 @@ export default {
     input[type=number]::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
-    }
-
-    label[for="qteElement"] {
-      position: absolute;
-      right: 140px;
-      bottom: 21.5px;
     }
 
     .element-name {

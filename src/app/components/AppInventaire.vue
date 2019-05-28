@@ -39,8 +39,7 @@ export default {
       this.$parent.$options.methods.openPageDemontage();
     },
     returnPageTypeDemenagement() {
-      this.$store.commit('emptyInventaire');
-      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
+      this.$store.dispatch('resetChoicesUser');
       this.$parent.$options.methods.returnPageTypeDemenagement();
     }
   },

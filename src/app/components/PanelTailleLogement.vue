@@ -23,7 +23,7 @@ export default {
     methods: {
       selectSize() {
         this.$parent.selectSizeLogement(this.sizeId);
-        this.$store.commit('setTailleLogement', this.size);
+        this.$store.commit('setTailleLogement', this.size.title);
         this.$store.commit('setTarif', this.$store.state.tarif + this.size.tarif);
         this.$parent.$parent.$options.methods.openPageDureePrestation();
       }
@@ -36,7 +36,7 @@ export default {
 <style lang="scss" scoped>
 
 #panel-taille-logement {
-  background: #f6b26bff;
+  background: #FFF;
   opacity: 0.95;
   border: 1px solid black;
   border-radius: 10px;
@@ -52,12 +52,8 @@ export default {
   max-width: 150px;
 
   &:hover {
-    background: darken(#e69138ff,1%);
+    transform: translateY(5px);
     cursor: pointer;
-  }
-  &:active {
-    background-color: #e69138ff;
-    transform: translateY(4px);
   }
 }
 </style>

@@ -1,11 +1,10 @@
 <template>
     <div id="app">
-
-      <div id="app-address" >
+      <div id="app-address">
           <LogoCartonPlein />
           <AppAddress />
       </div>
-      <div id="app-type-demenagement"> <!--style="display:none"-->
+      <div id="app-type-demenagement" style="display:none"> <!--style="display:none"-->
           <AppTypeDemenagement />
       </div>
       <div id="app-taille-logement" style="display:none">
@@ -29,6 +28,9 @@
       <div id="app-recapitulatif" style="display:none">
           <AppRecapitulatif />
       </div>
+      <div id="payment" style="display:none">
+          <Payment />
+      </div>
     </div>
 
 </template>
@@ -45,6 +47,7 @@ import AppDemontage from './components/AppDemontage.vue';
 import AppDateDemenagement from './components/AppDateDemenagement.vue';
 import AppOptions from './components/AppOptions.vue';
 import AppRecapitulatif from './components/AppRecapitulatif.vue';
+import Payment from './components/Payment.vue';
 import { store } from './store.js'
 
 export default {
@@ -59,7 +62,8 @@ export default {
     AppDemontage,
     AppDateDemenagement,
     AppOptions,
-    AppRecapitulatif
+    AppRecapitulatif,
+    Payment
   },
   methods: {
 
@@ -179,6 +183,10 @@ export default {
 
     returnPageOptions () {
       this.returnPreviousPage("app-recapitulatif", "app-options");
+    },
+
+    openPaymentPage () {
+      this.openNextPage("app-recapitulatif", "payment");
     }
 
   }
@@ -190,7 +198,6 @@ export default {
 body {
   height: 100%;
   overflow-x: hidden;
-
 }
 
 html {

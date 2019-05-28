@@ -24,6 +24,10 @@
               </td>
             </tr>
             <tr>
+              <th scope="row">Votre distance de déménagement</th>
+              <td>{{ getDistanceAdressesUser().text }}</td>
+            </tr>
+            <tr>
               <th scope="row">Votre type de déménagement</th>
               <td>{{ getTypeDemenagementUser() }}</td>
             </tr>
@@ -132,11 +136,14 @@ export default {
       getDestinationAddressUser() {
         return this.$store.getters.getDestinationAddressUser;
       },
+      getDistanceAdressesUser() {
+        return this.$store.getters.getDistanceAdressesUser;
+      },
       getTypeDemenagementUser() {
         return this.$store.getters.getTypeDemenagementUser;
       },
       getTailleLogementUser() {
-        return this.$store.getters.getTailleLogementUser.title;
+        return this.$store.getters.getTailleLogementUser;
       },
       getDureePrestationUser() {
         return this.$store.getters.getDureePrestationUser;

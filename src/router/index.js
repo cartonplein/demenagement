@@ -19,7 +19,7 @@ const router = new Router({
     routes: [
         {
             path: '*',
-            redirect: '/dashboard'
+            redirect: '/addresses'
         },
         {
             path: '/addresses',
@@ -31,22 +31,6 @@ const router = new Router({
             name: 'AppTypeDemenagement',
             component: AppTypeDemenagement
         },
-        {
-            path: '/dashboard',
-            name: 'Dashboard',
-            component: Dashboard,
-            meta: {
-                requiresAuth: true
-            }
-        },
-        {
-            path: '/settings',
-            name: 'Settings',
-            component: Settings,
-            meta: {
-                requiresAuth: true
-            }
-        }
     ]
 });
 

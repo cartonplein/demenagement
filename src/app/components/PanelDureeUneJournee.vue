@@ -26,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 
 #panel-duree-une-journee {
-  background: #ffd966ff;
+  background: #FFF;
   opacity: 0.95;
   border: 1px solid black;
   border-radius: 10px;
@@ -41,12 +41,8 @@ export default {
   overflow: hidden;
 
   &:hover {
-    background: darken(#f1c232ff,1%);
+    transform: translateY(5px);
     cursor: pointer;
-  }
-  &:active {
-    background-color: #f1c232ff;
-    transform: translateY(4px);
   }
 }
 </style>

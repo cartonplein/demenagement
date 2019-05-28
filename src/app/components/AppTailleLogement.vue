@@ -55,7 +55,7 @@ export default {
     },
 
     returnPageTypeDemenagement() {
-      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
+      this.$store.dispatch('resetChoicesUser');
       this.$parent.$options.methods.returnPageTypeDemenagement();
     }
   },

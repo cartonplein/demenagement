@@ -40,29 +40,29 @@
         </div>
 
         <div class="form-contact-title-cp">
-            <p style="color: black; font-size: 15px">
-                <b>Enquête: Comment avez-vous connu Carton Plein ?<span style="color:red">*</span></b>
-            </p>
+          <p style="color: black; font-size: 15px">
+            <b>Enquête: Comment avez-vous connu Carton Plein ?<span style="color:red">*</span></b>
+          </p>
         </div>
 
         <div class="form-contact-cp-reponse">
           <label for="one" style="color: black; font-size: 12px">
-            <input type="checkbox" id="one" v-model="inputReponseEnqueteOne" ref="reponseEnqueteOne" /> "Un/Une proche m'en a parlé"<br>
+            <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteOne" ref="reponseEnqueteOne" value="Un/Une proche m'en a parlé"/> "Un/Une proche m'en a parlé"<br>
           </label>
           <label for="two" style="color: black; font-size: 12px">
-            <input type="checkbox" id="two" v-model="inputReponseEnqueteTwo" ref="reponseEnqueteTwo" /> "J'ai vu passer vos remorques dans la rue"<br>
+            <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteTwo" ref="reponseEnqueteTwo" value="J'ai vu passer vos remorques dans la rue" /> "J'ai vu passer vos remorques dans la rue"<br>
           </label>
           <label for="three" style="color: black; font-size: 12px">
-            <input type="checkbox" id="three" v-model="inputReponseEnqueteThree" ref="reponseEnqueteThree" /> "J'ai entendu parler de vous par la presse"<br>
+            <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteThree" ref="reponseEnqueteThree" value="J'ai entendu parler de vous par la presse" /> "J'ai entendu parler de vous par la presse"<br>
           </label>
           <label for="four" style="color: black; font-size: 12px">
-            <input type="checkbox" id="four" v-model="inputReponseEnqueteFour" ref="reponseEnqueteFour" /> "J'ai vu une publication sur les réseaux sociaux"<br>
+            <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteFour" ref="reponseEnqueteFour" value="J'ai vu une publication sur les réseaux sociaux" /> "J'ai vu une publication sur les réseaux sociaux"<br>
           </label>
           <label for="five" style="color: black; font-size: 12px">
-            <input type="checkbox" id="five" v-model="inputReponseEnqueteFive" ref="reponseEnqueteFive" /> "En tapant déménagement sur mon moteur de recherche"<br>
+            <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteFive" ref="reponseEnqueteFive" value="En tapant déménagement sur mon moteur de recherche" /> "En tapant déménagement sur mon moteur de recherche"<br>
           </label>
           <label for="six" style="color: black; font-size: 12px">
-            <input type="checkbox" id="six" v-model="inputReponseEnqueteSix" ref="reponseEnqueteSix" /> "Autres"
+            <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteSix" ref="reponseEnqueteSix" value="Autres" /> "Autres"
           </label>
           <p style="color: red; font-size: 10px" v-if="errorReponseEnquete">
             Ce champ est obligatoire !
@@ -97,8 +97,17 @@ export default {
         }
     },
     methods: {
+      getCheckedResponses() {
+        var items = document.getElementsByName('input-response-enquete');
+        var selectedItems = [];
+        for(var i=0; i<items.length; i++){
+          if(items[i].type=='checkbox' && items[i].checked==true) {
+            selectedItems.push(items[i].value);
+          }
+        }
+        return selectedItems;
+      },
       submitContactInformation (inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail) {
-        //store.submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
         this.inputContactPrenom = '';
         this.inputContactNom = '';
         this.inputContactTelephone = '';

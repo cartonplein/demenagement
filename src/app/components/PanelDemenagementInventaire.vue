@@ -26,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 
 #panel-demenagement-inventaire {
-  background: #ffd966ff;
+  background: #FFF;
   opacity: 0.95;
   border: 1px solid black;
   border-radius: 10px;
@@ -36,12 +36,8 @@ export default {
   overflow: hidden;
 
   &:hover {
-    background: darken(#f1c232ff,1%);
+    transform: translateX(5px);
     cursor: pointer;
-  }
-  &:active {
-    background-color: #f1c232ff;
-    transform: translateY(4px);
   }
 }
 </style>

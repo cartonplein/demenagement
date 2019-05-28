@@ -4,7 +4,7 @@
       <img id="element-image" :src="viewElementImage(element)" @click="displayElementImage(element)"/>
       <label for="qteElement" style="color: black">Quantité à démonter :</label>
       <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantityDemonter == 0 }"><b>-</b></button>
-      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model.number="element.quantityDemonter">
+      <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model.number="element.quantityDemonter" disabled>
       <button class="btn-plus" @click="increaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantityDemonter == element.quantity }"><b>+</b></button>
 
     </div>

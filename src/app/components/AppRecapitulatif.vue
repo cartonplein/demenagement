@@ -91,7 +91,12 @@ export default {
         this.errorForm = true;
       }
       else {
-        this.$refs.formContact.$options.methods.submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
+        //console.log(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
+        let responsesEnquete = this.$refs.formContact.$options.methods.getCheckedResponses();
+        this.$store.commit('saveContactUser', [inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail, responsesEnquete]);
+        console.log(this.$store.state.choicesUser.contact);
+        this.$parent.$options.methods.openPaymentPage();
+        //this.$refs.formContact.$options.methods.submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
       }
       this.isNomEmpty = false;
       this.isPrenomEmpty = false;

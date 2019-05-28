@@ -1,10 +1,10 @@
 <template>
     <div id="app-options">
         <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez vos options : </h1>
-        <div id="panel-date-demenagement" class="container">
-              <div class="columns" style="width: 1000px; max-width: 850px">
-
-              </div>
+        <div id="panel-options" class="container">
+          <div class="columns" style="width: 1000px; max-width: 850px">
+            <PanelOptions />
+          </div>
         </div>
         <div class="panel-info-commande">
           <PanelInfoCommande />
@@ -16,6 +16,7 @@
 
 <script>
 
+import PanelOptions from './PanelOptions.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
 import ButtonPrecedent from './ButtonPrecedent.vue';
@@ -31,6 +32,7 @@ export default {
   methods: {
   },
   components: {
+    PanelOptions,
     PanelInfoCommande,
     ButtonSuivant,
     ButtonPrecedent
