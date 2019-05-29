@@ -38,7 +38,7 @@
                                                            this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number] &&
                                                            this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear))
                                                          )"><b>{{ tarifDate }}€</b></span>
-      <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
+      <span class="tarif-date" style="color: red" v-show="!(day.number < this.$parent.getActiveDay().number &&
                                                         day.currentMonth >= this.$parent.getActiveMonth().number &&
                                                         day.currentYear >= this.$parent.currentYear) &&
                                                         (this.$parent.closedDates &&
@@ -46,7 +46,7 @@
                                                            this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number] &&
                                                            this.$parent.closedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear)
                                                         )"><b>FERMÉ</b></span>
-      <span class="tarif-date has-text-black" v-show="!(day.number < this.$parent.getActiveDay().number &&
+      <span class="tarif-date" style="color: red" v-show="!(day.number < this.$parent.getActiveDay().number &&
                                                         day.currentMonth >= this.$parent.getActiveMonth().number &&
                                                         day.currentYear >= this.$parent.currentYear) &&
                                                         (this.$parent.closedDates &&
@@ -97,6 +97,9 @@ export default {
           if(snapshot.key == panelDay.$parent.getActiveMonth().number && snapshot.val().hasOwnProperty(panelDay.$parent.currentYear)) {
             if(snapshot.val() && snapshot.val()[panelDay.$parent.currentYear].hasOwnProperty(panelDay.day.number)) {
               panelDay.tarif = snapshot.val()[panelDay.$parent.currentYear][panelDay.day.number].tarif;
+              if(panelDay.day.selected) {
+                panelDay.$store.commit('setTarif', panelDay.$store.state.tarifPrec + panelDay.tarif + panelDay.$store.state.tarifOptions);
+              }
             }
           }
         });
@@ -204,12 +207,10 @@ export default {
 }
 
 .styleReservedDate {
-  background-color: #5A94B8;
   pointer-events: none;
 }
 
 .styleClosedDate {
-  background-color: #5AB897;
   pointer-events: none;
 }
 

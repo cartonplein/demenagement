@@ -22,11 +22,11 @@ export default {
       },
       increaseElementQuantity(element) {
         element.quantityDemonter++;
-        this.$store.commit('setTarif', this.$store.state.tarif + element.tarif*0.5);
+        this.$store.commit('setTarif', this.$store.state.tarif + element.tarif*0.25);
       },
       decreaseElementQuantity(element) {
         element.quantityDemonter--;
-        this.$store.commit('setTarif', this.$store.state.tarif - element.tarif*0.5);
+        this.$store.commit('setTarif', this.$store.state.tarif - element.tarif*0.25);
       },
       viewElementImage(element) {
         return element.image;

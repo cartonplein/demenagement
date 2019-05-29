@@ -163,6 +163,12 @@ export const store = new Vuex.Store({
         });
       },
 
+      unselectDay (state, dayNumber) {
+        state.seedDay.map((dayObj) => {
+          dayObj.number === dayNumber ? dayObj.selected = false : dayObj.selected = false;
+        });
+      },
+
       unselectAllDays (state) {
         state.seedDay.map((dayObj) => {
           dayObj.selected = false;
@@ -205,6 +211,22 @@ export const store = new Vuex.Store({
 
       deleteElementFromInventaire(state, element) {
         state.choicesUser.inventaire.splice(state.choicesUser.inventaire.indexOf(element), 1);
+      },
+
+      modifyQuantityElementInventaire(state, elementNumberAndQuantity) {
+        state.choicesUser.inventaire.map((elementObj) => {
+          if(elementObj.number === elementNumberAndQuantity[0]) {
+            elementObj.quantity = elementNumberAndQuantity[1];
+          }
+        });
+      },
+
+      modifyQuantityDemonterElementInventaire(state, elementNumberAndQuantity) {
+        state.choicesUser.inventaire.map((elementObj) => {
+          if(elementObj.number === elementNumberAndQuantity[0]) {
+            elementObj.quantityDemonter = elementNumberAndQuantity[1];
+          }
+        });
       },
 
       emptyInventaire(state) {

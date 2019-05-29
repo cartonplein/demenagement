@@ -1,7 +1,10 @@
 <template>
     <div id="panel-duree-une-journee" @click="onClick">
       <h1 style="color:black; font-size: 20px"><b>Formule une journée</b></h1>
-      <h2 style="color:black; font-size: 15px">Détails...</h2>
+      <p style="color:black; font-size: 15px">
+        <b>7 heures</b> </br>
+        Pour les deux pièces et les appartements jusqu'à 40m².
+      </p>
 
 
     </div>

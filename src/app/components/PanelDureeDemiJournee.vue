@@ -1,7 +1,10 @@
 <template>
     <div id="panel-duree-demi-journee" @click="onClick">
       <h1 style="color:black; font-size: 20px"><b>Formule demi-journée</b></h1>
-      <h2 style="color:black; font-size: 15px">Détails...</h2>
+      <p style="color:black; font-size: 15px">
+        <b>4 heures</b> </br>
+        Convient aux studios et petits appartements.
+      </p>
     </div>
 </template>
 

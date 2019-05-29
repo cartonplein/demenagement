@@ -10,10 +10,33 @@
 </template>
 
 <script>
+import { config } from '../../db/index.js';
+
+const fb = require('../../db/index.js');
 
 export default {
     name: 'PanelElementInventaire',
     props: ['element'],
+    mounted() {
+      let panelElementInventaire = this;
+      fb.inventaireRef.child('meubles').on('child_changed', function(snapshot) {
+        if(panelElementInventaire.$store.state.choicesUser.inventaire.includes(panelElementInventaire.element)) {
+          let oldElementTarif = panelElementInventaire.element.tarif;
+          let oldElementQuantity = panelElementInventaire.element.quantity;
+          let oldElementQuantityDemonter = panelElementInventaire.element.quantityDemonter;
+          panelElementInventaire.$store.commit('deleteElementFromInventaire', panelElementInventaire.element);
+          panelElementInventaire.$store.commit('addElementInInventaire', snapshot.val());
+          panelElementInventaire.$store.commit('modifyQuantityElementInventaire', [snapshot.val().number, oldElementQuantity]);
+          panelElementInventaire.$store.commit('modifyQuantityDemonterElementInventaire', [snapshot.val().number, oldElementQuantityDemonter]);
+          if(oldElementQuantityDemonter > 0) {
+            panelElementInventaire.$store.commit('setTarif', panelElementInventaire.$store.state.tarif - oldElementQuantity*oldElementTarif + oldElementQuantity*(snapshot.val().tarif) - oldElementQuantityDemonter*oldElementTarif*0.25 + oldElementQuantityDemonter*(snapshot.val().tarif*0.25));
+          }
+          else {
+            panelElementInventaire.$store.commit('setTarif', panelElementInventaire.$store.state.tarif - oldElementQuantity*oldElementTarif + oldElementQuantity*(snapshot.val().tarif));
+          }
+        }
+      });
+    },
     methods: {
       increaseElementQuantity(element) {
         element.quantity++;
@@ -23,7 +46,7 @@ export default {
       decreaseElementQuantity(element) {
         element.quantity--;
         if(element.quantityDemonter > 0) {
-          this.$store.commit('setTarif', this.$store.state.tarif - element.tarif - element.tarif*0.5);
+          this.$store.commit('setTarif', this.$store.state.tarif - element.tarif - element.tarif*0.25);
           if(element.quantityDemonter >= element.quantity) {
             element.quantityDemonter = element.quantity;
           }
@@ -34,7 +57,7 @@ export default {
         //this.updateElementQuantity(element, this.quantiteElement);
       },
       deleteElementFromInventaire (element) {
-        this.$store.commit('setTarif', this.$store.state.tarif - (element.quantity*element.tarif) - (element.quantityDemonter*element.tarif*0.5));
+        this.$store.commit('setTarif', this.$store.state.tarif - (element.quantity*element.tarif) - (element.quantityDemonter*element.tarif*0.25));
         this.$store.commit('deleteElementFromInventaire', element);
       },
       viewElementImage(element) {
