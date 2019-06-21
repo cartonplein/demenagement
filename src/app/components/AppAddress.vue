@@ -1,6 +1,6 @@
 <template>
     <div id="app-address">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px">Saisissez vos adresses de départ et de destination : </h1>
+        <h1>Saisissez vos adresses de départ et d'arrivée :</h1>
         <div id="form-address" class="container">
           <div class="columns is-mobile">
             <div id="panel-forms" class="columns is-mobile is-centered">
@@ -9,6 +9,10 @@
               </div>
               <div class="column">
                 <FormDestinationAddress id="form-destination-address" ref="formDestinationAddress" ></FormDestinationAddress>
+              </div>
+              <div id="warning-msg">
+                <img id="warning-icon" src="../../../public/images/warning.png" alt="">
+                <p style="position: inherit; left: 45px; font-weight: bold">La distance entre les adresses de départ et d'arrivée doit être comprise entre 0 et 10 kilomètres.</p>
               </div>
             </div>
             <div id="panel-map">
@@ -35,6 +39,7 @@ import FormPickupAddress from './FormPickupAddress.vue';
 import FormDestinationAddress from './FormDestinationAddress.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
 import { store } from '../store.js';
+import iconWarning from "../../../public/images/search-icon.png"
 
 import { config } from '../../db/index.js'
 
@@ -46,11 +51,9 @@ export default {
     return {
       originAdr: '',
       originCoor: '',
-      originCp: '',
 
       destinationAdr: '',
       destinationCoor: '',
-      destinationCp: '',
 
       availablePostalCodes: [],
 
@@ -79,14 +82,14 @@ export default {
 
     updateOrigin (addressData, placeResultData, id) {
       this.originAdr = placeResultData.formatted_address;
-      this.originCp = addressData.postal_code;
+      store.commit('setPickupCp', addressData.postal_code);
       this.originCoor = placeResultData.geometry.location.lat()+","+placeResultData.geometry.location.lng();
       this.calculateDirections();
     },
 
     updateDestination (addressData, placeResultData, id) {
       this.destinationAdr = placeResultData.formatted_address;
-      this.destinationCp = addressData.postal_code;
+      store.commit('setDestinationCp', addressData.postal_code);
       this.destinationCoor = placeResultData.geometry.location.lat()+","+placeResultData.geometry.location.lng();
       this.calculateDirections();
     },
@@ -94,7 +97,7 @@ export default {
     calculateDirections () {
       let app = this;
       if(this.originAdr !== undefined && this.destinationAdr !== undefined) {
-        if(!this.getAvailablePostalCodes().includes(this.originCp) || !this.getAvailablePostalCodes().includes(this.destinationCp)) {
+        if(!this.getAvailablePostalCodes().includes(store.getters.getPickupAddressUser.cp) || !this.getAvailablePostalCodes().includes(store.getters.getDestinationAddressUser.cp)) {
           document.getElementById('feasibility-trip-ko').style.display = "block";
         }
         else {
@@ -104,7 +107,8 @@ export default {
           store.commit('setAddressAvailable', true);
           this.calculateDistance(this.originCoor, this.destinationCoor).then( (distance) => {
             store.commit('setDistanceAdressesUser', distance);
-            store.commit('setTarifAddresses', store.state.tarifAddresses + this.calculateTarifByDistance(distance.value));
+            console.log(distance);
+            store.commit('setFirstTarif', store.state.firstTarif + this.calculateTarifByDistance(distance.value));
           });
         }
       }
@@ -142,14 +146,12 @@ export default {
     initializePickupAddress() {
       this.originAdr = undefined;
       this.originCoor = '';
-      this.originCp = '';
       document.getElementById('iframe-map').src = '';
     },
 
     initializeDestinationAddress() {
       this.destinationAdr = undefined;
       this.destinationCoor = '';
-      this.destinationCp = '';
       document.getElementById('iframe-map').src = '';
     },
 
@@ -174,7 +176,8 @@ export default {
 
     openPageTypeDemenagement() {
       this.submitFormAddress();
-      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
+      this.$store.commit('setTarif', this.$store.state.firstTarif);
+      console.log(this.$store.state.choicesUser.destinationAddress);
       this.$parent.$options.methods.openPageTypeDemenagement();
     }
   },
@@ -187,6 +190,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 html, body {
   margin: 0;
   padding: 0;
@@ -212,46 +216,41 @@ html, body {
     position: relative;
 
     #panel-forms {
-      background: #E85029;
+      //box-shadow: 0 3px 3px 3px #E85029;
+      //background: #E85029;
       opacity: 0.95;
       position: absolute;
-      border: 2px solid black;
-      left: 12px;
-      top: 12px;
+      //border-radius: 10px;
+      left: 0;
+      top: 0;
       height: 400px;
       max-height: 400px;
+      //border: 1px solid black;
 
-      .fade-enter-active,
-      .fade-leave-active {
-        transition: opacity 1.5s;
-      }
-
-      .fade-enter,
-      .fade-leave-to
-      {
-        opacity: 0
-      }
-
-      #button-validate-addresses {
+      #warning-msg {
+        //border: 1px solid #E85029;
+        box-shadow: 0 2px 2px 0 #E85029;
+        background: #E85029;
+        border-radius: 10px;
+        padding: 10px;
+        height: 15%;
+        width: 95%;
+        color: #FFF;
         position: inherit;
-        bottom: 15px;
-        cursor: pointer;
-        width: 12%;
-        height: 8%;
-        font-size: 90%;
-        border-radius: 8px;
-        background-color: #4A4CE3;
-        color: white;
+        bottom: 0;
+        left: 10px;
+        font-size: 13px;
 
-        &:hover {
-          background-color: #2628D1;
+        #warning-icon {
+          width: 30px; height: 30px; position: inherit; top: 5px; left: 10px;
         }
       }
     }
 
     #panel-map {
       background: lightgray;
-      border: 2px solid black;
+      border: 1px solid #E85029;
+      box-shadow: 0 2px 2px 0 #E85029;
       position: absolute;
       right: 0;
       top: 0;
@@ -282,7 +281,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 
 }

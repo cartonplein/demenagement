@@ -1,23 +1,87 @@
 <template>
     <div id="app-recapitulatif">
-      <div v-bind:class="{ 'backgroundDisabled': errorForm }">
+      <div>
         <div class="container">
-          <!--<div v-bind:class="{ 'backgroundDisabled': errorForm }">-->
-          <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Récapitulatif de votre commande : </h1>
+          <h1>Récapitulatif de votre commande : </h1>
           <PanelRecapitulatif class="panel-recapitulatif"></PanelRecapitulatif>
         </div>
-        <FormContact class="panel-form-contact" ref="formContact"></FormContact>
-        <ButtonFinaliser id="button-finaliser" :onClick="finaliserCommande" v-bind:class="{ 'disableButton': false }">
-        </ButtonFinaliser>
+
+        <div id="form-contact">
+          <form id="form-contact-1" onsubmit="return false">
+            <div class="form-contact-title-contact">
+                <p style="font-size: 15px">
+                    <b>Contact<span style="color:red">*</span></b>
+                </p>
+            </div>
+
+            <div class="form-contact-prenom">
+              <input type="text" id="input-contact-prenom" placeholder="Prénom*" v-model="inputContactPrenom" ref="inputPrenom"  required />
+            </div>
+
+            <div class="form-contact-nom">
+              <input type="text" id="input-contact-nom" placeholder="Nom*" v-model="inputContactNom" ref="inputNom" required />
+            </div>
+
+            <div class="form-contact-telephone">
+              <input type="text" id="input-contact-telephone" placeholder="N° de téléphone*" v-model="inputContactTelephone" ref="inputTelephone" required />
+            </div>
+
+            <div class="form-contact-email">
+              <input type="text" id="input-contact-email" placeholder="Email*" v-model="inputContactEmail" ref="inputEmail" required />
+            </div>
+
+            <div class="form-contact-title-cp">
+              <p style="font-size: 15px">
+                <b>Enquête: Comment avez-vous connu Carton Plein ?<span style="color:red">*</span></b>
+              </p>
+            </div>
+
+            <div class="form-contact-cp-reponse">
+              <label for="one" style="font-size: 12px">
+                <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteOne" ref="reponseEnqueteOne" value="Un/Une proche m'en a parlé"/> "Un/Une proche m'en a parlé"<br>
+              </label>
+              <label for="two" style="font-size: 12px">
+                <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteTwo" ref="reponseEnqueteTwo" value="J'ai vu passer vos remorques dans la rue" /> "J'ai vu passer vos remorques dans la rue"<br>
+              </label>
+              <label for="three" style="font-size: 12px">
+                <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteThree" ref="reponseEnqueteThree" value="J'ai entendu parler de vous par la presse" /> "J'ai entendu parler de vous par la presse"<br>
+              </label>
+              <label for="four" style="font-size: 12px">
+                <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteFour" ref="reponseEnqueteFour" value="J'ai vu une publication sur les réseaux sociaux" /> "J'ai vu une publication sur les réseaux sociaux"<br>
+              </label>
+              <label for="five" style="font-size: 12px">
+                <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteFive" ref="reponseEnqueteFive" value="En tapant déménagement sur mon moteur de recherche" /> "En tapant déménagement sur mon moteur de recherche"<br>
+              </label>
+              <label for="six" style="font-size: 12px">
+                <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteSix" ref="reponseEnqueteSix" value="Autres" /> "Autres"
+              </label>
+              <p style="color: red; font-size: 10px" v-if="errorSurvey">
+                  Veuillez répondre à l'enquête !
+              </p>
+            </div>
+          </form>
+        </div>
+
+        <vue-stripe-checkout
+          ref="checkoutRef"
+          :image="image"
+          :locale="locale"
+          :name="name"
+          :description="description"
+          :currency="currency"
+          :panelLabel="panelLabel"
+          :allow-remember-me="false"
+          :email="inputContactEmail"
+          :amount = "getTotalTarif()"
+          @done="done"
+          @opened="opened"
+          @closed="closed"
+          @canceled="canceled"
+        ></vue-stripe-checkout>
+
+        <button type="submit" id="button-finaliser" form="form-contact-1" @click="validateContactForm">Finaliser votre commande</button>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageOptions"></ButtonPrecedent>
       </div>
-      <div id="panel-error-msg" v-show="errorForm">
-        <span class="closebtn" @click="fermerErrorMsg">&times;</span>
-        <!--<button class="btn-close" @click="fermerErrorMsg"><b>Fermer</b></button>-->
-        <b>Ce(s) champ(s) est/sont obligatoire(s) :</b><br/>
-        {{ errorMsg }}
-      </div>
-
     </div>
 
 </template>
@@ -25,92 +89,109 @@
 <script>
 
 import PanelRecapitulatif from './PanelRecapitulatif.vue';
-import FormContact from './FormContact.vue';
-import ButtonFinaliser from './ButtonFinaliser.vue';
 import ButtonPrecedent from './ButtonPrecedent.vue';
+import image from "../../../public/images/carton_plein_logo_noir.jpg"
 
 export default {
   name: 'AppRecapitulatif',
   data () {
     return {
-      errorMsg: '',
-      errorForm: false,
-      isPrenomEmpty: false,
-      isNomEmpty: false,
-      isTelephoneEmpty: false,
-      isEmailEmpty: false,
-      isSurveyAnswered: false
+      inputContactPrenom: '',
+      inputContactNom: '',
+      inputContactTelephone: '',
+      inputContactEmail: '',
+      inputReponseEnqueteOne: false,
+      inputReponseEnqueteTwo: false,
+      inputReponseEnqueteThree: false,
+      inputReponseEnqueteFour: false,
+      inputReponseEnqueteFive: false,
+      inputReponseEnqueteSix: false,
+
+      errorSurvey: false,
+
+      image: image,
+      locale: 'fr',
+      name: 'Carton Plein 75',
+      description: "Réservation d'un déménagement",
+      panelLabel: 'Régler',
+      currency: 'EUR',
     }
   },
   components: {
     PanelRecapitulatif,
-    FormContact,
-    ButtonFinaliser,
     ButtonPrecedent
   },
   methods: {
-    finaliserCommande() {
 
-      let inputContactPrenom = this.$refs.formContact.$refs.inputPrenom.value;
-      let inputContactNom = this.$refs.formContact.$refs.inputNom.value;
-      let inputContactTelephone = this.$refs.formContact.$refs.inputTelephone.value;
-      let inputContactEmail = this.$refs.formContact.$refs.inputEmail.value;
+    getCheckedResponses() {
+      var items = document.getElementsByName('input-response-enquete');
+      var selectedItems = [];
+      for(var i=0; i<items.length; i++){
+        if(items[i].type=='checkbox' && items[i].checked==true) {
+          selectedItems.push(items[i].value);
+        }
+      }
+      return selectedItems;
+    },
 
-      let isReponseOneChecked = this.$refs.formContact.$refs.reponseEnqueteOne.checked;
-      let isReponseTwoChecked = this.$refs.formContact.$refs.reponseEnqueteTwo.checked;
-      let isReponseThreeChecked = this.$refs.formContact.$refs.reponseEnqueteThree.checked;
-      let isReponseFourChecked = this.$refs.formContact.$refs.reponseEnqueteFour.checked;
-      let isReponseFiveChecked = this.$refs.formContact.$refs.reponseEnqueteFive.checked;
-      let isReponseSixChecked = this.$refs.formContact.$refs.reponseEnqueteSix.checked;
+    validateContactForm () {
+      let isReponseOneChecked = this.$refs.reponseEnqueteOne.checked;
+      let isReponseTwoChecked = this.$refs.reponseEnqueteTwo.checked;
+      let isReponseThreeChecked = this.$refs.reponseEnqueteThree.checked;
+      let isReponseFourChecked = this.$refs.reponseEnqueteFour.checked;
+      let isReponseFiveChecked = this.$refs.reponseEnqueteFive.checked;
+      let isReponseSixChecked = this.$refs.reponseEnqueteSix.checked;
 
-      if(inputContactPrenom === '') {
-        this.isPrenomEmpty = true;
-        this.errorMsg = this.errorMsg.concat('Prénom ');
-      }
-      if(inputContactNom === '') {
-        this.isNomEmpty = true;
-        this.errorMsg = this.errorMsg.concat('Nom ');
-      }
-      if(inputContactTelephone === '') {
-        this.isTelephoneEmpty = true;
-        this.errorMsg = this.errorMsg.concat('Téléphone ');
-      }
-      if (inputContactEmail === '') {
-        this.isEmailEmpty = true;
-        this.errorMsg = this.errorMsg.concat('Email ');
-      }
-      if (isReponseOneChecked || isReponseTwoChecked || isReponseThreeChecked ||
-      isReponseFourChecked || isReponseFiveChecked || isReponseSixChecked ) {
-        this.isSurveyAnswered = true;
-      }
-      if (!this.isSurveyAnswered) {
-        this.errorMsg = this.errorMsg.concat('Enquête ');
-      }
-
-      if(this.isPrenomEmpty || this.isNomEmpty || this.isTelephoneEmpty || this.isEmailEmpty || !this.isSurveyAnswered) {
-        this.errorForm = true;
+      if (isReponseOneChecked || isReponseTwoChecked || isReponseThreeChecked || isReponseFourChecked || isReponseFiveChecked || isReponseSixChecked) {
+        this.errorSurvey = false;
+        if(!(this.inputContactPrenom == '' || this.inputContactNom == '' || this.inputContactTelephone == '' || this.inputContactEmail == '')) {
+          this.$store.commit('saveContactUser', [this.inputContactPrenom, this.inputContactNom, this.inputContactTelephone, this.inputContactEmail, this.getCheckedResponses()]);
+          this.openPaymentForm();
+          console.log(this.$store.state.choicesUser.contact);
+        }
       }
       else {
-        //console.log(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
-        let responsesEnquete = this.$refs.formContact.$options.methods.getCheckedResponses();
-        this.$store.commit('saveContactUser', [inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail, responsesEnquete]);
-        console.log(this.$store.state.choicesUser.contact);
-        this.$parent.$options.methods.openPaymentPage();
-        //this.$refs.formContact.$options.methods.submitContactInformation(inputContactPrenom, inputContactNom, inputContactTelephone, inputContactEmail);
+        this.errorSurvey = true;
       }
-      this.isNomEmpty = false;
-      this.isPrenomEmpty = false;
-      this.isTelephoneEmpty = false;
-      this.isEmailEmpty = false;
-      this.isSurveyAnswered = false;
+    },
+
+    async openPaymentForm() {
+      // token - is the token object
+      // args - is an object containing the billing and shipping address if enabled
+      const { token, args } = await this.$refs.checkoutRef.open();
+    },
+
+    done ({token, args}) {
+      // token - is the token object
+      // args - is an object containing the billing and shipping address if enabled
+      this.$store.commit('setOrderDateTime', this.getCurrentDateTime());
+      let ordersRef = fb.rootRef.child('orders');
+      ordersRef.push(this.$store.state.choicesUser);
+    },
+
+    opened () {
+      // do stuff
+    },
+    closed () {
+      // do stuff
+    },
+    canceled () {
+      // do stuff
+    },
+
+    getCurrentDateTime() {
+      var today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      return date+' '+time;
+    },
+
+    getTotalTarif() {
+      return this.$store.state.tarif*100;
     },
 
     returnPageOptions() {
       this.$parent.$options.methods.returnPageOptions();
-    },
-    fermerErrorMsg () {
-      this.errorForm = false;
-      this.errorMsg = '';
     }
   }
 }
@@ -134,16 +215,78 @@ html, body {
   border-top: 1px solid lightgray;
   position: relative;
 
-  #app-recapitulatif .panel-form-contact {
+  #form-contact {
+    background: #FFF;
+    box-shadow: 0 2px 2px 0 #E85029;
+    opacity: 0.95;
+    border: 1px solid #E85029;
+    border-radius: 10px;
+    width: 330px;
+    max-width: 330px;
+    margin: 0 auto;
+    padding: 20px;
+    overflow: hidden;
+    display: inline-block;
+    align-self: stretch;
     position: absolute;
     right: 0;
     bottom: 100px;
+    color: #E85029;
+
+    .form-contact-title-cp {
+      margin-top: 20px;
+    }
+
+    input[type=text] {
+      width: 100%;
+      padding: 10px 10px;
+      margin: 5px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      &:focus {
+        outline: none;
+      }
+    }
+
+    select {
+      width: 100%;
+      padding: 10px 10px;
+      margin: 5px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
   }
 
   #button-finaliser {
     position: absolute;
     right: 0;
     bottom: 30px;
+    display: inline-block;
+    padding: 3px;
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: purple;
+    border: none;
+  //  border-radius: 10px;
+    box-shadow: 0 9px #999;
+    width: 120px;
+    height: 40px;
+
+    &:hover {background-color: #3E0863}
+
+    &:active {
+      background-color: #3E0863;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
   }
 
   #button-precedent {
@@ -153,7 +296,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    color: red;
+    background-color: #FFF;
   }
 
   .disableButton {
@@ -161,42 +313,8 @@ html, body {
     pointer-events: none;
   }
 
-  #panel-error-msg {
-    background-color: white;
-    border-radius: 10px;
-    color: black;
-    width: 380px;
-    height: 150px;
-    z-index: 1;
-    padding: 10px;
-    margin: auto;
-    position: absolute;
-    left:0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    box-shadow: 0 9px black;
-
-    .closebtn {
-      margin-left: 15px;
-      color: black;
-      font-weight: bold;
-      float: right;
-      font-size: 25px;
-      line-height: 20px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .closebtn:hover {
-      color: red;
-    }
-  }
-
-  .backgroundDisabled {
-    opacity: 0.2;
-    pointer-events: none;
-    //background-color: rgba(0, 0, 0, 0.5);
+  label {
+    color: #E85029;
   }
 
 }

@@ -1,14 +1,17 @@
 <template>
     <div id="app-type-demenagement">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez votre type de déménagement :</h1>
+        <h1>Choisissez votre type de déménagement :</h1>
         <div id="panel-type-demenagement" class="container">
           <div class="columns is-mobile">
             <div class="columns is-multiline">
               <div class="column is-full">
-                  <PanelDemenagementForfait id="panel-demenagement-forfait" ref="panelDemenagementForfait" :onClick="selectTypeDemenagementForfait"></PanelDemenagementForfait>
+                  <PanelDemenagementInventaire id="panel-demenagement-inventaire" ref="panelDemenagementInventaire" :onClick="selectTypeInventaire"></PanelDemenagementInventaire>
               </div>
               <div class="column is-full">
-                  <PanelDemenagementInventaire id="panel-demenagement-inventaire" ref="panelDemenagementInventaire" :onClick="selectTypeDemenagementInventaire"></PanelDemenagementInventaire>
+                  <PanelDemenagementTransport id="panel-demenagement-transport" ref="panelTransport" :onClick="selectTypeTransport"></PanelDemenagementTransport>
+              </div>
+              <div class="column is-full">
+                  <PanelDemenagementAideDem id="panel-demenagement-aide-dem" ref="panelDemenagementAideDem" :onClick="selectTypeAideDem"></PanelDemenagementAideDem>
               </div>
             </div>
           </div>
@@ -22,8 +25,9 @@
 
 <script>
 
-import PanelDemenagementForfait from './PanelDemenagementForfait.vue';
+import PanelDemenagementAideDem from './PanelDemenagementAideDem.vue';
 import PanelDemenagementInventaire from './PanelDemenagementInventaire.vue';
+import PanelDemenagementTransport from './PanelDemenagementTransport.vue';
 import PanelInfoCommande from './PanelInfoCommande.vue';
 import ButtonPrecedent from './ButtonPrecedent.vue';
 
@@ -32,23 +36,38 @@ export default {
   data() {
     return {
       isPageTypeDemenagement: true,
-      typeForfait: 'Déménagement au forfait',
+      typeAideDem: 'Aide au déménagement',
       typeInventaire: 'Déménagement sur inventaire',
+      typeTransport: 'Transport simple',
     }
   },
   components: {
-    PanelDemenagementForfait,
+    PanelDemenagementAideDem,
     PanelDemenagementInventaire,
+    PanelDemenagementTransport,
     PanelInfoCommande,
     ButtonPrecedent
   },
   methods: {
-    selectTypeDemenagementForfait() {
-      this.$store.commit('setTypeDemenagement', this.typeForfait);
+    selectTypeAideDem() {
+      this.$store.commit('setTypeDemenagement', this.typeAideDem);
+      this.$store.commit('setTypeAideDem', true);
+      this.$store.commit('setTypeInventaire', false);
+      this.$store.commit('setTypeTransport', false);
       this.$parent.$options.methods.openPageTailleLogement();
     },
-    selectTypeDemenagementInventaire() {
+    selectTypeInventaire() {
       this.$store.commit('setTypeDemenagement', this.typeInventaire);
+      this.$store.commit('setTypeAideDem', false);
+      this.$store.commit('setTypeInventaire', true);
+      this.$store.commit('setTypeTransport', false);
+      this.$parent.$options.methods.openPageInventaire();
+    },
+    selectTypeTransport() {
+      this.$store.commit('setTypeDemenagement', this.typeTransport);
+      this.$store.commit('setTypeAideDem', false);
+      this.$store.commit('setTypeInventaire', false);
+      this.$store.commit('setTypeTransport', true);
       this.$parent.$options.methods.openPageInventaire();
     },
     returnPageAddress() {
@@ -86,8 +105,17 @@ html, body {
     bottom: 30px;
   }
 
+  mark {
+    background-color: #E85029;
+    color: #FFF;
+  }
+
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
   }
 }
 

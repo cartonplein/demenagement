@@ -1,6 +1,6 @@
 <template>
     <div id="app-options">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez vos options : </h1>
+        <h1>Choisissez vos options : </h1>
         <div id="panel-options" class="container">
           <div class="columns" style="width: 1000px; max-width: 850px">
             <PanelOptions />
@@ -86,7 +86,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 }
 

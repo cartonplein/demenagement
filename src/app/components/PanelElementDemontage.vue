@@ -1,12 +1,10 @@
 <template>
-    <div id="panel-element-demontage">
-      <div class="element-name has-text-centered has-text-black" style="margin-top: 5px"><b>{{ element.name }}</b></div>
+    <div id="panel-element-demontage" v-show="element.canDisassemble">
+      <div class="element-name has-text-centered" style="margin-top: 5px"><b>{{ element.name }}</b></div>
       <img id="element-image" :src="viewElementImage(element)" @click="displayElementImage(element)"/>
-      <label for="qteElement" style="color: black">Quantité à démonter :</label>
       <button class="btn-minus" @click="decreaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantityDemonter == 0 }"><b>-</b></button>
       <input type="number" id="qteElement" name="quantity" min="1" max="10" v-model.number="element.quantityDemonter" disabled>
       <button class="btn-plus" @click="increaseElementQuantity(element)" v-bind:class="{ 'disableButton': element.quantityDemonter == element.quantity }"><b>+</b></button>
-
     </div>
 </template>
 
@@ -16,12 +14,16 @@ export default {
     name: 'PanelElementDemontage',
     props: ['element'],
     methods: {
+      /*
       updateElementQuantityDemonter(element, quantity) {
         let elementAndQuantity = [element, quantity];
         this.$store.commit('updateElementQuantityDemonter', elementAndQuantity);
+        console.log();
       },
+      */
       increaseElementQuantity(element) {
         element.quantityDemonter++;
+        console.log(element.canDisassemble);
         this.$store.commit('setTarif', this.$store.state.tarif + element.tarif*0.25);
       },
       decreaseElementQuantity(element) {
@@ -43,8 +45,10 @@ export default {
 <style lang="scss" scoped>
 
 #panel-element-demontage {
-    background: #f6b26bff;
-    border: 1px solid black;
+    background: #FFF;
+    color: #E85029;
+    border: 1px solid #E85029;
+    box-shadow: 0 2px 2px 0 #E85029;
     border-radius: 10px;
     width: 180px;
     max-width: 220px;
@@ -73,18 +77,12 @@ export default {
       margin: 0;
     }
 
-    label[for="qteElement"] {
-      font-size: 12px;
-      position: absolute;
-      left: 30px;
-      bottom: 33px;
-    }
 
     .btn-plus {
       position: absolute;
       background-color: #4CAF50;
       font-size: 10px;
-      color: white;
+      color: #FFF;
       right: 45px;
       bottom: 12px;
       border-radius: 10px;
@@ -102,7 +100,7 @@ export default {
       position: absolute;
       background-color: #ff0000ff;
       font-size: 10px;
-      color: white;
+      color: #FFF;
       left: 45px;
       bottom: 12px;
       border-radius: 10px;
@@ -121,10 +119,15 @@ export default {
       opacity: 0.3;
     }
 
+    .disabled {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
     #element-image {
       position: absolute;
       left: 43px;
-      top: 40px;
+      top: 58px;
       width: 50%;
       height: 45%;
       cursor: pointer;

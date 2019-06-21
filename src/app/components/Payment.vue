@@ -5,9 +5,9 @@
       <button @click="cancelOrder()">Annuler</button>
       <button @click="finaliseOrder()">Payer</button>
     </div>
-
   </div>
 </template>
+
 
 <script>
 
@@ -16,6 +16,15 @@ const fb = require('../../db/index.js');
 
 export default {
   name: 'Payment',
+  data() {
+    return {
+      image: 'https://i.imgur.com/HhqxVCW.jpg',
+      name: 'Shut up and take my money!',
+      description: 'Cats are the best dog!',
+      currency: 'PHP',
+      amount: 99999
+    }
+  },
   methods: {
     cancelOrder() {
 
@@ -33,7 +42,7 @@ export default {
       var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
       var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
       return date+' '+time;
-    }
+    },
   }
 }
 

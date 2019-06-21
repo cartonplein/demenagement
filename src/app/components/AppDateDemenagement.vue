@@ -1,6 +1,6 @@
 <template>
     <div id="app-date-demenagement">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez la date de votre déménagement : </h1>
+        <h1>Choisissez la date de votre déménagement : </h1>
         <div id="panel-date-demenagement" class="container">
           <PanelDateDemenagement></PanelDateDemenagement>
         </div>
@@ -86,7 +86,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 
   .disableButton {

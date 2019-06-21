@@ -1,19 +1,19 @@
 <template>
     <div id="panel-info-commande">
       <div class="panel-info-commande-tarif">
-          <p style="color: black; font-size: 15px">
+          <p style="color: #FFF; font-size: 15px">
               <b>Votre tarif :</b>
           </p>
-          <p style="color: #E85029; font-size: 30px">
-              {{ currentTarif }} <span style="color: black">€</span>
+          <p style="color: #FFF; font-size: 30px">
+              {{ tarif }} €
           </p>
       </div>
 
       <div class="panel-info-commande-choix" style="margin-top: 10px">
-          <p style="color: black; font-size: 15px">
+          <p style="color: #FFF; font-size: 15px">
               <b>Vos choix :</b>
           </p>
-          <ul style="color: #E85029; font-size: 11px">
+          <ul style="color: #FFF; font-size: 11px">
             <li>
               <b><br/>Adresse de départ :</b><br/>
                 <div class="tooltipAdresse">
@@ -80,11 +80,11 @@
                                 <b><br/>Type de déménagement :</b><br/> {{ getTypeDemenagementUser() }}
             </li>
             <li v-bind:class="{ 'hideElement': true,
-                                'displayElement': isPageDureePrestation || (isPageDateDemenagement || isPageOptions) && isForfait }">
+                                'displayElement': isPageDureePrestation || (isPageDateDemenagement || isPageOptions) && isAideDem }">
                                 <b><br/>Taille de logement :</b><br/> {{ getTailleLogementUser() }}
             </li>
             <li v-bind:class="{ 'hideElement': true,
-                                'displayElement': (isPageDateDemenagement || isPageOptions) && isForfait }">
+                                'displayElement': (isPageDateDemenagement || isPageOptions) && isAideDem }">
                                 <b><br/>Durée de prestation :</b><br/> {{ getDureePrestationUser() }}
             </li>
             <li v-bind:class="{ 'hideElement': true,
@@ -179,13 +179,13 @@ export default {
       }
     },
     computed: {
-      isForfait () {
-        return this.$store.state.isForfait;
+      isAideDem () {
+        return this.$store.state.isAideDem;
       },
       isInventaire () {
         return this.$store.state.isInventaire;
       },
-      currentTarif() {
+      tarif() {
         return this.$store.state.tarif;
       }
     },
@@ -196,9 +196,10 @@ export default {
 <style lang="scss" scoped>
 
 #panel-info-commande {
-    background: #FFF;
-    /*border: 1px solid black;
-    border-radius: 10px;*/
+    background: #E85029;
+    box-shadow: 0 2px 2px 0 #E85029;
+    /*border: 1px solid black;*/
+    border-radius: 10px;
     padding: 15px;
     width: 200px;
     max-width: 200px;
@@ -221,7 +222,7 @@ export default {
         opacity: 0.9;
         visibility: hidden;
         width: 200px;
-        background-color: #E85029;
+        background-color: #FFF;
         color: #fff;
         text-align: center;
         border-radius: 6px;
@@ -245,7 +246,7 @@ export default {
         opacity: 0.9;
         visibility: hidden;
         width: 150px;
-        background-color: #E85029;
+        background-color: #FFF;
         color: #fff;
         text-align: center;
         border-radius: 6px;
@@ -269,7 +270,7 @@ export default {
         opacity: 0.9;
         visibility: hidden;
         width: 150px;
-        background-color: #E85029;
+        background-color: #FFF;
         color: #fff;
         text-align: center;
         border-radius: 6px;
@@ -288,8 +289,8 @@ export default {
     }
 
     table, th, td {
-      color: white;
-      border: 1px solid black;
+      color: #E85029;
+      border: 1px solid #E85029;
     }
 
     th, td {

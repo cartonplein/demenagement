@@ -1,8 +1,8 @@
 <template>
     <div id="panel-taille-logement" @click="selectSize">
-      <div class="size-banner has-text-centered has-text-black"><b>{{ size.title }}</b></div>
-      <h2 style="color:black; font-size: 12px">{{ size.details }}</h2>
-      <h2 style="color:black; font-size: 12px">{{ size.tarif }}€</h2>
+      <div class="size-banner has-text-centered">{{ size.title }}</div>
+      <h2>{{ size.details }}</h2>
+      <h2>{{ size.tarif }}€</h2>
       <!--<div class="size-banner has-text-centered has-text-black"><b>{{ size.tarif }}</b></div>-->
     </div>
 </template>
@@ -37,8 +37,9 @@ export default {
 
 #panel-taille-logement {
   background: #FFF;
-  opacity: 0.95;
-  border: 1px solid black;
+  //opacity: 0.95;
+  border: 1px solid #E85029;
+  box-shadow: 0 2px 2px 0 #E85029;
   border-radius: 10px;
 
   padding: 10px;
@@ -54,6 +55,16 @@ export default {
   &:hover {
     transform: translateY(5px);
     cursor: pointer;
+  }
+
+  .size-banner {
+    color: #E85029;
+    font-weight: bold;
+  }
+
+  h2 {
+    color: #E85029;
+    font-size: 12px;
   }
 }
 </style>

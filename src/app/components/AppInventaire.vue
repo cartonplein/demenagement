@@ -1,6 +1,6 @@
 <template>
     <div id="app-inventaire">
-      <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Créez votre inventaire : </h1>
+      <h1>Créez votre inventaire : </h1>
       <div id="panel-inv" class="container">
         <PanelInventaire></PanelInventaire>
       </div>
@@ -42,7 +42,7 @@ export default {
       this.$store.dispatch('resetChoicesUser');
       this.$parent.$options.methods.returnPageTypeDemenagement();
     }
-  },
+  }
 }
 
 </script>
@@ -83,7 +83,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 
   .disableButton {

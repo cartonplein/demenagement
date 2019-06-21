@@ -1,6 +1,6 @@
 <template>
     <div id="app-demontage">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Vos meubles, on les démonte ou pas ?  </h1>
+        <h1>Vos meubles, on les démonte ou pas ? </h1>
         <div id="panel-dem" class="container">
           <div id="panel-demontage">
             <div class="columns is-multiline">
@@ -74,10 +74,11 @@ html, body {
 
     #panel-demontage {
       opacity: 0.95;
-      background: #E85029;
+      background: #FFF;
+      box-shadow: 0 2px 2px 0 #E85029;
       margin-top: 10px;
       padding: 15px;
-      border: 2px solid black;
+      border: 2px solid #E85029;
       width: 760px;
       max-width: 760px;
       height: 450px;
@@ -107,7 +108,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 }
 

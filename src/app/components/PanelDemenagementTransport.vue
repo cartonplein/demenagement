@@ -1,9 +1,7 @@
 <template>
-    <div id="panel-demenagement-inventaire" @click="onClick">
-      <h1>Déménagement sur inventaire</h1>
-      <h2>Le déménagement classique (protection des meubles, manutention, transport), entièrement écologique dans l'esprit de Carton Plein.</h2>
-
-
+    <div id="panel-demenagement-transport" @click="onClick">
+      <h1>Transport simple</h1>
+      <h2>La solution rapide et écologique pour transporter votre meuble d'un bout à l'autre de Paris.</h2>
     </div>
 </template>
 
@@ -11,7 +9,7 @@
 <script>
 
 export default {
-    name: 'PanelDemenagementInventaire',
+    name: 'PanelDemenagementTransport',
     props: {
       onClick: {
         type: Function,
@@ -25,7 +23,7 @@ export default {
 
 <style lang="scss" scoped>
 
-#panel-demenagement-inventaire {
+#panel-demenagement-transport {
   background: #FFF;
   //opacity: 0.95;
   border: 1px solid #E85029;

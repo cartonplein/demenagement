@@ -10,13 +10,14 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
       isAddressAvailable: false,
-      isForfait: false,
+      isAideDem: false,
       isInventaire: false,
+      isTransport: false,
       seedMonth,
       seedDay,
       choicesUser: {
-        pickupAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
-        destinationAddress: { adresse: '', surface: '', etage: '', ascenseur: '', cave: '' },
+        pickupAddress: { adresse: '', cp: '', surface: '', etage: '', ascenseur: '', hasAscenseur: false, cave: '' },
+        destinationAddress: { adresse: '', cp: '', surface: '', etage: '', ascenseur: '', hasAscenseur: false, cave: '' },
         direction: '',
         distance: { text: '', value: null },
         typeDemenagement: '',
@@ -28,10 +29,12 @@ export const store = new Vuex.Store({
         contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: [] },
         orderDateTime: ''
       },
-      tarifAddresses: 0,
+      firstTarif: 0,
       tarifPrec: 0,
       tarifOptions: 0,
-      tarif: 0
+      tarif: 0,
+      vrTotalInventaire: 0,
+      numberMovers: 0
     },
 
     getters: {
@@ -56,8 +59,8 @@ export const store = new Vuex.Store({
         return store.state.tarif;
       },
 
-      getTarifAddresses() {
-        return store.state.tarifAddresses;
+      getFirstTarif() {
+        return store.state.firstTarif;
       },
 
       getPickupAddressUser() {
@@ -95,6 +98,14 @@ export const store = new Vuex.Store({
       getOptionsUser() {
         return store.state.choicesUser.options;
       },
+
+      getVrTotalInventaire() {
+        return store.state.vrTotalInventaire;
+      },
+
+      getNumberMovers() {
+        return store.state.numberMovers;
+      }
     },
 
 
@@ -109,7 +120,14 @@ export const store = new Vuex.Store({
         state.choicesUser.pickupAddress.surface = pickupAddress[1];
         state.choicesUser.pickupAddress.etage = pickupAddress[2];
         state.choicesUser.pickupAddress.ascenseur = pickupAddress[3];
+        if(pickupAddress[3] !== 'Non') {
+          state.choicesUser.pickupAddress.hasAscenseur = true;
+        }
         state.choicesUser.pickupAddress.cave = pickupAddress[4];
+      },
+
+      setPickupCp (state, pickupCp) {
+        state.choicesUser.pickupAddress.cp = pickupCp;
       },
 
       setDestinationAddressUser (state, destinationAddress) {
@@ -117,19 +135,30 @@ export const store = new Vuex.Store({
         state.choicesUser.destinationAddress.surface = destinationAddress[1];
         state.choicesUser.destinationAddress.etage = destinationAddress[2];
         state.choicesUser.destinationAddress.ascenseur = destinationAddress[3];
+        if(destinationAddress[3] !== 'Non') {
+          state.choicesUser.destinationAddress.hasAscenseur = true;
+        }
         state.choicesUser.destinationAddress.cave = destinationAddress[4];
+      },
+
+      setDestinationCp (state, destinationCp) {
+        state.choicesUser.destinationAddress.cp = destinationCp;
       },
 
       setDirection (state, direction) {
         state.choicesUser.direction = direction;
       },
 
-      setTypeForfait(state, isForfait) {
-        state.isForfait = isForfait;
+      setTypeAideDem(state, isAideDem) {
+        state.isAideDem = isAideDem;
       },
 
       setTypeInventaire(state, isInventaire) {
         state.isInventaire = isInventaire;
+      },
+
+      setTypeTransport(state, isTransport) {
+        state.isTransport = isTransport;
       },
 
       initDayNames(state, monthAndYear) {
@@ -185,8 +214,8 @@ export const store = new Vuex.Store({
         state.choicesUser.distance = distance;
       },
 
-      setTarifAddresses(state, tarif) {
-        state.tarifAddresses = tarif;
+      setFirstTarif(state, tarif) {
+        state.firstTarif = tarif;
       },
 
       setTarif(state, tarif) {
@@ -206,7 +235,17 @@ export const store = new Vuex.Store({
       },
 
       addElementInInventaire(state, element) {
-        state.choicesUser.inventaire.push({ number: element.number, name: element.name, image: element.image, volume: element.volume, tarif: element.tarif, quantity: 1, quantityDemonter: 0 });
+        state.choicesUser.inventaire.push({
+          number: element.number,
+          name: element.name,
+          image: element.image,
+          volume: element.volume,
+          tarif: element.tarif,
+          vr: element.vr,
+          quantity: 1,
+          canDisassemble: element.canDisassemble,
+          quantityDemonter: 0
+        });
       },
 
       deleteElementFromInventaire(state, element) {
@@ -229,6 +268,10 @@ export const store = new Vuex.Store({
         });
       },
 
+      setVrTotalInventaire (state, vrTotalInventaire) {
+        state.vrTotalInventaire = vrTotalInventaire;
+      },
+
       emptyInventaire(state) {
         for(var i=0; i<state.choicesUser.inventaire.length; i++) {
           state.choicesUser.inventaire.splice(state.choicesUser.inventaire[i], 1);
@@ -244,7 +287,12 @@ export const store = new Vuex.Store({
       },
 
       addOption(state, element) {
-        state.choicesUser.options.push({ number: element.number, name: element.name, tarif: element.tarif, quantity: 1});
+        state.choicesUser.options.push({
+          number: element.number,
+          name: element.name,
+          tarif: element.tarif,
+          quantity: 1
+        });
       },
 
       setTarifOptions (state, tarif) {
@@ -271,7 +319,12 @@ export const store = new Vuex.Store({
 
       setOrderDateTime(state, orderDateTime) {
         state.choicesUser.orderDateTime = orderDateTime;
+      },
+
+      setNumberMovers(state, numberMovers) {
+        state.numberMovers = numberMovers;
       }
+
 
     },
 
@@ -281,13 +334,39 @@ export const store = new Vuex.Store({
         context.commit('setTailleLogement', null);
         context.commit('setDureePrestation', null);
         context.commit('emptyInventaire');
+        context.commit('setVrTotalInventaire', 0);
         context.commit('setDateDemenagement', '');
         context.commit('emptyOptions');
-        context.commit('setTarif', context.getters.getTarifAddresses);
+        context.commit('setTarif', context.getters.getFirstTarif);
         context.commit('setTarifPrec', 0);
         context.commit('setTarifOptions', 0);
+      },
+
+      calculateNumberMovers(context) {
+        let oversize = false;
+        if(context.getters.getInventaireUser.length !== 0) {
+          for(var i=0; i<context.getters.getInventaireUser.length; i++) {
+            console.log(context.getters.getInventaireUser[i]);
+            if(context.getters.getInventaireUser[i].vr > 0.2) {
+              oversize = true;
+            }
+          }
+          if(oversize) {
+            context.commit('setNumberMovers', 2);
+          }
+          else {
+            context.commit('setNumberMovers', 1);
+          }
+        }
+      },
+
+      calculateAccessibility(context) {
+
       }
-    }
+
+    },
+
+
 
 
 });

@@ -1,19 +1,19 @@
 <template>
     <div id="panel-date-demenagement" class="container">
       <div class="calendar">
-          <table id="agenda" style="background-color: white; opacity: 0.95">
+          <table id="agenda">
             <tr id="row-month">
               <th id="month-display" colspan="7">
 
                 <i class="arrow" @click="setActivePreviousMonth(getActiveMonth().number)" v-bind:class="{ 'left': true, 'leftInactive': getActiveMonth().number == currentMonth && getActiveMonth().currentYear == currentYear }"></i>
-                <span style="font-size: 20px"><b>{{ getActiveMonth().name }} {{ titleOfActiveYear }}</b></span>
+                <span style="font-size: 20px; color: #E85029;"><b>{{ getActiveMonth().name }} {{ titleOfActiveYear }}</b></span>
                 <i class="arrow right" @click="setActiveNextMonth(getActiveMonth().number)"></i>
 
               </th>
             </tr>
 
             <tr id="days-display">
-              <th scope="col" v-for="dayName in dayNames" :key="dayName">{{ dayName }}</th>
+              <th scope="col" v-for="dayName in dayNames" :key="dayName" style="color: #E85029;">{{ dayName }}</th>
             </tr>
 
             <tr id="days-row-one">
@@ -422,9 +422,16 @@ export default {
 
 #panel-date-demenagement {
 
+    #agenda {
+      background-color: #FFF;
+      opacity: 0.95;
+      border: 1px solid #E85029;
+      box-shadow: 0 2px 2px 0 #E85029;
+    }
+
     table {
       border-collapse: collapse;
-      border: 1px solid rgb(100, 100, 100);
+      //border: 1px solid rgb(100, 100, 100);
       letter-spacing: 1px;
       margin: auto;
       table-layout: fixed;
@@ -436,13 +443,13 @@ export default {
 
     th,
     td {
-      overflow: hidden;
+      //overflow: hidden;
       text-align: center;
     }
 
 
     #month-display, #days-display {
-      border: 1px solid rgb(100, 100, 100);
+      //border: 1px solid rgb(100, 100, 100);
       padding: 5px 5px;
 
       i {
@@ -453,6 +460,8 @@ export default {
       }
 
       .right {
+        border: solid #E85029;
+        border-width: 0 4px 4px 0;
         transform: rotate(-45deg);
         -webkit-transform: rotate(-45deg);
         position: absolute;
@@ -464,11 +473,11 @@ export default {
           border-width: 0 5px 5px 0;
 
         }
-        &:active {
-        }
       }
 
       .left {
+        border: solid #E85029;
+        border-width: 0 4px 4px 0;
         transform: rotate(135deg);
         -webkit-transform: rotate(135deg);
         position: absolute;
@@ -478,9 +487,6 @@ export default {
           cursor: pointer;
           border: solid red;
           border-width: 0 5px 5px 0;
-
-        }
-        &:active {
 
         }
       }
@@ -493,6 +499,8 @@ export default {
 
       }
     }
+
+
 
 
 }

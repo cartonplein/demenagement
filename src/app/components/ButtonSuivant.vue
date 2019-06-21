@@ -1,7 +1,7 @@
 <template>
-<button class="button-suivant" style="vertical-align:middle" @click="onClick">
-  <span>Suivant <b>&gt;&gt;</b></span>
-</button>
+  <button id="button-suivant" @click="onClick">
+    <span>Suivant <b>&gt;&gt;</b></span>
+  </button>
 </template>
 
 <script>
@@ -16,9 +16,10 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 
-.button-suivant {
+#button-suivant {
+  vertical-align: middle;
   display: inline-block;
   padding: 8px 8px;
   font-size: 12px;
@@ -29,18 +30,18 @@ export default {
   color: #fff;
   background-color: #4CAF50;
   border: none;
-  border-radius: 10px;
   box-shadow: 0 9px #999;
   width: 120px;
   height: 40px;
-}
 
-.button-suivant:hover {background-color: #3e8e41}
 
-.button-suivant:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+  &:hover {background-color: #3e8e41}
+
+  &:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
 }
 
 </style>

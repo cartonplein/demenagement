@@ -2,8 +2,8 @@
     <div id="form-pickup-address">
 
         <div class="form-pickup-address-title">
-            <p style="color: black; font-size: 20px">
-                <b>Adresse de départ</b>
+            <p style="font-size: 20px">
+              <b>Adresse de départ</b>
             </p>
         </div>
 
@@ -48,15 +48,12 @@
                   <label for="input-pickup-address-surface">Surface (m²)<span style="color:red">*</span> :</label>
                   <select id="input-pickup-address-surface" ref="pickupSurface" @change="isFormCompleted">
                       <option value="" disabled selected>Selectionner une surface</option>
-                      <option value="5m²">5m²</option>
-                      <option value="10m²">10m²</option>
-                      <option value="15m²">15m²</option>
-                      <option value="20m²">20m²</option>
-                      <option value="25m²">25m²</option>
-                      <option value="30m²">30m²</option>
-                      <option value="35m²">35m²</option>
-                      <option value="40m²">40m²</option>
-                      <option value="Plus que 40m²">Plus que 40m²</option>
+                      <option value="10m²-20m²">10m²-20m²</option>
+                      <option value="20m²-30m²">20m²-30m²</option>
+                      <option value="30m²-40m²">30m²-40m²</option>
+                      <option value="40m²-50m²">40m²-50m²</option>
+                      <option value="50m²-60m²">50m²-60m²</option>
+                      <option value=">60m²">&gt;60m²</option>
                   </select>
               </div>
 
@@ -69,7 +66,11 @@
                       <option value="2">2</option>
                       <option value="3">3</option>
                       <option value="4">4</option>
-                      <option value="Plus que 4">Plus que 4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value=">8">&gt;8</option>
                   </select>
               </div>
 
@@ -78,7 +79,9 @@
                       <label for="input-pickup-address-ascenseur">Ascenseur<span style="color:red">*</span> :</label>
                       <select id="input-pickup-address-ascenseur" ref="pickupAscenseur" @change="isFormCompleted">
                           <option value="" disabled selected>Oui/Non</option>
-                          <option value="Oui">Oui</option>
+                          <option value="Oui - 2 personnes">Oui - 2 personnes</option>
+                          <option value="Oui - 3 personnes">Oui - 3 personnes</option>
+                          <option value="Oui - 4 personnes">Oui - 4 personnes</option>
                           <option value="Non">Non</option>
                       </select>
                   </div>
@@ -130,7 +133,7 @@ export default {
             this.errorPickupAdresse = false;
           }
           this.$refs.pickupAddress.clear();
-          this.$store.commit('setTarifAddresses', 0);
+          this.$store.commit('setFirstTarif', 0);
           this.$parent.$options.methods.initializePickupAddress();
           this.inputPickupAddress = '';
           this.isFormCompleted();
@@ -175,10 +178,11 @@ export default {
 
 #form-pickup-address {
     background: #FFF;
-    border: 2px solid black;
+    color: #E85029;
+    border: 1px solid #E85029;
+    box-shadow: 0 2px 2px 0 #E85029;
     border-radius: 10px;
     max-width: 300px;
-    margin: 0 auto;
     padding: 20px;
     overflow: hidden;
 
@@ -277,7 +281,6 @@ export default {
     }
 
     label {
-      color: black;
       font-size: 12px;
       font-weight: bold;
     }

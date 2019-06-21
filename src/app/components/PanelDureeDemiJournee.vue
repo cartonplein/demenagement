@@ -1,10 +1,8 @@
 <template>
     <div id="panel-duree-demi-journee" @click="onClick">
-      <h1 style="color:black; font-size: 20px"><b>Formule demi-journée</b></h1>
-      <p style="color:black; font-size: 15px">
-        <b>4 heures</b> </br>
-        Convient aux studios et petits appartements.
-      </p>
+      <h1>Formule demi-journée</h1>
+      <h2><b>4 heures</b> </h2>
+      <h2>Convient aux studios et petits appartements.</h2>
     </div>
 </template>
 
@@ -28,8 +26,9 @@ export default {
 
 #panel-duree-demi-journee {
   background: #FFF;
-  opacity: 0.95;
-  border: 1px solid black;
+  //opacity: 0.95;
+  border: 1px solid #E85029;
+  box-shadow: 0 2px 2px 0 #E85029;
   border-radius: 10px;
 
   max-width: 250px;
@@ -43,6 +42,17 @@ export default {
   &:hover {
     transform: translateY(5px);
     cursor: pointer;
+  }
+
+  h1 {
+    color: #E85029;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  h2 {
+    color: #E85029;
+    font-size: 15px;
   }
 }
 </style>

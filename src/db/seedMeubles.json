@@ -4,218 +4,370 @@
       "number": 1,
       "name": "Canapé 2 places",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 2,
+      "vr": 0.75,
+      "canDisassemble": false
     },
     "2": {
       "number": 2,
       "name": "Canapé 3 places",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 2.5,
+      "vr": 0.75,
+      "canDisassemble": false
     },
     "3": {
       "number": 3,
       "name": "Canapé clic-clac",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 2.5,
+      "vr": 0.75,
+      "canDisassemble": true
     },
     "4": {
       "number": 4,
-      "name": "Canapé d'angle",
+      "name": "Commode 3 tiroirs",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.35,
+      "canDisassemble": true
     },
     "5": {
       "number": 5,
-      "name": "Chaise",
+      "name": "Tabouret",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.1,
+      "canDisassemble": true
     },
     "6": {
       "number": 6,
-      "name": "Chaise de bureau",
+      "name": "Desserte",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": true
     },
     "7": {
       "number": 7,
-      "name": "Chaise pliante",
+      "name": "Table de chevet",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": true
     },
     "8": {
       "number": 8,
-      "name": "Commode",
+      "name": "Table à manger 4 places",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.6,
+      "canDisassemble": true
     },
     "9": {
       "number": 9,
-      "name": "Cuisinière",
+      "name": "Commode 4 tiroirs",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.6,
+      "canDisassemble": true
     },
     "10": {
       "number": 10,
-      "name": "Fauteuil",
+      "name": "Table basse",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": true
     },
     "11": {
       "number": 11,
-      "name": "Frigo-américain",
+      "name": "Armoire",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.6,
+      "canDisassemble": true
     },
     "12": {
       "number": 12,
-      "name": "Frigo-congélateur",
+      "name": "Étagères",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.25,
+      "canDisassemble": true
     },
     "13": {
       "number": 13,
-      "name": "Frigo-simple",
+      "name": "Bibliothèque double",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 1.0,
+      "canDisassemble": true
     },
     "14": {
       "number": 14,
-      "name": "Grande table",
+      "name": "Bibliothèque simple",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": true
     },
     "15": {
       "number": 15,
-      "name": "Lit bébé",
+      "name": "Rangement",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": true
     },
     "16": {
       "number": 16,
-      "name": "Lit double",
+      "name": "Bureau 1 personne",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.5,
+      "canDisassemble": true
     },
     "17": {
       "number": 17,
-      "name": "Lit simple",
+      "name": "Cadres",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.1,
+      "canDisassemble": false
     },
     "18": {
       "number": 18,
-      "name": "Lit superposé",
+      "name": "Carton livre",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.05,
+      "canDisassemble": false
     },
     "19": {
       "number": 19,
-      "name": "Moyenne table",
+      "name": "Carton penderie",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": false
     },
     "20": {
       "number": 20,
-      "name": "Petite table",
+      "name": "Carton standard",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.05,
+      "canDisassemble": false
     },
     "21": {
       "number": 21,
-      "name": "Placard 1 porte",
+      "name": "Chaise empilable",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.1,
+      "canDisassemble": true
     },
     "22": {
       "number": 22,
-      "name": "Placard 2 portes",
+      "name": "Chaise non empilable",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.15,
+      "canDisassemble": true
     },
     "23": {
       "number": 23,
-      "name": "Placard 3 portes",
+      "name": "Fauteuil",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": false
     },
     "24": {
       "number": 24,
-      "name": "Placard cuisine",
+      "name": "Gasinière",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
     },
     "25": {
       "number": 25,
-      "name": "Table à langer",
+      "name": "Lave vaisselle",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
     },
     "26": {
       "number": 26,
-      "name": "Table à repasser",
+      "name": "Machine à laver",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
     },
     "27": {
       "number": 27,
-      "name": "Table basse",
+      "name": "Matelas double",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
     },
     "28": {
       "number": 28,
-      "name": "Table d'appoint",
+      "name": "Matelas simple",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
     },
     "29": {
       "number": 29,
-      "name": "Table de jardin",
+      "name": "Plantes",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": false
     },
     "30": {
       "number": 30,
-      "name": "Table de nuit",
+      "name": "Refrigérateur",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
     },
     "31": {
       "number": 31,
-      "name": "Table pliante",
+      "name": "Sommier double",
       "image": "",
-      "tarif": "",
-      "volume": ""
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
+    },
+    "32": {
+      "number": 32,
+      "name": "Table à langer",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.4,
+      "canDisassemble": true
+    },
+    "33": {
+      "number": 33,
+      "name": "Sommier simple",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": false
+    },
+    "34": {
+      "number": 34,
+      "name": "Lit enfant",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.3,
+      "canDisassemble": true
+    },
+    "35": {
+      "number": 35,
+      "name": "Coffre/Malle",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.35,
+      "canDisassemble": false
+    },
+    "36": {
+      "number": 36,
+      "name": "Écran/Ordinateur/Télévision",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.2,
+      "canDisassemble": false
+    },
+    "37": {
+      "number": 37,
+      "name": "Chaîne Hifi/Playstation",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.1,
+      "canDisassemble": false
+    },
+    "38": {
+      "number": 38,
+      "name": "Meuble TV long",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.7,
+      "canDisassemble": true
+    },
+    "39": {
+      "number": 39,
+      "name": "Bonnetière",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.4,
+      "canDisassemble": true
+    },
+    "40": {
+      "number": 40,
+      "name": "Dressing complet",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 2.07,
+      "canDisassemble": true
+    },
+    "41": {
+      "number": 41,
+      "name": "Micro-onde",
+      "image": "",
+      "tarif": 0,
+      "volume": 0,
+      "vr": 0.1,
+      "canDisassemble": false
     }
   }
 }

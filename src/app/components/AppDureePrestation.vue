@@ -1,6 +1,6 @@
 <template>
     <div id="app-duree-prestation">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez la durée de la prestation : </h1>
+        <h1>Choisissez la durée de la prestation : </h1>
         <div id="panel-duree-prestation" class="container">
             <div class="columns is-mobile">
               <div class="columns">
@@ -56,7 +56,7 @@ export default {
       this.$parent.$options.methods.openPageDateDemenagement();
     },
     returnPageTailleLogement() {
-      this.$store.commit('setTarif', this.$store.state.tarifAddresses);
+      this.$store.commit('setTarif', this.$store.state.firstTarif);
       this.$parent.$options.methods.returnPageTailleLogement();
     }
   }
@@ -93,8 +93,18 @@ html, body {
     bottom: 30px;
   }
 
+
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 }
 

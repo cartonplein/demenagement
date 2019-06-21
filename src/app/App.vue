@@ -4,32 +4,29 @@
           <LogoCartonPlein />
           <AppAddress />
       </div>
-      <div id="app-type-demenagement" style="display:none"> <!--style="display:none"-->
+      <div id="app-type-demenagement"> <!--style="display:none"-->
           <AppTypeDemenagement />
       </div>
-      <div id="app-taille-logement" style="display:none">
-          <AppTailleLogement />
-      </div>
-      <div id="app-duree-prestation" style="display:none">
-          <AppDureePrestation />
-      </div>
-      <div id="app-inventaire" style="display:none">
+      <div id="app-inventaire" >
           <AppInventaire />
       </div>
-      <div id="app-demontage" style="display:none">
+      <div id="app-demontage">
           <AppDemontage />
       </div>
-      <div id="app-date-demenagement" style="display:none">
+      <div id="app-taille-logement">
+          <AppTailleLogement />
+      </div>
+      <div id="app-duree-prestation">
+          <AppDureePrestation />
+      </div>
+      <div id="app-date-demenagement">
           <AppDateDemenagement />
       </div>
-      <div id="app-options" style="display:none">
+      <div id="app-options">
           <AppOptions />
       </div>
-      <div id="app-recapitulatif" style="display:none">
+      <div id="app-recapitulatif">
           <AppRecapitulatif />
-      </div>
-      <div id="payment" style="display:none">
-          <Payment />
       </div>
     </div>
 
@@ -98,14 +95,9 @@ export default {
 
     /* depuis Page Type Déménagement */
     openPageTailleLogement() {
-
-      store.commit('setTypeForfait', true);
-      store.commit('setTypeInventaire', false);
       this.openNextPage("app-type-demenagement", "app-taille-logement");
     },
     openPageInventaire() {
-      store.commit('setTypeForfait', false);
-      store.commit('setTypeInventaire', true);
       this.openNextPage("app-type-demenagement", "app-inventaire");
     },
     returnPageAddress() {
@@ -125,22 +117,29 @@ export default {
 
     /* depuis Page Duree Prestation ou Page Inventaire */
     returnPageTypeDemenagement() {
-      if(store.state.isForfait) {
+      if(store.state.isAideDem) {
         this.returnPreviousPage("app-taille-logement", "app-type-demenagement");
       }
       if(store.state.isInventaire) {
         this.returnPreviousPage("app-inventaire", "app-type-demenagement");
       }
-      store.commit('setTypeForfait', false);
+      if(store.state.isTransport) {
+        this.returnPreviousPage("app-inventaire", "app-type-demenagement");
+      }
+      store.commit('setTypeAideDem', false);
       store.commit('setTypeInventaire', false);
+      store.commit('setTypeTransport', false);
     },
 
     /* depuis Page Taille Logement ou Page Demontage */
     openPageDateDemenagement() {
-      if(store.state.isForfait) {
+      if(store.state.isAideDem) {
         this.openNextPage("app-duree-prestation", "app-date-demenagement");
       }
       if(store.state.isInventaire) {
+        this.openNextPage("app-demontage", "app-date-demenagement");
+      }
+      if(store.state.isTransport) {
         this.openNextPage("app-demontage", "app-date-demenagement");
       }
     },
@@ -158,7 +157,7 @@ export default {
     },
 
     returnPageBeforeDateDemenagement () {
-      if(store.state.isForfait) {
+      if(store.state.isAideDem) {
         if(store.getters.getDureePrestationUser == 'Une journée') {
           store.commit('setTarif', store.state.tarifPrec/2);
         }
@@ -183,10 +182,6 @@ export default {
 
     returnPageOptions () {
       this.returnPreviousPage("app-recapitulatif", "app-options");
-    },
-
-    openPaymentPage () {
-      this.openNextPage("app-recapitulatif", "payment");
     }
 
   }

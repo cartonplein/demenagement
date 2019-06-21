@@ -1,6 +1,6 @@
 <template>
     <div id="element-search-bar" @click="addElementInInventaire(element)">
-      <div class="element-name has-text-justified has-text-black"><b>{{ element.name }} ({{ element.volume }}m³)</b></div>
+      <div class="element-name has-text-justified"><b>{{ element.name }}</b></div>
     </div>
 </template>
 
@@ -21,7 +21,9 @@ export default {
             }
           });
         }
-        this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
+        this.$store.commit('setVrTotalInventaire', Math.round((this.$store.state.vrTotalInventaire+element.vr)*100)/100);
+        this.$store.dispatch('calculateNumberMovers');
+        //this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
       },
       isElementAdded(element) {
         var found = false;
@@ -41,22 +43,20 @@ export default {
 <style lang="scss" scoped>
 
 #element-search-bar {
-    border: 1px solid #ddd;
+    border: 1px solid #B43F21;
     margin-top: -1px;
-    background-color: #f6f6f6;
+    background-color: #E85029;
+    color: #FFF;
     padding: 12px;
     text-decoration: none;
     font-size: 15px;
     height: 50px;
     max-height: 50px;
-    width: 500px;
+    width: 630px;
 
     &:hover {
-      background: darken(#b1b1b1,1%);
+      background: darken(#B43F21,1%);
       cursor: pointer;
-    }
-    &:active {
-      background-color: #b1b1b1;
     }
 }
 

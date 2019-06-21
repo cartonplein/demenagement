@@ -31,11 +31,11 @@
               <th scope="row">Votre type de déménagement</th>
               <td>{{ getTypeDemenagementUser() }}</td>
             </tr>
-            <tr v-show="isForfait">
+            <tr v-show="isAideDem">
               <th scope="row">Votre taille de logement</th>
               <td>{{ getTailleLogementUser() }}</td>
             </tr>
-            <tr v-show="isForfait">
+            <tr v-show="isAideDem">
               <th scope="row">Votre durée de prestation</th>
               <td>{{ getDureePrestationUser() }}</td>
             </tr>
@@ -108,9 +108,7 @@
       </div>
 
       <div class="panel-recapitulatif-total">
-          <p style="color: black; font-size: 25px; font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif">
-              <b>TOTAL : {{ tarifTotal }} €</b>
-          </p>
+          <h1><b>TOTAL : {{ tarifTotal }} €</b></h1>
       </div>
     </div>
 </template>
@@ -153,8 +151,8 @@ export default {
       }
     },
     computed: {
-      isForfait () {
-        return this.$store.state.isForfait;
+      isAideDem () {
+        return this.$store.state.isAideDem;
       },
       isInventaire () {
         return this.$store.state.isInventaire;
@@ -171,9 +169,10 @@ export default {
 
 #panel-recapitulatif {
     background: #FFF;
+    box-shadow: 0 2px 2px 0 #E85029;
     opacity: 0.95;
-    border: 1px solid black;
-    border-radius: 10px;
+    border: 1px solid #E85029;
+    //border-radius: 10px;
     padding: 15px;
     width: 750px;
     max-width: 750px;
@@ -184,9 +183,11 @@ export default {
     position: relative;
 
     .panel-recapitulatif-total {
-      border-top: 1.5px solid black;
+      border-top: 1.5px solid #E85029;
       position: absolute;
       bottom: 10px;
+      color: #E85029;
+      font-size: 25px;
     }
 
     .tooltip {
@@ -196,8 +197,7 @@ export default {
         visibility: hidden;
         width: 200px;
         max-width: 200px;
-        background-color: black;
-        color: #fff;
+        background-color: #E85029;
         text-align: center;
         border-radius: 6px;
         padding: 5px 5px;
@@ -213,8 +213,8 @@ export default {
       }
       table, th, td {
         font-size: 12px;
-        color: white;
-        border: 2px solid white;
+        color: #FFF;
+        border: 2px solid #FFF;
       }
       th, td {
         padding: 3px 3px;
@@ -223,7 +223,8 @@ export default {
 
 
     table, th, td {
-      border: 2px solid black;
+      border: 2px solid #E85029;
+      color: #E85029;
     }
 
     th, td {

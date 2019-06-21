@@ -15,8 +15,8 @@
       </div>
       <div class="cell" style="width: 30%">
         <div id="choices-options">
-          <span style="color: black"><b><ins>Vos options :</ins></b></span>
-          <p style="color: black; font-size: 13px;" v-show="!(Array.isArray(this.$store.state.choicesUser.options) && this.$store.state.choicesUser.options.length)">Ajoutez des options depuis le catalogue</p>
+          <span><b><ins>Vos options :</ins></b></span>
+          <p style="font-size: 13px;" v-show="!(Array.isArray(this.$store.state.choicesUser.options) && this.$store.state.choicesUser.options.length)">Ajoutez des options depuis le catalogue</p>
           <div id="choice-element" v-for="element in this.$store.state.choicesUser.options"
             :key="element.number"
             :element="element">
@@ -111,8 +111,9 @@ export default {
     overflow-y: scroll;
     scroll-behavior: smooth;
     height: 100%;
-    border: 2px solid black;
-    background: #E85029;
+    border: 2px solid #E85029;
+    background: #FFF;
+    box-shadow: 0 2px 2px 0 #E85029;
     padding: 10px;
     width: 100%;
     opacity: 0.95;
@@ -120,8 +121,10 @@ export default {
 
   #choices-options {
     margin: 0;
-    border: 2px solid black;
-    background: #E85029;
+    color: #E85029;
+    border: 2px solid #E85029;
+    background: #FFF;
+    box-shadow: 0 2px 2px 0 #E85029;
     padding: 10px;
     opacity: 0.95;
     width: 100%;
@@ -133,13 +136,14 @@ export default {
     padding: 15px;
     width: 100%;
     height: 85px;
-    background: white;
+    background: #FFF;
     margin-left: auto;
     margin-bottom: 5px;
-    border: 1px solid gray;
-    border-radius: 5px;
+    border: 1px solid #E85029;
+    box-shadow: 0 2px 2px 0 #E85029;
+    border-radius: 10px;
     font-size: 13px;
-    color: black;
+    color: #E85029;
     text-align: justify;
     cursor: pointer;
     position: relative;
@@ -152,7 +156,7 @@ export default {
       position: absolute;
       bottom: 2px;
       right: 2px;
-      color: white;
+      color: #FFF;
       background: green;
       padding-left: 8px;
       padding-right: 8px;
@@ -161,23 +165,24 @@ export default {
   }
 
   #choice-element {
-    border: 1px solid gray;
+    border: 1px solid #E85029;
+    box-shadow: 0 2px 2px 0 #E85029;
     margin-bottom: 1px;
     background: #FFF;
     padding: 10px;
     opacity: 0.95;
     width: 100%;
     height: 60px;
-    color: black;
+    color: #E85029;
     font-size: 11px;
-    border-radius: 5px;
+    //border-radius: 5px;
     position: relative;
 
     .btn-plus {
       position: absolute;
       background-color: #4CAF50;
       font-size: 10px;
-      color: white;
+      color: #FFF;
       right: 60px;
       bottom: 6px;
       border-radius: 10px;
@@ -195,7 +200,7 @@ export default {
       position: absolute;
       background-color: #ff0000ff;
       font-size: 10px;
-      color: white;
+      color: #FFF;
       left: 60px;
       bottom: 6px;
       border-radius: 10px;

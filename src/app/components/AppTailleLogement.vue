@@ -1,6 +1,6 @@
 <template>
     <div id="app-taille-logement">
-        <h1 style="color:white; font-size: 200%; padding-bottom: 20px ">Choisissez la taille de votre logement : </h1>
+        <h1>Choisissez la taille de votre logement : </h1>
         <div id="panel-taille-logement" class="container">
             <div class="columns is-mobile">
               <div class="columns is-multiline" style="width: 1000px; max-width: 850px">
@@ -94,7 +94,16 @@ html, body {
   }
 
   h1 {
+    font-size: 200%;
+    font-weight: bold;
+    padding-bottom: 20px;
     margin-top: 70px;
+    color: #E85029;
+  }
+
+  mark {
+    background-color: #E85029;
+    color: #FFF;
   }
 }
 
