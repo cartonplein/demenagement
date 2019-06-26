@@ -290,6 +290,11 @@ export default {
     setActiveMonth(monthNumber) {
       this.$store.commit('unselectAllDays');
       this.$store.commit('setActiveMonth', monthNumber);
+      if(this.$store.getters.getDateDemenagementUser.length !== 0) {
+        if(this.$store.getters.getDateDemenagementUser[1] == this.getActiveMonth().number) {
+          this.$store.commit('setSelectedDay', this.$store.getters.getDateDemenagementUser[0]);
+        }
+      }
     },
 
     getActiveMonth() {

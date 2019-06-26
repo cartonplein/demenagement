@@ -24,7 +24,8 @@ export const store = new Vuex.Store({
         tailleLogement: null,
         dureePrestation: null,
         inventaire: [],
-        dateDemenagement: '',
+        dateDemenagement: [],
+        creneauDemenagement: '',
         options: [],
         contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: [] },
         orderDateTime: ''
@@ -34,7 +35,8 @@ export const store = new Vuex.Store({
       tarifOptions: 0,
       tarif: 0,
       vrTotalInventaire: 0,
-      numberMovers: 0
+      numberMovers: 0,
+      numberItems: 0
     },
 
     getters: {
@@ -95,6 +97,10 @@ export const store = new Vuex.Store({
         return store.state.choicesUser.dateDemenagement;
       },
 
+      getCreneauDemenagementUser () {
+        return store.state.choicesUser.creneauDemenagement;
+      },
+
       getOptionsUser() {
         return store.state.choicesUser.options;
       },
@@ -105,6 +111,10 @@ export const store = new Vuex.Store({
 
       getNumberMovers() {
         return store.state.numberMovers;
+      },
+
+      getNumberItems() {
+        return store.state.numberItems;
       }
     },
 
@@ -234,24 +244,31 @@ export const store = new Vuex.Store({
         state.choicesUser.dureePrestation = dureePrestation;
       },
 
+      setInventaireUser(state, inventaire) {
+        state.choicesUser.inventaire = inventaire;
+        console.log(state.choicesUser.inventaire);
+      },
+
       addElementInInventaire(state, element) {
         state.choicesUser.inventaire.push({
-          number: element.number,
-          name: element.name,
-          image: element.image,
-          volume: element.volume,
-          tarif: element.tarif,
-          vr: element.vr,
-          quantity: 1,
-          canDisassemble: element.canDisassemble,
-          quantityDemonter: 0
+          number: element[0].number,
+          name: element[0].name,
+          image: element[0].image,
+          volume: element[0].volume,
+          vr: element[0].vr,
+          canDisassemble: element[0].canDisassemble,
+          quantity: element[1],
+          quantityDemonter: element[2],
+          tab: element[3]
         });
       },
+
 
       deleteElementFromInventaire(state, element) {
         state.choicesUser.inventaire.splice(state.choicesUser.inventaire.indexOf(element), 1);
       },
 
+      /*
       modifyQuantityElementInventaire(state, elementNumberAndQuantity) {
         state.choicesUser.inventaire.map((elementObj) => {
           if(elementObj.number === elementNumberAndQuantity[0]) {
@@ -267,14 +284,20 @@ export const store = new Vuex.Store({
           }
         });
       },
+      */
 
       setVrTotalInventaire (state, vrTotalInventaire) {
         state.vrTotalInventaire = vrTotalInventaire;
       },
 
       emptyInventaire(state) {
+        state.choicesUser.inventaire = [];
+      },
+
+      resetInventaire(state) {
         for(var i=0; i<state.choicesUser.inventaire.length; i++) {
-          state.choicesUser.inventaire.splice(state.choicesUser.inventaire[i], 1);
+          state.choicesUser.inventaire[i].quantity = 0;
+          state.choicesUser.inventaire[i].quantityDemonter = 0;
         }
       },
 
@@ -284,6 +307,10 @@ export const store = new Vuex.Store({
 
       setDateDemenagement (state, dateDemenagement) {
         state.choicesUser.dateDemenagement = dateDemenagement;
+      },
+
+      setCreneauDemenagement (state, creneauDemenagement) {
+        state.choicesUser.creneauDemenagement = creneauDemenagement;
       },
 
       addOption(state, element) {
@@ -323,6 +350,10 @@ export const store = new Vuex.Store({
 
       setNumberMovers(state, numberMovers) {
         state.numberMovers = numberMovers;
+      },
+
+      setNumberItems(state, numberItems) {
+        state.numberItems = numberItems;
       }
 
 
@@ -333,7 +364,10 @@ export const store = new Vuex.Store({
         context.commit('setTypeDemenagement', '');
         context.commit('setTailleLogement', null);
         context.commit('setDureePrestation', null);
-        context.commit('emptyInventaire');
+        context.commit('resetInventaire');
+        context.commit('setNumberItems', 0);
+        context.commit('setNumberMovers', 0);
+        //context.commit('emptyInventaire');
         context.commit('setVrTotalInventaire', 0);
         context.commit('setDateDemenagement', '');
         context.commit('emptyOptions');
@@ -343,20 +377,22 @@ export const store = new Vuex.Store({
       },
 
       calculateNumberMovers(context) {
-        let oversize = false;
-        if(context.getters.getInventaireUser.length !== 0) {
+        let twoMovers = false;
+        if(context.getters.getNumberItems !== 0) {
           for(var i=0; i<context.getters.getInventaireUser.length; i++) {
-            console.log(context.getters.getInventaireUser[i]);
-            if(context.getters.getInventaireUser[i].vr > 0.2) {
-              oversize = true;
+            if(context.getters.getInventaireUser[i].vr > 0.2 && context.getters.getInventaireUser[i].quantity > 0) {
+              twoMovers = true;
             }
           }
-          if(oversize) {
+          if(twoMovers) {
             context.commit('setNumberMovers', 2);
           }
           else {
             context.commit('setNumberMovers', 1);
           }
+        }
+        else {
+          context.commit('setNumberMovers', 0);
         }
       },
 

@@ -7,7 +7,6 @@ import App from './App.vue';
 import { store } from './store.js'
 
 Vue.use(VueFire);
-
 Vue.use(VueStripeCheckout, 'pk_test_VwTRhhTmGeEZVzbnn9ozpwfN00lGct3b8L');
 
 

@@ -8,8 +8,8 @@
               <td>
                 <ul>
                   <li>{{ getPickupAddressUser().adresse }}</li>
-                  <li style="font-size: 11px">Surface : {{ getPickupAddressUser().surface }} | Etage : {{ getPickupAddressUser().etage }} |
-                  Ascenseur : {{ getPickupAddressUser().ascenseur }} | Cave : {{ getPickupAddressUser().cave }}</li>
+                  <li style="font-size: 11px"><b>Surface :</b> {{ getPickupAddressUser().surface }} | <b>Etage :</b> {{ getPickupAddressUser().etage }} |
+                  <b>Ascenseur :</b> {{ getPickupAddressUser().ascenseur }} | <b>Cave :</b> {{ getPickupAddressUser().cave }}</li>
                 </ul>
               </td>
             </tr>
@@ -18,8 +18,8 @@
               <td>
                 <ul>
                   <li>{{ getDestinationAddressUser().adresse }}</li>
-                  <li style="font-size: 11px">Surface : {{ getDestinationAddressUser().surface }} | Etage : {{ getDestinationAddressUser().etage }} |
-                  Ascenseur : {{ getDestinationAddressUser().ascenseur }} | Cave : {{ getDestinationAddressUser().cave }}</li>
+                  <li style="font-size: 11px"><b>Surface :</b> {{ getDestinationAddressUser().surface }} | <b>Etage :</b> {{ getDestinationAddressUser().etage }} |
+                  <b>Ascenseur :</b> {{ getDestinationAddressUser().ascenseur }} | <b>Cave :</b> {{ getDestinationAddressUser().cave }}</li>
                 </ul>
               </td>
             </tr>
@@ -50,7 +50,7 @@
                         <th>Meuble</th>
                         <th>Qté</th>
                       </tr>
-                      <tr v-for="element in inventaire">
+                      <tr v-for="element in $store.getters.getInventaireUser" v-if="element.quantity > 0">
                         <td>{{ element.name }}</td>
                         <td>{{ element.quantity }}</td>
                       </tr>
@@ -70,7 +70,7 @@
                         <th>Meuble</th>
                         <th>Qté</th>
                       </tr>
-                      <tr v-for="element in inventaire" v-if="element.quantityDemonter > 0">
+                      <tr v-for="element in $store.getters.getInventaireUser" v-if="element.quantityDemonter > 0">
                         <td>{{ element.name }}</td>
                         <td>{{ element.quantityDemonter }}</td>
                       </tr>
@@ -81,7 +81,7 @@
             </tr>
             <tr>
               <th scope="row">Votre date de déménagement</th>
-              <td>{{ getDateDemenagementUser() }}</td>
+              <td>{{ getDateDemenagementUser() }} ({{ getCreneauDemenagementUser() }})</td>
             </tr>
             <tr>
               <th scope="row">Vos options</th>
@@ -94,7 +94,7 @@
                         <th>Option</th>
                         <th>Qté</th>
                       </tr>
-                      <tr v-for="element in options"">
+                      <tr v-for="element in $store.getters.getOptionsUser">
                         <td>{{ element.name }}</td>
                         <td>{{ element.quantity }}</td>
                       </tr>
@@ -122,9 +122,7 @@ export default {
         typeDemenagement: 'typeDemenagement',
         dureePrestation: 'dureePrestation',
         tailleLogement: 'tailleLogement',
-        dateDemenagement: 'dateDemenagement',
-        inventaire: this.$store.getters.getInventaireUser,
-        options: this.$store.getters.getOptionsUser
+        dateDemenagement: 'dateDemenagement'
       }
     },
     methods: {
@@ -147,7 +145,14 @@ export default {
         return this.$store.getters.getDureePrestationUser;
       },
       getDateDemenagementUser() {
-        return this.$store.getters.getDateDemenagementUser;
+        let date = this.$store.getters.getDateDemenagementUser;
+        if(date.length ==  0) {
+          return '';
+        }
+        return ""+date[0]+"/"+(date[1]+1)+"/"+date[2]+"";
+      },
+      getCreneauDemenagementUser() {
+        return this.$store.getters.getCreneauDemenagementUser;
       }
     },
     computed: {

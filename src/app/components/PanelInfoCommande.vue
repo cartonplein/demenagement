@@ -98,7 +98,7 @@
                                         <th>Meuble</th>
                                         <th>Qté</th>
                                       </tr>
-                                      <tr v-for="element in inventaire">
+                                      <tr v-for="element in $store.getters.getInventaireUser" v-if="element.quantity > 0">
                                         <td>{{ element.name }}</td>
                                         <td>{{ element.quantity }}</td>
                                       </tr>
@@ -117,7 +117,7 @@
                                         <th>Meuble</th>
                                         <th>Qté</th>
                                       </tr>
-                                      <tr v-for="element in inventaire" v-if="element.quantityDemonter > 0">
+                                      <tr v-for="element in $store.getters.getInventaireUser" v-if="element.quantityDemonter > 0">
                                         <td>{{ element.name }}</td>
                                         <td>{{ element.quantityDemonter }}</td>
                                       </tr>
@@ -127,7 +127,7 @@
             </li>
             <li v-bind:class="{ 'hideElement': true,
                                 'displayElement': isPageDateDemenagement || isPageOptions }">
-                                <b><br/>Date de déménagement :</b><br/> {{ getDateDemenagementUser() }}
+                                <b><br/>Date de déménagement :</b><br/> {{ getDateDemenagementUser() }}<br/> {{ getCreneauDemenagementUser() }}
             </li>
           </ul>
 
@@ -152,7 +152,6 @@ export default {
         dureePrestation: 'dureePrestation',
         tailleLogement: 'tailleLogement',
         dateDemenagement: 'dateDemenagement',
-        inventaire: this.$store.getters.getInventaireUser
       }
     },
     methods: {
@@ -175,7 +174,14 @@ export default {
         return this.$store.getters.getDureePrestationUser;
       },
       getDateDemenagementUser() {
-        return this.$store.getters.getDateDemenagementUser;
+        let date = this.$store.getters.getDateDemenagementUser;
+        if(date.length ==  0) {
+          return '';
+        }
+        return ""+date[0]+"/"+(date[1]+1)+"/"+date[2]+"";
+      },
+      getCreneauDemenagementUser() {
+        return this.$store.getters.getCreneauDemenagementUser;
       }
     },
     computed: {
@@ -203,8 +209,8 @@ export default {
     padding: 15px;
     width: 200px;
     max-width: 200px;
-    height: 550px;
-    max-height: 550px;
+    height: 500px;
+    max-height: 500px;
     display: inline-block;
     align-self: stretch;
 

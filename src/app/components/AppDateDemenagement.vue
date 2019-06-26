@@ -4,10 +4,15 @@
         <div id="panel-date-demenagement" class="container">
           <PanelDateDemenagement></PanelDateDemenagement>
         </div>
+        <div id="panel-creneaux-horaires" v-show="$store.getters.getDateDemenagementUser.length !== 0">
+          <b>Choisir votre créneau horaire :</b>
+          <div class="choice-creneau has-text-centered" v-bind:class="{ 'creneau-selected': isCreneauMatin }" @click="setCreneau(1)">Entre 10h et 12h</div>
+          <div class="choice-creneau has-text-centered" v-bind:class="{ 'creneau-selected': isCreneauSoir }" @click="setCreneau(2)">Entre 14h et 16h</div>
+        </div>
         <div class="panel-info-commande">
           <PanelInfoCommande />
         </div>
-        <ButtonSuivant id="button-suivant" :onClick="openPageOptions" v-bind:class="{ 'disableButton': this.$store.getters.getDateDemenagementUser == '' }"></ButtonSuivant>
+        <ButtonSuivant id="button-suivant" :onClick="openPageOptions" v-bind:class="{ 'disableButton': $store.getters.getCreneauDemenagementUser == '' }"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageBeforeDateDemenagement"></ButtonPrecedent>
     </div>
 </template>
@@ -23,7 +28,10 @@ export default {
   name: 'AppDateDemenagement',
   data () {
     return {
-      isPageDateDemenagement: true
+      isPageDateDemenagement: true,
+
+      isCreneauMatin: false,
+      isCreneauSoir: false
     }
   },
   components: {
@@ -33,12 +41,25 @@ export default {
     ButtonPrecedent
   },
   methods: {
+    setCreneau(creneau) {
+      if(creneau == 1) {
+        this.isCreneauMatin = true;
+        this.isCreneauSoir = false;
+        this.$store.commit('setCreneauDemenagement', 'Entre 10h - 12h');
+      }
+      if(creneau == 2) {
+        this.isCreneauMatin = false;
+        this.isCreneauSoir = true;
+        this.$store.commit('setCreneauDemenagement', 'Entre 14h - 16h');
+      }
+    },
     openPageOptions() {
       this.$parent.$options.methods.openPageOptions();
     },
     returnPageBeforeDateDemenagement() {
       this.$store.commit('unselectAllDays');
       this.$store.commit('setDateDemenagement', '');
+      this.$store.commit('setCreneauDemenagement', '');
       this.$store.commit('emptyOptions');
       this.$store.commit('setTarifOptions', 0);
       //this.$store.commit('setTarifPrecDate', 0);
@@ -72,6 +93,34 @@ html, body {
     right: 0;
     bottom: 100px;
   }
+
+  #panel-creneaux-horaires {
+    position: absolute;
+    top: 138px;
+    right: 240px;
+    width: 180px;
+    height: 200px;
+    border: 1px solid #E85029;
+    background: #FFF;
+    box-shadow: 0 2px 2px 0 #E85029;
+    padding: 10px;
+    color: #E85029;
+
+    .choice-creneau {
+      border: 1px solid #E85029;
+      background: #FFF;
+      padding: 5px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    .creneau-selected {
+      background: #E85029;
+      color: #FFF;
+    }
+  }
+
+
 
   #button-suivant {
     position: absolute;

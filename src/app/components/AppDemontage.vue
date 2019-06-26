@@ -4,7 +4,7 @@
         <div id="panel-dem" class="container">
           <div id="panel-demontage">
             <div class="columns is-multiline">
-              <PanelElementDemontage id="panel-element-demontage" v-for="element in inventaire"
+              <PanelElementDemontage id="panel-element-demontage" v-for="element in this.$store.getters.getInventaireUser"
                 :key="element.id"
                 :element="element" />
             </div>
@@ -29,8 +29,7 @@ export default {
   name: 'AppDemontage',
   data () {
     return {
-      isPageDemontage: true,
-      inventaire: this.$store.getters.getInventaireUser
+      isPageDemontage: true
     }
   },
   components: {

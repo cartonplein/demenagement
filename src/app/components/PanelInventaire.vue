@@ -1,58 +1,85 @@
 <template>
     <div id="panel-inventaire">
-      <input id="input-search-bar" type="text" v-model="searchElement" placeholder="Cherchez un objet pour l'ajouter" v-on:click="showList=true" v-click-outside="hideList">
-      <div id="list-elements-search-bar" v-show="showList && isInventaire">
-        <ElementSearchBar id="element-search-bar" v-for="element in filteredListInventaire"
-          :key="element.number"
-          :element="element" />
-      </div>
-      <div id="list-elements-search-bar" v-show="showList && isTransport">
-        <ElementSearchBar id="element-search-bar" v-for="element in filteredListTransport"
-          :key="element.number"
-          :element="element" />
-      </div>
-      <div id="list-elements-search-bar" v-show="showList && this.$store.state.vrTotalInventaire == 1 && isTransport">
-        <div id="msg-limit-reached">
-          <p>Vous avez atteint le volume maximum pour transport simple.</p>
-        </div>
-      </div>
-      <div id="panel-inventaire-list">
+      <input id="input-search-bar" type="text" v-model="searchElement" placeholder="Cherchez un objet pour filtrer">
+      <table id="buttonsTab">
+        <tr>
+          <td class="buttonTab has-text-centered" v-on:click="openTab(0)" v-bind:class="{ 'tabActive': tabs[0] }">SALON/SÉJOUR</td>
+          <td class="buttonTab has-text-centered" v-on:click="openTab(1)" v-bind:class="{ 'tabActive': tabs[1] }">BUREAU</td>
+          <td class="buttonTab has-text-centered" v-on:click="openTab(2)" v-bind:class="{ 'tabActive': tabs[2] }">CHAMBRE</td>
+          <td class="buttonTab has-text-centered" v-on:click="openTab(3)" v-bind:class="{ 'tabActive': tabs[3] }">CUISINE</td>
+          <td class="buttonTab has-text-centered" v-on:click="openTab(4)" v-bind:class="{ 'tabActive': tabs[4] }">CELLIER</td>
+          <td class="buttonTab has-text-centered" v-on:click="openTab(5)" v-bind:class="{ 'tabActive': tabs[5] }">DIVERS</td>
+        </tr>
+      </table>
+      <div class="panel-inventaire-list" v-if="tabs[0]">
         <div class="columns is-multiline">
-          <PanelElementInventaire id="panel-element-inventaire" v-for="element in this.$store.state.choicesUser.inventaire"
-            :key="element.number"
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
+            v-if="element.tab == 0"
+            :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
       </div>
-      <div id="panel-inventaire-calcul" v-show="this.$store.state.choicesUser.inventaire.length !== 0">
+      <div class="panel-inventaire-list" v-if="tabs[1]">
+        <div class="columns is-multiline">
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
+            v-if="element.tab == 1"
+            :key="filteredInventaire.indexOf(element)"
+            :element="element" />
+        </div>
+      </div>
+      <div class="panel-inventaire-list" v-if="tabs[2]">
+        <div class="columns is-multiline">
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
+            v-if="element.tab == 2"
+            :key="filteredInventaire.indexOf(element)"
+            :element="element" />
+        </div>
+      </div>
+      <div class="panel-inventaire-list" v-if="tabs[3]">
+        <div class="columns is-multiline">
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
+            v-if="element.tab == 3"
+            :key="filteredInventaire.indexOf(element)"
+            :element="element" />
+        </div>
+      </div>
+      <div class="panel-inventaire-list" v-if="tabs[4]">
+        <div class="columns is-multiline">
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
+            v-if="element.tab == 4"
+            :key="filteredInventaire.indexOf(element)"
+            :element="element" />
+        </div>
+      </div>
+      <div class="panel-inventaire-list" v-if="tabs[5]">
+        <div class="columns is-multiline">
+          <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
+            v-if="element.tab == 5"
+            :key="filteredInventaire.indexOf(element)"
+            :element="element" />
+        </div>
+      </div>
+      <div id="panel-calcul-transport-simple" v-show="$store.getters.getNumberItems !== 0">
         <table style="width:100%; margin-bottom: 3px;">
-          <tr>
-            <th>Équivalent vélo-remorque</th>
-            <td>{{ getVrTotalInventaire() }}</td>
-          </tr>
           <tr>
             <th>Nombre de déménageurs</th>
             <td>{{ numberMovers }}</td>
           </tr>
+        </table>
+        <div style="margin-bottom: 10px;">
+          <input type="checkbox" @change="toggleCheckbox()" ref="checkboxOneMover"><span style="margin-left: 5px; font-size: 13px; font-weight: bold">Je n'ai besoin qu'un seul déménageur.</span></input>
+        </div>
+        <table style="width:100%; margin-bottom: 3px;">
           <tr>
             <th>Nombre d'articles</th>
             <td>{{ numberItems }}</td>
           </tr>
           <tr>
-            <th>Durée d'approche</th>
-            <td>~ {{ approachTime }}</td>
-          </tr>
-          <tr>
             <th>Durée de transport</th>
             <td>~ {{ tripTime }}</td>
           </tr>
-          <!--
-          <tr>
-            <th>Durée total</th>
-            <td>{{ totalTime }}</td>
-          </tr>-->
-
         </table>
-        <span style="color: #E85029; font-weight: bold"> Tarif calculé : {{ tarifTransportSimple }}€</span>
+        <span style="color: #E85029; font-weight: bold"> Tarif : {{ tarifTransportSimple }}€</span>
         <!--<button id="btn-update-tarif" @click="updateTarif">Calculer tarif</button>-->
       </div>
     </div>
@@ -72,87 +99,241 @@ export default {
     data () {
       return {
         searchElement: '',
-        showList: false,
-        cp1: ['75008', '75009', '75010', '75011', '75018', '75019'],
-        cp2: ['75001', '75002', '75003', '75004', '75005', '75006', '75007', '75017', '75020'],
-        cp3: ['75012', '75013', '75014', '75015', '75016'],
+        tabs: [true, false, false, false, false, false],
 
-        tarifParEtage: 2,
-        tarifParDistance: 30,
-        forfaitTransportByHour: 30
+        tpsAppr1: { codesPostaux:'', heure: 0 },
+        tpsAppr2: { codesPostaux:'', heure: 0 },
+        tpsAppr3: { codesPostaux:'', heure: 0 },
+
+        vitesseTraj1: 0,
+        vitesseTraj2: 0,
+        vitesseTraj3: 0,
+        vitesseTraj4: 0,
+
+        tpsManutention: 0,
+
+        tarifManutention: 0,
+        tarifPerDistance: 0,
+        tarifApproach: 0,
+        tarifAccessibilityFloor: 0
       }
     },
-    firebase: {
-      elementsInventaire: fb.inventaireRef.child('meubles')
+    mounted() {
+      this.getInventaireUser();
+      this.getApproachDataCalcul();
+      this.getTripDataCalcul();
+      this.getHandlingDataCalcul();
+      this.getAccessibiltyFloorDataCalcul();
     },
     components: {
       ElementSearchBar,
       PanelElementInventaire
     },
     methods: {
-      hideList () {
-        this.showList = false;
+
+      openTab(tab) {
+        this.tabs = [false, false, false, false, false, false];
+        this.tabs[tab] = true;
       },
 
-      getVrTotalInventaire() {
-        return this.$store.state.vrTotalInventaire;
+      toggleCheckbox() {
+        if(this.$refs.checkboxOneMover.checked) {
+          this.$store.commit('setNumberMovers', 1);
+        }
+        else {
+          this.$store.commit('setNumberMovers', 2);
+        }
       },
 
-      getNumberItems() {
-        let numberItems = 0;
-        for(var i=0; i<this.$store.state.choicesUser.inventaire.length; i++) {
-          numberItems = numberItems + this.$store.state.choicesUser.inventaire[i].quantity;
-        }
-        return numberItems;
+      getInventaireUser () {
+        let panelInventaire = this;
+        fb.inventaireRef.orderByKey().equalTo('meubles').on('child_added', function(snapshot) {
+          console.log('Added');
+          panelInventaire.$store.commit('emptyInventaire');
+          snapshot.forEach(function(data) {
+            if(data.val().isSalon) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 0]);
+            }
+            if(data.val().isBureau) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 1]);
+            }
+            if(data.val().isChambre) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 2]);
+            }
+            if(data.val().isCuisine) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 3]);
+            }
+            if(data.val().isCellier) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 4]);
+            }
+            if(data.val().isDivers) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 5]);
+            }
+          });
+          console.log(panelInventaire.$store.getters.getInventaireUser);
+        });
+        fb.inventaireRef.orderByKey().equalTo('meubles').on('child_changed', function(snapshot) {
+          console.log('Changed');
+          panelInventaire.$store.commit('emptyInventaire');
+          snapshot.forEach(function(data) {
+            if(data.val().isSalon) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 0]);
+            }
+            if(data.val().isBureau) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 1]);
+            }
+            if(data.val().isChambre) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 2]);
+            }
+            if(data.val().isCuisine) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 3]);
+            }
+            if(data.val().isCellier) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 4]);
+            }
+            if(data.val().isDivers) {
+              panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 5]);
+            }
+          });
+        });
       },
 
-      calculateApproachTime() {
-        if(this.cp1.includes(this.$store.getters.getPickupAddressUser.cp)) {
-          return 0.5;
-        }
-        else if(this.cp2.includes(this.$store.getters.getPickupAddressUser.cp)) {
-          return 1;
-        }
-        else if(this.cp3.includes(this.$store.getters.getPickupAddressUser.cp)) {
-          return 1.5;
-        }
+      getApproachDataCalcul() {
+        let panelInventaire = this;
+        fb.inventaireRef.child('calculs').child('approche').on('child_added', function(snapshot) {
+          if(snapshot.key == 1) {
+            panelInventaire.tpsAppr1 = snapshot.val();
+          }
+          if(snapshot.key == 2) {
+            panelInventaire.tpsAppr2 = snapshot.val();
+          }
+          if(snapshot.key == 3) {
+            panelInventaire.tpsAppr3 = snapshot.val();
+          }
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifApproach = snapshot.val();
+          }
+        });
+        fb.inventaireRef.child('calculs').child('approche').on('child_changed', function(snapshot) {
+          if(snapshot.key == 1) {
+            panelInventaire.tpsAppr1 = snapshot.val();
+          }
+          if(snapshot.key == 2) {
+            panelInventaire.tpsAppr2 = snapshot.val();
+          }
+          if(snapshot.key == 3) {
+            panelInventaire.tpsAppr3 = snapshot.val();
+          }
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifApproach = snapshot.val();
+          }
+        });
+      },
+
+      getTripDataCalcul() {
+        let panelInventaire = this;
+        fb.inventaireRef.child('calculs').child('trajet').on('child_added', function(snapshot) {
+          if(snapshot.key == 1) {
+            panelInventaire.vitesseTraj1 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 2) {
+            panelInventaire.vitesseTraj2 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 3) {
+            panelInventaire.vitesseTraj3 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 4) {
+            panelInventaire.vitesseTraj4 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifPerDistance = snapshot.val();
+          }
+
+        });
+        fb.inventaireRef.child('calculs').child('trajet').on('child_changed', function(snapshot) {
+          if(snapshot.key == 1) {
+            panelInventaire.vitesseTraj1 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 2) {
+            panelInventaire.vitesseTraj2 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 3) {
+            panelInventaire.vitesseTraj3 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 4) {
+            panelInventaire.vitesseTraj4 = snapshot.val().vitesse;
+          }
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifPerDistance = snapshot.val();
+          }
+        });
+      },
+
+      getHandlingDataCalcul() {
+        let panelInventaire = this;
+        fb.inventaireRef.child('calculs').child('manutention').on('child_added', function(snapshot) {
+          if(snapshot.key == 'heure') {
+            panelInventaire.tpsManutention = snapshot.val();
+          }
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifManutention = snapshot.val();
+          }
+        });
+        fb.inventaireRef.child('calculs').child('manutention').on('child_changed', function(snapshot) {
+          if(snapshot.key == 'heure') {
+            panelInventaire.tpsManutention = snapshot.val();
+          }
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifManutention = snapshot.val();
+          }
+        });
+      },
+
+      getAccessibiltyFloorDataCalcul () {
+        let panelInventaire = this;
+        fb.inventaireRef.child('calculs').child('accessibiliteEtage').on('child_added', function(snapshot) {
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifAccessibilityFloor = snapshot.val();
+          }
+        });
+        fb.inventaireRef.child('calculs').child('accessibiliteEtage').on('child_changed', function(snapshot) {
+          if(snapshot.key == 'tarif') {
+            panelInventaire.tarifAccessibilityFloor = snapshot.val();
+          }
+        });
       },
 
       calculateTripTime() {
         let distance = this.$store.getters.getDistanceAdressesUser.value/1000;
         if(this.$store.getters.getNumberMovers == 1) {
-          return Math.round((distance/15)*100)/100;
+          return Math.round((distance/this.vitesseTraj1)*100)/100;
         }
         else if (this.$store.getters.getNumberMovers == 2) {
-          return Math.round((distance/13)*100)/100;
+          return Math.round((distance/this.vitesseTraj2)*100)/100;
         }
         else if (this.$store.getters.getNumberMovers == 3) {
-          return Math.round((distance/10)*100)/100;
+          return Math.round((distance/this.vitesseTraj3)*100)/100;
         }
         else if (this.$store.getters.getNumberMovers == 4) {
-          return Math.round((distance/9)*100)/100;
+          return Math.round((distance/this.vitesseTraj4)*100)/100;
         }
-        else {
-
-        }
-        /*
-        if(this.$store.state.vrTotalInventaire <= 1) {
-          return Math.round((distance/15)*100)/100;
-        }
-        else if (this.$store.state.vrTotalInventaire <= 2) {
-          return Math.round((distance/13)*100)/100;
-        }
-        else if (this.$store.state.vrTotalInventaire <= 3) {
-          return Math.round((distance/10)*100)/100;
-        }
-        else if (this.$store.state.vrTotalInventaire <= 4) {
-          return Math.round((distance/9)*100)/100;
-        }*/
       },
 
       calculateTarifDistance() {
-        let tarifDistance = this.calculateTripTime()*this.$store.getters.getNumberMovers*this.tarifParDistance;
+        let tarifDistance = this.calculateTripTime()*this.$store.getters.getNumberMovers*this.tarifPerDistance;
         return Math.round(tarifDistance*100)/100;
+      },
+
+      calculateTarifApproach() {
+        if(this.tpsAppr1.codesPostaux.includes(this.$store.getters.getPickupAddressUser.cp)) {
+          return this.tpsAppr1.heure*this.tarifApproach;
+        }
+        else if(this.tpsAppr2.codesPostaux.includes(this.$store.getters.getPickupAddressUser.cp)) {
+          return this.tpsAppr2.heure*this.tarifApproach;
+        }
+        else if(this.tpsAppr3.codesPostaux.includes(this.$store.getters.getPickupAddressUser.cp)) {
+          return this.tpsAppr3.heure*this.tarifApproach;
+        }
       },
 
       calculateTarifAccessibility() {
@@ -162,22 +343,26 @@ export default {
         let tarifAccessibilityDestination = 0;
         if(pickupEtage > 2) {
           if(!this.$store.getters.getPickupAddressUser.hasAscenseur) {
-            tarifAccessibilityPickup = (this.getNumberItems()*(pickupEtage-2)*this.tarifParEtage);
-            console.log(tarifAccessibilityPickup);
+            tarifAccessibilityPickup = (this.getNumberItems()*(pickupEtage-2)*this.tarifAccessibilityFloor);
           }
         }
         if(destinationEtage > 2) {
           if(!this.$store.getters.getDestinationAddressUser.hasAscenseur) {
-            tarifAccessibilityDestination = (this.getNumberItems()*(destinationEtage-2)*this.tarifParEtage);
+            tarifAccessibilityDestination = (this.getNumberItems()*(destinationEtage-2)*this.tarifAccessibilityFloor);
           }
         }
         let tarifAccessibility = tarifAccessibilityPickup + tarifAccessibilityDestination;
         return Math.round(tarifAccessibility*100)/100;
-        //return tarifAccessibility.toFixed(2);
       },
 
+      calculateTarifHandling() {
+        return this.$store.getters.getNumberMovers * this.tarifManutention * this.tpsManutention;
+      },
+
+
       calculateTarifTransportSimple() {
-        return (this.$store.getters.getNumberMovers * this.forfaitTransportByHour * 2) + this.calculateTarifAccessibility() + this.calculateTarifDistance();
+        let tarifTransportSimple = this.calculateTarifHandling() + this.calculateTarifAccessibility() + this.calculateTarifDistance() + this.calculateTarifApproach();
+        return parseFloat(Math.round(tarifTransportSimple * 100) / 100).toFixed(2);
       },
 
       decimalToHourMin(decimalTime) {
@@ -204,24 +389,16 @@ export default {
       isTransport() {
         return this.$store.state.isTransport;
       },
-      filteredListInventaire() {
-        return this.elementsInventaire.filter(element => {
+      filteredInventaire() {
+        return this.$store.getters.getInventaireUser.filter(element => {
           return element.name.toLowerCase().includes(this.searchElement.toLowerCase())
         });
       },
-      filteredListTransport() {
-        return this.elementsInventaire.filter(element => {
-          return this.$store.state.vrTotalInventaire + element.vr <= 1
-        });
-      },
       numberItems() {
-        return this.getNumberItems();
+        return this.$store.state.numberItems;
       },
       tripTime() {
         return this.decimalToHourMin(this.calculateTripTime());
-      },
-      approachTime() {
-        return this.decimalToHourMin(this.calculateApproachTime());
       },
       numberMovers() {
         return this.$store.state.numberMovers;
@@ -242,12 +419,12 @@ export default {
 #panel-inventaire {
     width: 900px;
     max-width: 900px;
-    height: 480px;
-    max-height: 480px;
+    height: 580px;
+    max-height: 580px;
     align-self: stretch;
     overflow: hidden;
     position: relative;
-
+    /*
     #list-elements-search-bar {
       z-index: 2;
       position: absolute;
@@ -257,45 +434,53 @@ export default {
       transition: height 0.4s ease-in-out;
       max-height: 250px;
       max-width: 70%;
+    }*/
+
+    #buttonsTab {
+      width: 79%;
+      border: 1px solid #E85029;
+      margin-top: 5px;
     }
 
-    #msg-limit-reached {
-      border: 1px solid #ddd;
-      margin-top: -1px;
-      background-color: #f6f6f6;
-      padding: 12px;
-      text-decoration: none;
-      font-size: 15px;
-      height: 50px;
-      max-height: 50px;
-      width: 630px;
+    .buttonTab {
+      width: 16%;
+      background: #FFF;
+      font-size: 12px;
+      margin: 0;
+      border: 1px solid #E85029;
+      padding: 5px;
+      cursor: pointer;
     }
 
-    #panel-inventaire-list {
+    .tabActive {
+      color: white;
+      font-weight: bold;
+      background: #E85029;
+    }
+
+    .panel-inventaire-list {
       opacity: 0.95;
       background: #FFF;
       box-shadow: 0 2px 2px 0 #E85029;
-      margin-top: 10px;
       padding: 15px;
       border: 2px solid #E85029;
-      height: 88%;
-      max-height: 88%;
-      width: 70%;
+      height: 74.5%;
+      max-height: 74.5%;
+      width: 79%;
       overflow-y: scroll;
       scroll-behavior: smooth;
       float: left;
     }
 
-    #panel-inventaire-calcul {
+    #panel-calcul-transport-simple {
       opacity: 0.95;
       background: #FFF;
       box-shadow: 0 2px 2px 0 #E85029;
-      margin-top: 10px;
-      padding: 15px;
+      padding: 10px;
       border: 2px solid #E85029;
-      height: 88%;
-      max-height: 88%;
-      width: 28%;
+      height: 60%;
+      max-height: 60%;
+      width: 20%;
       overflow-y: scroll;
       scroll-behavior: smooth;
       float: right;
@@ -323,7 +508,7 @@ export default {
       transition: width 0.4s ease-in-out;
     }
     input[type=text]:focus {
-      width: 70%;
+      width: 79%;
     }
 
     table, th, td {

@@ -7,7 +7,7 @@
       <div class="panel-info-commande">
         <PanelInfoCommande />
       </div>
-      <ButtonSuivant id="button-suivant" :onClick="openPageDemontage" v-bind:class="{ 'disableButton': inventaire.length == 0 }"></ButtonSuivant>
+      <ButtonSuivant id="button-suivant" :onClick="openPageDemontage" v-bind:class="{ 'disableButton': $store.getters.getNumberItems == 0 }"></ButtonSuivant>
       <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
 
     </div>

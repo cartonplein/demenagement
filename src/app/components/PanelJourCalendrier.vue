@@ -104,10 +104,20 @@ export default {
     },
     methods: {
       selectDay() {
-        this.$store.commit('unselectAllDays');
-        this.$store.commit('setSelectedDay', this.dayNumber);
-        this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif + this.$store.state.tarifOptions);
-        this.$store.commit('setDateDemenagement', ""+this.day.number+" "+this.$parent.getActiveMonth().name+" "+this.$parent.currentYear+"");
+        if(!this.day.selected) {
+          this.$store.commit('unselectAllDays');
+          this.$store.commit('setSelectedDay', this.dayNumber);
+          this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif + this.$store.state.tarifOptions);
+          this.$store.commit('setDateDemenagement', [this.day.number, this.$parent.getActiveMonth().number, this.$parent.currentYear]);
+        }
+        else {
+          this.$store.commit('unselectDay', this.dayNumber);
+          //this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif + this.$store.state.tarifOptions);
+          this.$store.commit('setDateDemenagement', []);
+          this.$store.commit('setCreneauDemenagement', '');
+          this.$parent.$parent.isCreneauMatin = false;
+          this.$parent.$parent.isCreneauSoir = false;
+        }
       }
 
     },

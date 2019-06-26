@@ -7,7 +7,6 @@
             </p>
         </div>
 
-
         <div class="form-pickup-address-adresse">
             <vue-google-autocomplete
               ref="pickupAddress"
@@ -138,6 +137,7 @@ export default {
           this.inputPickupAddress = '';
           this.isFormCompleted();
         },
+        
         submitFormPickupAddress () {
             console.log(this.$refs.pickupSurface.value);
             this.$store.commit('setPickupAddressUser', [this.inputPickupAddress, this.$refs.pickupSurface.value, this.$refs.pickupEtage.value, this.$refs.pickupAscenseur.value, this.$refs.pickupCave.value]);
@@ -185,7 +185,6 @@ export default {
     max-width: 300px;
     padding: 20px;
     overflow: hidden;
-
 
     #input-pickup-address-adresse {
       width: 260px;

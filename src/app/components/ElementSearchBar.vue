@@ -23,6 +23,7 @@ export default {
         }
         this.$store.commit('setVrTotalInventaire', Math.round((this.$store.state.vrTotalInventaire+element.vr)*100)/100);
         this.$store.dispatch('calculateNumberMovers');
+        console.log(this.$store.state.vrTotalInventaire);
         //this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
       },
       isElementAdded(element) {

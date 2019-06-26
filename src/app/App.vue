@@ -1,7 +1,16 @@
 <template>
     <div id="app">
+      <div id="upper-bar-tabs">
+        <LogoCartonPlein style="float:left; margin-left: 20px" />
+        <div style="float: right; margin-right: 20px">
+          <a href="http://cartonplein.org/">ACCUEIL</a>
+          <a href="http://cartonplein.org/association">L'ASSOCIATION</a>
+          <a href="https://boutique.cartonplein.org/">CARTONS</a>
+          <a href="http://cartonplein.org/actions/demenagement">DÉMÉNAGEMENT</a>
+          <a href="http://cartonplein.org/collecte">COLLECTE</a>
+        </div>
+      </div>
       <div id="app-address">
-          <LogoCartonPlein />
           <AppAddress />
       </div>
       <div id="app-type-demenagement"> <!--style="display:none"-->
@@ -13,12 +22,13 @@
       <div id="app-demontage">
           <AppDemontage />
       </div>
+      <!--
       <div id="app-taille-logement">
           <AppTailleLogement />
       </div>
       <div id="app-duree-prestation">
           <AppDureePrestation />
-      </div>
+      </div>-->
       <div id="app-date-demenagement">
           <AppDateDemenagement />
       </div>
@@ -44,7 +54,6 @@ import AppDemontage from './components/AppDemontage.vue';
 import AppDateDemenagement from './components/AppDateDemenagement.vue';
 import AppOptions from './components/AppOptions.vue';
 import AppRecapitulatif from './components/AppRecapitulatif.vue';
-import Payment from './components/Payment.vue';
 import { store } from './store.js'
 
 export default {
@@ -59,8 +68,7 @@ export default {
     AppDemontage,
     AppDateDemenagement,
     AppOptions,
-    AppRecapitulatif,
-    Payment
+    AppRecapitulatif
   },
   methods: {
 
@@ -207,7 +215,6 @@ html {
 <style lang="scss" scoped>
 
 #app {
-
   display: grid;
   flex-direction: column;
   align-items: center;
@@ -217,6 +224,26 @@ html {
   position: relative;
   overflow-y: scroll;
   scroll-behavior: smooth;
+
+  a {
+    color: #E85029;
+    margin-right: 30px;
+
+    &:hover {
+      color: black;
+    }
+  }
+
+  #upper-bar-tabs {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 999;
+    background: #FFF;
+    height: 9%;
+    padding: 20px;
+    border-bottom: 0.5px solid #E85029;
+  }
 
 }
 

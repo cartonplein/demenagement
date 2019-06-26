@@ -2,31 +2,29 @@
     <div id="app-address">
         <h1>Saisissez vos adresses de départ et d'arrivée :</h1>
         <div id="form-address" class="container">
-          <div class="columns is-mobile">
-            <div id="panel-forms" class="columns is-mobile is-centered">
-              <div class="column">
-                <FormPickupAddress id="form-pickup-address" ref="formPickupAddress"></FormPickupAddress>
-              </div>
-              <div class="column">
-                <FormDestinationAddress id="form-destination-address" ref="formDestinationAddress" ></FormDestinationAddress>
-              </div>
+          <table id="panel-forms">
+            <tr>
+              <FormPickupAddress id="form-pickup-address" ref="formPickupAddress"></FormPickupAddress>
+              <FormDestinationAddress id="form-destination-address" ref="formDestinationAddress" ></FormDestinationAddress>
+            </tr>
+            <tr>
               <div id="warning-msg">
                 <img id="warning-icon" src="../../../public/images/warning.png" alt="">
-                <p style="position: inherit; left: 45px; font-weight: bold">La distance entre les adresses de départ et d'arrivée doit être comprise entre 0 et 10 kilomètres.</p>
+                <p>La distance entre les adresses de départ et d'arrivée doit être comprise entre 0 et 10 kilomètres.</p>
               </div>
-            </div>
-            <div id="panel-map">
-              <iframe height="100%" width="100%" id="iframe-map" allowFullscreen>
-              </iframe>
-            </div>
-            <transition name="fade" mode="out-in">
-              <p id="feasibility-trip-ko">DÉMÉNAGEMENT NON-POSSIBLE<br> On vous invite à contacter un autre partenaire :
-                <ul>
-                  <li> 0612445567 </li>
-                </ul>
-              </p>
-            </transition>
+            </tr>
+          </table>
+          <div id="panel-map">
+            <iframe height="100%" width="100%" id="iframe-map" allowFullscreen>
+            </iframe>
           </div>
+          <transition name="fade" mode="out-in">
+            <p id="feasibility-trip-ko">DÉMÉNAGEMENT NON-POSSIBLE<br> On vous invite à contacter un autre partenaire :
+              <ul>
+                <li> 0612445567 </li>
+              </ul>
+            </p>
+          </transition>
         </div>
         <ButtonSuivant id="button-suivant" :onClick="openPageTypeDemenagement" v-show="isButtonNextVisible"></ButtonSuivant>
     </div>
@@ -34,7 +32,6 @@
 
 <script>
 
-import LogoCartonPlein from './LogoCartonPlein.vue';
 import FormPickupAddress from './FormPickupAddress.vue';
 import FormDestinationAddress from './FormDestinationAddress.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
@@ -62,7 +59,6 @@ export default {
     }
   },
   components: {
-    LogoCartonPlein,
     FormPickupAddress,
     FormDestinationAddress,
     ButtonSuivant
@@ -210,22 +206,26 @@ html, body {
   /*border-top: 1px solid lightgray;*/
   position: relative;
 
-
   #form-address {
     height: 450px;
-    position: relative;
+    position: absolute;
+    top: 150px;
+    width: 100%;
 
     #panel-forms {
-      //box-shadow: 0 3px 3px 3px #E85029;
-      //background: #E85029;
       opacity: 0.95;
-      position: absolute;
       //border-radius: 10px;
-      left: 0;
-      top: 0;
-      height: 400px;
-      max-height: 400px;
-      //border: 1px solid black;
+      float: left;
+      height: 250px;
+      width: 55%;
+
+      #form-pickup-address {
+        float: left;
+      }
+
+      #form-destination-address {
+        float: right;
+      }
 
       #warning-msg {
         //border: 1px solid #E85029;
@@ -233,16 +233,19 @@ html, body {
         background: #E85029;
         border-radius: 10px;
         padding: 10px;
-        height: 15%;
-        width: 95%;
+        height: 100px;
+        width: 100%;
         color: #FFF;
-        position: inherit;
-        bottom: 0;
-        left: 10px;
         font-size: 13px;
+        position: relative;
+        margin-top: 20px;
+
+        p {
+          position: absolute; left: 55px; top: 15px; font-weight: bold;
+        }
 
         #warning-icon {
-          width: 30px; height: 30px; position: inherit; top: 5px; left: 10px;
+          width: 40px; height: 40px;
         }
       }
     }
@@ -251,9 +254,7 @@ html, body {
       background: lightgray;
       border: 1px solid #E85029;
       box-shadow: 0 2px 2px 0 #E85029;
-      position: absolute;
-      right: 0;
-      top: 0;
+      float: right;
       height: 400px;
       width: 480px;
     }
