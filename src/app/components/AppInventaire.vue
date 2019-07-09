@@ -4,12 +4,9 @@
       <div id="panel-inv" class="container">
         <PanelInventaire></PanelInventaire>
       </div>
-      <div class="panel-info-commande">
-        <PanelInfoCommande />
-      </div>
+      <PanelInfoCommande id="panel-info-commande" />
       <ButtonSuivant id="button-suivant" :onClick="openPageDemontage" v-bind:class="{ 'disableButton': $store.getters.getNumberItems == 0 }"></ButtonSuivant>
       <ButtonPrecedent id="button-precedent" :onClick="returnPageTypeDemenagement"></ButtonPrecedent>
-
     </div>
 </template>
 
@@ -25,7 +22,7 @@ export default {
   data () {
     return {
       isPageInventaire: true,
-      inventaire: this.$store.getters.getInventaireUser
+      //inventaire: this.$store.getters.getInventaire
     }
   },
   components: {
@@ -39,8 +36,18 @@ export default {
       this.$parent.$options.methods.openPageDemontage();
     },
     returnPageTypeDemenagement() {
-      this.$store.dispatch('resetChoicesUser');
       this.$parent.$options.methods.returnPageTypeDemenagement();
+    },
+    makeAdmin() {
+      console.log('hello');
+      //this.returnPageTypeDemenagement();
+    },
+    doNothing() {
+      console.log('nothing');
+    },
+
+    test() {
+
     }
   }
 }
@@ -56,18 +63,19 @@ html, body {
 <style lang="scss" scoped>
 
 #app-inventaire {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgray;
-  position: relative;
+  position: relative;*/
 
-  #app-inventaire .panel-info-commande {
+  #panel-info-commande {
     position: absolute;
     right: 0;
-    bottom: 90px;
+    bottom: 100px;
   }
 
   #button-suivant {

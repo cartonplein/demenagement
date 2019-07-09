@@ -43,6 +43,7 @@
         -->
         <transition name="fade" mode="out-in">
           <div id="form-pickup-address-logement" style="margin-top: 20px" v-show="isAddressAvailable">
+              <!--
               <div class="form-pickup-address-surface">
                   <label for="input-pickup-address-surface">Surface (m²)<span style="color:red">*</span> :</label>
                   <select id="input-pickup-address-surface" ref="pickupSurface" @change="isFormCompleted">
@@ -54,7 +55,7 @@
                       <option value="50m²-60m²">50m²-60m²</option>
                       <option value=">60m²">&gt;60m²</option>
                   </select>
-              </div>
+              </div>-->
 
               <div class="form-pickup-address-etage">
                   <label for="input-pickup-address-etage">Étage<span style="color:red">*</span> :</label>
@@ -132,25 +133,24 @@ export default {
             this.errorPickupAdresse = false;
           }
           this.$refs.pickupAddress.clear();
-          this.$store.commit('setFirstTarif', 0);
           this.$parent.$options.methods.initializePickupAddress();
           this.inputPickupAddress = '';
           this.isFormCompleted();
         },
-        
+
         submitFormPickupAddress () {
-            console.log(this.$refs.pickupSurface.value);
-            this.$store.commit('setPickupAddressUser', [this.inputPickupAddress, this.$refs.pickupSurface.value, this.$refs.pickupEtage.value, this.$refs.pickupAscenseur.value, this.$refs.pickupCave.value]);
+            //console.log(this.$refs.pickupSurface.value);
+            this.$store.commit('setPickupAddressUser', [this.inputPickupAddress, this.$refs.pickupEtage.value, this.$refs.pickupAscenseur.value, this.$refs.pickupCave.value]);
             this.errorPickupAdresse = false;
         },
 
         isFormCompleted() {
-          let choicePickupSurface = this.$refs.pickupSurface.value;
+          //let choicePickupSurface = this.$refs.pickupSurface.value;
           let choicePickupEtage = this.$refs.pickupEtage.value;
           let choicePickupAscenseur = this.$refs.pickupAscenseur.value;
           let choicePickupCave = this.$refs.pickupCave.value;
 
-          if(this.inputPickupAddress == '' || choicePickupSurface == '' || choicePickupEtage == '' || choicePickupAscenseur == '' || choicePickupCave == '') {
+          if(this.inputPickupAddress == '' || choicePickupEtage == '' || choicePickupAscenseur == '' || choicePickupCave == '') {
             this.$parent.setPickupAddressCompleted(false);
           }
           else {

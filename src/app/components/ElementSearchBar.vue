@@ -15,7 +15,7 @@ export default {
           this.$store.commit('addElementInInventaire', element);
         }
         else {
-          this.$store.state.choicesUser.inventaire.map((elementObj) => {
+          this.$store.getters.getInventaire.map((elementObj) => {
             if(elementObj.number === element.number) {
               elementObj.quantity++;
             }
@@ -28,8 +28,8 @@ export default {
       },
       isElementAdded(element) {
         var found = false;
-        for(var i = 0; i < this.$store.state.choicesUser.inventaire.length; i++) {
-          if (this.$store.state.choicesUser.inventaire[i].number == element.number) {
+        for(var i = 0; i < this.$store.getters.getInventaire.length; i++) {
+          if (this.$store.getters.getInventaire[i].number == element.number) {
             found = true;
             break;
           }

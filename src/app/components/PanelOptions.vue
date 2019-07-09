@@ -47,7 +47,6 @@ export default {
       addOption(element) {
         if(!this.isOptionAdded(element)) {
           this.$store.commit('addOption', element);
-          this.$store.commit('setTarifOptions', this.$store.state.tarifOptions + element.tarif);
           this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
         }
         else {
@@ -59,18 +58,15 @@ export default {
         }
       },
       deleteOption(element) {
-        this.$store.commit('setTarifOptions', this.$store.state.tarifOptions - (element.quantity*element.tarif));
         this.$store.commit('setTarif', this.$store.state.tarif - (element.quantity*element.tarif));
         this.$store.commit('deleteOption', element);
       },
       increaseOptionQuantity(element) {
         element.quantity++;
-        this.$store.commit('setTarifOptions', this.$store.state.tarifOptions + element.tarif);
         this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
       },
       decreaseOptionQuantity(element) {
         element.quantity--;
-        this.$store.commit('setTarifOptions', this.$store.state.tarifOptions - element.tarif);
         this.$store.commit('setTarif', this.$store.state.tarif - element.tarif);
       },
       isOptionAdded(element) {

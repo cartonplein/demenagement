@@ -10,34 +10,17 @@
           <a href="http://cartonplein.org/collecte">COLLECTE</a>
         </div>
       </div>
-      <div id="app-address">
-          <AppAddress />
-      </div>
-      <div id="app-type-demenagement"> <!--style="display:none"-->
-          <AppTypeDemenagement />
-      </div>
-      <div id="app-inventaire" >
-          <AppInventaire />
-      </div>
-      <div id="app-demontage">
-          <AppDemontage />
-      </div>
-      <!--
-      <div id="app-taille-logement">
-          <AppTailleLogement />
-      </div>
-      <div id="app-duree-prestation">
-          <AppDureePrestation />
-      </div>-->
-      <div id="app-date-demenagement">
-          <AppDateDemenagement />
-      </div>
-      <div id="app-options">
-          <AppOptions />
-      </div>
-      <div id="app-recapitulatif">
-          <AppRecapitulatif />
-      </div>
+      <AppAddress id="app-address" class="app-page" />
+      <AppTypeDemenagement id="app-type-demenagement" class="app-page" />
+      <AppInventaire id="app-inventaire" class="app-page" />
+      <AppDemontage id="app-demontage" class="app-page" />
+      <!-- style="display: none"
+      <AppTailleLogement id="app-taille-logement" class="app-page" />
+      <AppDureePrestation id="app-duree-prestation" class="app-page" />
+      -->
+      <AppDateDemenagement id="app-date-demenagement" class="app-page" />
+      <AppOptions id="app-options" class="app-page" />
+      <AppRecapitulatif id="app-recapitulatif" class="app-page" />
     </div>
 
 </template>
@@ -71,8 +54,10 @@ export default {
     AppRecapitulatif
   },
   methods: {
-
-    openNextPage (currentPageId, nextPageId) {
+    /*
+      Balayer depuis une page vers une autre page
+    */
+    openPage (currentPageId, nextPageId) {
       var nextPage = document.getElementById(nextPageId);
       var currentPage = document.getElementById(currentPageId);
       if (nextPage.style.display === "none") {
@@ -84,87 +69,136 @@ export default {
       setTimeout(function() { currentPage.style.display = "none"; }, 500)
     },
 
-    returnPreviousPage (currentPageId, previousPageId) {
-      var previousPage = document.getElementById(previousPageId);
-      var currentPage = document.getElementById(currentPageId);
-      if (previousPage.style.display === "none") {
-        previousPage.style.display = "block";
-      }
-      previousPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
-      previousPage.style.opacity = "1";
-      previousPage.style.pointerEvents = "initial";
-      setTimeout(function() { currentPage.style.display = "none"; }, 500)
-    },
-
-    /* depuis Page Address */
+    /*
+      Balayer vers la page de choix du type de déménagement
+    */
     openPageTypeDemenagement() {
-      this.openNextPage("app-address", "app-type-demenagement");
+      this.openPage("app-address", "app-type-demenagement");
     },
 
-    /* depuis Page Type Déménagement */
-    openPageTailleLogement() {
-      this.openNextPage("app-type-demenagement", "app-taille-logement");
-    },
+    /*
+      Balayer vers la page de création de l'inventaire
+      (cas Transport Simple ou Déménagement sur Inventaire)
+    */
     openPageInventaire() {
-      this.openNextPage("app-type-demenagement", "app-inventaire");
-    },
-    returnPageAddress() {
-      this.returnPreviousPage("app-type-demenagement", "app-address");
+      this.openPage("app-type-demenagement", "app-inventaire");
     },
 
-    /* depuis Page Taille Logement */
-    openPageDureePrestation() {
-      this.openNextPage("app-taille-logement", "app-duree-prestation");
-    },
-
-
-    /* depuis Page Inventaire */
+    /*
+      Balayer vers la page de choix des meubles à démonter
+      (cas Transport Simple ou Déménagement sur Inventaire)
+    */
     openPageDemontage() {
-      this.openNextPage("app-inventaire", "app-demontage");
+      let inventaireUser = []
+      for(var i=0; i<store.getters.getInventaire.length; i++) {
+        if(store.getters.getInventaire[i].quantity > 0) {
+          store.commit('addElementInInventaireUser', store.getters.getInventaire[i]);
+        }
+      }
+      console.log(store.getters.getInventaireUser);
+      this.openPage("app-inventaire", "app-demontage");
     },
 
-    /* depuis Page Duree Prestation ou Page Inventaire */
-    returnPageTypeDemenagement() {
+    /*
+      Balayer vers la page de choix de la taille du logement
+      (cas Aide au Déménagement)
+    */
+    openPageTailleLogement() {
+      this.openPage("app-type-demenagement", "app-taille-logement");
+    },
+
+    /*
+      Balayer vers la page de choix de la durée de prestation
+      (cas Aide au Déménagement)
+    */
+    openPageDureePrestation() {
+      this.openPage("app-taille-logement", "app-duree-prestation");
+    },
+
+    /*
+      Balayer vers la page de choix de date de déménagement
+    */
+    openPageDateDemenagement() {
       if(store.state.isAideDem) {
-        this.returnPreviousPage("app-taille-logement", "app-type-demenagement");
+        this.openPage("app-duree-prestation", "app-date-demenagement");
       }
       if(store.state.isInventaire) {
-        this.returnPreviousPage("app-inventaire", "app-type-demenagement");
+        store.commit('setTarif', store.state.tarifDemInventaire);
+        this.openPage("app-demontage", "app-date-demenagement");
       }
       if(store.state.isTransport) {
-        this.returnPreviousPage("app-inventaire", "app-type-demenagement");
+        store.commit('setTarif', store.state.tarifTransportSimple);
+        this.openPage("app-demontage", "app-date-demenagement");
       }
+    },
+
+    /*
+      Balayer vers la page de choix des options
+    */
+    openPageOptions () {
+      this.openPage("app-date-demenagement", "app-options");
+    },
+
+    /*
+      Balayer vers la page d'affichage du récapitulatif de déménagement
+    */
+    openPageRecapitulatif () {
+      store.commit('setOrderNumber', Math.floor(Math.random() * Math.floor(999999999)));
+      this.openPage("app-options", "app-recapitulatif");
+    },
+
+    /*
+      Revenir vers la page de saisie des adresses de départ et d'arrivée
+    */
+    returnPageAddress() {
+      this.openPage("app-type-demenagement", "app-address");
+    },
+
+    /*
+      Revenir vers la page de choix du type de déménagement
+    */
+    returnPageTypeDemenagement() {
+      if(store.state.isAideDem) {
+        this.openPage("app-taille-logement", "app-type-demenagement");
+      }
+      if(store.state.isInventaire) {
+        this.openPage("app-inventaire", "app-type-demenagement");
+      }
+      if(store.state.isTransport) {
+        this.openPage("app-inventaire", "app-type-demenagement");
+      }
+      store.dispatch('resetChoicesUser');
       store.commit('setTypeAideDem', false);
       store.commit('setTypeInventaire', false);
       store.commit('setTypeTransport', false);
     },
 
-    /* depuis Page Taille Logement ou Page Demontage */
-    openPageDateDemenagement() {
-      if(store.state.isAideDem) {
-        this.openNextPage("app-duree-prestation", "app-date-demenagement");
-      }
-      if(store.state.isInventaire) {
-        this.openNextPage("app-demontage", "app-date-demenagement");
-      }
-      if(store.state.isTransport) {
-        this.openNextPage("app-demontage", "app-date-demenagement");
-      }
-    },
-
-    returnPageTailleLogement() {
-      this.returnPreviousPage("app-duree-prestation", "app-taille-logement");
-    },
-
+    /*
+      Revenir vers la page de création de l'inventaire
+      (cas Transport Simple ou Déménagement sur Inventaire)
+    */
     returnPageInventaire() {
-      this.returnPreviousPage("app-demontage", "app-inventaire");
+      store.commit('emptyInventaireUser');
+      this.openPage("app-demontage", "app-inventaire");
     },
 
-    openPageOptions () {
-      this.openNextPage("app-date-demenagement", "app-options");
+    /*
+      Revenir vers la page de choix de la taille du logement
+      (cas Aide au Déménagement)
+    */
+    returnPageTailleLogement() {
+      this.openPage("app-duree-prestation", "app-taille-logement");
     },
 
+    /*
+      Revenir vers la page avant la page de choix de date de déménagement
+      (soit la page de démontage ou la page de choix de la durée de prestation)
+    */
     returnPageBeforeDateDemenagement () {
+      store.commit('unselectAllDays');
+      store.commit('setDateDemenagement', '');
+      store.commit('setCreneauDemenagement', '');
+      store.commit('emptyOptions');
       if(store.state.isAideDem) {
         if(store.getters.getDureePrestationUser == 'Une journée') {
           store.commit('setTarif', store.state.tarifPrec/2);
@@ -172,24 +206,30 @@ export default {
         else {
           store.commit('setTarif', store.state.tarifPrec);
         }
-        this.returnPreviousPage("app-date-demenagement", "app-duree-prestation");
+        this.openPage("app-date-demenagement", "app-duree-prestation");
       }
       if(store.state.isInventaire) {
-        store.commit('setTarif', store.state.tarifPrec);
-        this.returnPreviousPage("app-date-demenagement", "app-demontage");
+        store.commit('setTarif', 0);
+        this.openPage("app-date-demenagement", "app-demontage");
+      }
+      if(store.state.isTransport) {
+        store.commit('setTarif', 0);
+        this.openPage("app-date-demenagement", "app-demontage");
       }
     },
 
+    /*
+      Revenir vers la page de choix de date de déménagement
+    */
     returnPageDateDemenagement () {
-      this.returnPreviousPage("app-options", "app-date-demenagement");
+      this.openPage("app-options", "app-date-demenagement");
     },
 
-    openPageRecapitulatif () {
-      this.openNextPage("app-options", "app-recapitulatif");
-    },
-
+    /*
+      Revenir vers la page de choix des options
+    */
     returnPageOptions () {
-      this.returnPreviousPage("app-recapitulatif", "app-options");
+      this.openPage("app-recapitulatif", "app-options");
     }
 
   }
@@ -225,10 +265,20 @@ html {
   overflow-y: scroll;
   scroll-behavior: smooth;
 
+  .app-page {
+    height: 690px;
+    grid-row: auto;
+    display: flex;
+    flex-direction: column;
+    //border: 1px solid red;
+    border-top: 1px solid lightgray;
+    position: relative;
+  }
+
   a {
     color: #E85029;
     margin-right: 30px;
-
+    font-size: 13px;
     &:hover {
       color: black;
     }

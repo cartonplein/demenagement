@@ -283,7 +283,6 @@ export default {
     this.initCurrentMonthCurrentYear(this.currentMonth, this.currentYear);
     console.log("Aujourd'hui : "+this.currentDay+"/"+(this.currentMonth+1)+"/"+this.currentYear);
     this.initDayNames(this.currentMonth, this.currentYear);
-    console.log(this.getActiveDay());
     this.getClosedReservedDatesByMonth(this.currentMonth);
   },
   methods: {

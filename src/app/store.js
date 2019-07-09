@@ -9,15 +9,17 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
     state: {
+      orderNumber: 0,
       isAddressAvailable: false,
       isAideDem: false,
       isInventaire: false,
       isTransport: false,
       seedMonth,
       seedDay,
+      inventaire: [],
       choicesUser: {
-        pickupAddress: { adresse: '', cp: '', surface: '', etage: '', ascenseur: '', hasAscenseur: false, cave: '' },
-        destinationAddress: { adresse: '', cp: '', surface: '', etage: '', ascenseur: '', hasAscenseur: false, cave: '' },
+        pickupAddress: { adresse: '', cp: '', etage: '', ascenseur: '', hasAscenseur: false, cave: '' },
+        destinationAddress: { adresse: '', cp: '', etage: '', ascenseur: '', hasAscenseur: false, cave: '' },
         direction: '',
         distance: { text: '', value: null },
         typeDemenagement: '',
@@ -30,16 +32,20 @@ export const store = new Vuex.Store({
         contact: { nom: '', prenom: '', telephone: '', email: '', reponseEnquete: [] },
         orderDateTime: ''
       },
-      firstTarif: 0,
-      tarifPrec: 0,
-      tarifOptions: 0,
       tarif: 0,
+      tarifTransportSimple: 0,
+      tarifDemInventaire: 0,
       vrTotalInventaire: 0,
       numberMovers: 0,
-      numberItems: 0
+      numberItems: 0,
+      isTransportTwoMovers: false,
     },
 
     getters: {
+
+      getChoicesUser() {
+        return store.state.choicesUser;
+      },
 
       getDays () {
         return store.state.seedDay;
@@ -58,11 +64,19 @@ export const store = new Vuex.Store({
       },
 
       getTarif() {
-        return store.state.tarif;
+        return parseFloat(Math.round(store.state.tarif * 100) / 100);
       },
 
-      getFirstTarif() {
-        return store.state.firstTarif;
+      getTarifTransportSimple() {
+        return store.state.tarifTransportSimple;
+      },
+
+      getTarifDemInventaire() {
+        return store.state.tarifDemInventaire;
+      },
+
+      getOrderNumber() {
+        return store.state.orderNumber;
       },
 
       getPickupAddressUser() {
@@ -87,6 +101,10 @@ export const store = new Vuex.Store({
 
       getDureePrestationUser() {
         return store.state.choicesUser.dureePrestation;
+      },
+
+      getInventaire() {
+        return store.state.inventaire;
       },
 
       getInventaireUser() {
@@ -115,11 +133,23 @@ export const store = new Vuex.Store({
 
       getNumberItems() {
         return store.state.numberItems;
+      },
+
+      isTransportTwoMovers() {
+        return store.state.isTransportTwoMovers;
+      },
+
+      getContactUser() {
+        return store.state.choicesUser.contact;
       }
     },
 
 
     mutations: {
+
+      setOrderNumber(state, orderNumber) {
+        state.orderNumber = orderNumber;
+      },
 
       setAddressAvailable (state, val) {
         state.isAddressAvailable = val;
@@ -127,13 +157,13 @@ export const store = new Vuex.Store({
 
       setPickupAddressUser (state, pickupAddress) {
         state.choicesUser.pickupAddress.adresse = pickupAddress[0];
-        state.choicesUser.pickupAddress.surface = pickupAddress[1];
-        state.choicesUser.pickupAddress.etage = pickupAddress[2];
-        state.choicesUser.pickupAddress.ascenseur = pickupAddress[3];
+        //state.choicesUser.pickupAddress.surface = pickupAddress[1];
+        state.choicesUser.pickupAddress.etage = pickupAddress[1];
+        state.choicesUser.pickupAddress.ascenseur = pickupAddress[2];
         if(pickupAddress[3] !== 'Non') {
           state.choicesUser.pickupAddress.hasAscenseur = true;
         }
-        state.choicesUser.pickupAddress.cave = pickupAddress[4];
+        state.choicesUser.pickupAddress.cave = pickupAddress[3];
       },
 
       setPickupCp (state, pickupCp) {
@@ -142,13 +172,13 @@ export const store = new Vuex.Store({
 
       setDestinationAddressUser (state, destinationAddress) {
         state.choicesUser.destinationAddress.adresse = destinationAddress[0];
-        state.choicesUser.destinationAddress.surface = destinationAddress[1];
-        state.choicesUser.destinationAddress.etage = destinationAddress[2];
-        state.choicesUser.destinationAddress.ascenseur = destinationAddress[3];
+        //state.choicesUser.destinationAddress.surface = destinationAddress[1];
+        state.choicesUser.destinationAddress.etage = destinationAddress[1];
+        state.choicesUser.destinationAddress.ascenseur = destinationAddress[2];
         if(destinationAddress[3] !== 'Non') {
           state.choicesUser.destinationAddress.hasAscenseur = true;
         }
-        state.choicesUser.destinationAddress.cave = destinationAddress[4];
+        state.choicesUser.destinationAddress.cave = destinationAddress[3];
       },
 
       setDestinationCp (state, destinationCp) {
@@ -224,12 +254,16 @@ export const store = new Vuex.Store({
         state.choicesUser.distance = distance;
       },
 
-      setFirstTarif(state, tarif) {
-        state.firstTarif = tarif;
-      },
-
       setTarif(state, tarif) {
         state.tarif = tarif;
+      },
+
+      setTarifTransportSimple (state, tarifTransportSimple) {
+        state.tarifTransportSimple = tarifTransportSimple;
+      },
+
+      setTarifDemInventaire (state, tarifDemInventaire) {
+        state.tarifDemInventaire = tarifDemInventaire;
       },
 
       setTypeDemenagement (state, typeDemenagement) {
@@ -244,13 +278,17 @@ export const store = new Vuex.Store({
         state.choicesUser.dureePrestation = dureePrestation;
       },
 
-      setInventaireUser(state, inventaire) {
-        state.choicesUser.inventaire = inventaire;
-        console.log(state.choicesUser.inventaire);
+      setInventaire(state, inventaire) {
+        state.inventaire = inventaire;
+        console.log(state.inventaire);
+      },
+
+      addElementInInventaireUser(state, element) {
+        state.choicesUser.inventaire.push(element);
       },
 
       addElementInInventaire(state, element) {
-        state.choicesUser.inventaire.push({
+        state.inventaire.push({
           number: element[0].number,
           name: element[0].name,
           image: element[0].image,
@@ -265,7 +303,7 @@ export const store = new Vuex.Store({
 
 
       deleteElementFromInventaire(state, element) {
-        state.choicesUser.inventaire.splice(state.choicesUser.inventaire.indexOf(element), 1);
+        state.inventaire.splice(state.inventaire.indexOf(element), 1);
       },
 
       /*
@@ -291,19 +329,20 @@ export const store = new Vuex.Store({
       },
 
       emptyInventaire(state) {
+        state.inventaire = [];
+      },
+
+      emptyInventaireUser(state) {
         state.choicesUser.inventaire = [];
       },
 
       resetInventaire(state) {
-        for(var i=0; i<state.choicesUser.inventaire.length; i++) {
-          state.choicesUser.inventaire[i].quantity = 0;
-          state.choicesUser.inventaire[i].quantityDemonter = 0;
+        for(var i=0; i<state.inventaire.length; i++) {
+          state.inventaire[i].quantity = 0;
+          state.inventaire[i].quantityDemonter = 0;
         }
       },
 
-      setTarifPrec (state, tarif) {
-        state.tarifPrec = tarif;
-      },
 
       setDateDemenagement (state, dateDemenagement) {
         state.choicesUser.dateDemenagement = dateDemenagement;
@@ -320,10 +359,6 @@ export const store = new Vuex.Store({
           tarif: element.tarif,
           quantity: 1
         });
-      },
-
-      setTarifOptions (state, tarif) {
-        state.tarifOptions = tarif;
       },
 
       deleteOption(state, element) {
@@ -344,6 +379,14 @@ export const store = new Vuex.Store({
         state.choicesUser.contact.reponseEnquete = contact[4];
       },
 
+      resetContactUser(state) {
+        state.choicesUser.contact.prenom = '';
+        state.choicesUser.contact.nom = '';
+        state.choicesUser.contact.telephone = '';
+        state.choicesUser.contact.email = '';
+        state.choicesUser.contact.reponseEnquete = [];
+      },
+
       setOrderDateTime(state, orderDateTime) {
         state.choicesUser.orderDateTime = orderDateTime;
       },
@@ -354,8 +397,11 @@ export const store = new Vuex.Store({
 
       setNumberItems(state, numberItems) {
         state.numberItems = numberItems;
-      }
+      },
 
+      setTransportTwoMovers(state, isTransportTwoMovers) {
+        state.isTransportTwoMovers = isTransportTwoMovers;
+      }
 
     },
 
@@ -364,27 +410,27 @@ export const store = new Vuex.Store({
         context.commit('setTypeDemenagement', '');
         context.commit('setTailleLogement', null);
         context.commit('setDureePrestation', null);
+        context.commit('setTarifTransportSimple', 0);
+        context.commit('setTarifDemInventaire', 0);
         context.commit('resetInventaire');
         context.commit('setNumberItems', 0);
         context.commit('setNumberMovers', 0);
-        //context.commit('emptyInventaire');
         context.commit('setVrTotalInventaire', 0);
         context.commit('setDateDemenagement', '');
+        context.commit('setCreneauDemenagement', '');
         context.commit('emptyOptions');
-        context.commit('setTarif', context.getters.getFirstTarif);
-        context.commit('setTarifPrec', 0);
-        context.commit('setTarifOptions', 0);
+        context.commit('resetContactUser');
       },
 
       calculateNumberMovers(context) {
-        let twoMovers = false;
+        context.commit('setTransportTwoMovers', false);
         if(context.getters.getNumberItems !== 0) {
-          for(var i=0; i<context.getters.getInventaireUser.length; i++) {
-            if(context.getters.getInventaireUser[i].vr > 0.2 && context.getters.getInventaireUser[i].quantity > 0) {
-              twoMovers = true;
+          for(var i=0; i<context.getters.getInventaire.length; i++) {
+            if(context.getters.getInventaire[i].vr > 0.2 && context.getters.getInventaire[i].quantity > 0) {
+              context.commit('setTransportTwoMovers', true);
             }
           }
-          if(twoMovers) {
+          if(context.getters.isTransportTwoMovers) {
             context.commit('setNumberMovers', 2);
           }
           else {

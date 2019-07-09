@@ -15,6 +15,7 @@
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
             v-if="element.tab == 0"
+            v-bind:class="{ 'isInInventaire' : element.quantity > 0 }"
             :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
@@ -23,6 +24,7 @@
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
             v-if="element.tab == 1"
+            v-bind:class="{ 'isInInventaire' : element.quantity > 0 }"
             :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
@@ -31,6 +33,7 @@
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
             v-if="element.tab == 2"
+            v-bind:class="{ 'isInInventaire' : element.quantity > 0 }"
             :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
@@ -39,6 +42,7 @@
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
             v-if="element.tab == 3"
+            v-bind:class="{ 'isInInventaire' : element.quantity > 0 }"
             :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
@@ -47,6 +51,7 @@
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
             v-if="element.tab == 4"
+            v-bind:class="{ 'isInInventaire' : element.quantity > 0 }"
             :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
@@ -55,31 +60,35 @@
         <div class="columns is-multiline">
           <PanelElementInventaire id="panel-element-inventaire" v-for="element in filteredInventaire"
             v-if="element.tab == 5"
+            v-bind:class="{ 'isInInventaire' : element.quantity > 0 }"
             :key="filteredInventaire.indexOf(element)"
             :element="element" />
         </div>
       </div>
       <div id="panel-calcul-transport-simple" v-show="$store.getters.getNumberItems !== 0">
+        <span style="color: #E85029; font-weight: bold">{{ $store.getters.getTypeDemenagementUser }}</span>
         <table style="width:100%; margin-bottom: 3px;">
           <tr>
-            <th>Nombre de déménageurs</th>
-            <td>{{ numberMovers }}</td>
+            <th>Durée de transport</th>
+            <td>~ {{ tripTime }}</td>
           </tr>
-        </table>
-        <div style="margin-bottom: 10px;">
-          <input type="checkbox" @change="toggleCheckbox()" ref="checkboxOneMover"><span style="margin-left: 5px; font-size: 13px; font-weight: bold">Je n'ai besoin qu'un seul déménageur.</span></input>
-        </div>
-        <table style="width:100%; margin-bottom: 3px;">
           <tr>
             <th>Nombre d'articles</th>
             <td>{{ numberItems }}</td>
           </tr>
           <tr>
-            <th>Durée de transport</th>
-            <td>~ {{ tripTime }}</td>
+            <th>Nombre de déménageurs</th>
+            <td>{{ numberMovers }}</td>
           </tr>
         </table>
-        <span style="color: #E85029; font-weight: bold"> Tarif : {{ tarifTransportSimple }}€</span>
+        <div style="margin-bottom: 10px;" v-show="$store.getters.isTransportTwoMovers">
+          <input type="checkbox" @change="toggleCheckbox()" ref="checkboxOneMover">
+            <span style="margin-left: 5px; font-size: 13px; font-weight: bold">
+              Je n'ai besoin qu'un seul déménageur
+            </span>
+          </input>
+        </div>
+        <span style="color: #E85029; font-weight: bold"> Tarif : {{ tarif }}€</span>
         <!--<button id="btn-update-tarif" @click="updateTarif">Calculer tarif</button>-->
       </div>
     </div>
@@ -111,6 +120,7 @@ export default {
         vitesseTraj4: 0,
 
         tpsManutention: 0,
+        etageMaxGratuit: 0,
 
         tarifManutention: 0,
         tarifPerDistance: 0,
@@ -119,7 +129,7 @@ export default {
       }
     },
     mounted() {
-      this.getInventaireUser();
+      this.getInventaire();
       this.getApproachDataCalcul();
       this.getTripDataCalcul();
       this.getHandlingDataCalcul();
@@ -145,7 +155,7 @@ export default {
         }
       },
 
-      getInventaireUser () {
+      getInventaire () {
         let panelInventaire = this;
         fb.inventaireRef.orderByKey().equalTo('meubles').on('child_added', function(snapshot) {
           console.log('Added');
@@ -170,7 +180,6 @@ export default {
               panelInventaire.$store.commit('addElementInInventaire', [data.val(), 0, 0, 5]);
             }
           });
-          console.log(panelInventaire.$store.getters.getInventaireUser);
         });
         fb.inventaireRef.orderByKey().equalTo('meubles').on('child_changed', function(snapshot) {
           console.log('Changed');
@@ -292,11 +301,17 @@ export default {
       getAccessibiltyFloorDataCalcul () {
         let panelInventaire = this;
         fb.inventaireRef.child('calculs').child('accessibiliteEtage').on('child_added', function(snapshot) {
+          if(snapshot.key == 'etageMaxGratuit') {
+            panelInventaire.etageMaxGratuit = snapshot.val();
+          }
           if(snapshot.key == 'tarif') {
             panelInventaire.tarifAccessibilityFloor = snapshot.val();
           }
         });
         fb.inventaireRef.child('calculs').child('accessibiliteEtage').on('child_changed', function(snapshot) {
+          if(snapshot.key == 'etageMaxGratuit') {
+            panelInventaire.etageMaxGratuit = snapshot.val();
+          }
           if(snapshot.key == 'tarif') {
             panelInventaire.tarifAccessibilityFloor = snapshot.val();
           }
@@ -341,14 +356,14 @@ export default {
         let destinationEtage = parseInt(this.$store.getters.getDestinationAddressUser.etage, 10);
         let tarifAccessibilityPickup = 0;
         let tarifAccessibilityDestination = 0;
-        if(pickupEtage > 2) {
+        if(pickupEtage > this.etageMaxGratuit) {
           if(!this.$store.getters.getPickupAddressUser.hasAscenseur) {
-            tarifAccessibilityPickup = (this.getNumberItems()*(pickupEtage-2)*this.tarifAccessibilityFloor);
+            tarifAccessibilityPickup = (this.$store.getters.getNumberItems*(pickupEtage-this.etageMaxGratuit)*this.tarifAccessibilityFloor);
           }
         }
-        if(destinationEtage > 2) {
+        if(destinationEtage > this.etageMaxGratuit) {
           if(!this.$store.getters.getDestinationAddressUser.hasAscenseur) {
-            tarifAccessibilityDestination = (this.getNumberItems()*(destinationEtage-2)*this.tarifAccessibilityFloor);
+            tarifAccessibilityDestination = (this.$store.getters.getNumberItems*(destinationEtage-this.etageMaxGratuit)*this.tarifAccessibilityFloor);
           }
         }
         let tarifAccessibility = tarifAccessibilityPickup + tarifAccessibilityDestination;
@@ -359,10 +374,11 @@ export default {
         return this.$store.getters.getNumberMovers * this.tarifManutention * this.tpsManutention;
       },
 
-
       calculateTarifTransportSimple() {
         let tarifTransportSimple = this.calculateTarifHandling() + this.calculateTarifAccessibility() + this.calculateTarifDistance() + this.calculateTarifApproach();
-        return parseFloat(Math.round(tarifTransportSimple * 100) / 100).toFixed(2);
+        tarifTransportSimple = parseFloat(Math.round(tarifTransportSimple * 100) / 100).toFixed(2);
+        this.$store.commit('setTarifTransportSimple', tarifTransportSimple);
+        return tarifTransportSimple;
       },
 
       decimalToHourMin(decimalTime) {
@@ -377,10 +393,11 @@ export default {
         return Math.ceil(Math.round((decimalTime*60)*10)/10) +" min";
       },
 
+      /*
       updateTarif() {
         let tarifInventaire = this.tarifInventaire;
         this.$store.commit('setTarif', this.$store.state.tarif + tarifInventaire);
-      }
+      }*/
     },
     computed: {
       isInventaire() {
@@ -390,7 +407,7 @@ export default {
         return this.$store.state.isTransport;
       },
       filteredInventaire() {
-        return this.$store.getters.getInventaireUser.filter(element => {
+        return this.$store.getters.getInventaire.filter(element => {
           return element.name.toLowerCase().includes(this.searchElement.toLowerCase())
         });
       },
@@ -403,8 +420,13 @@ export default {
       numberMovers() {
         return this.$store.state.numberMovers;
       },
-      tarifTransportSimple() {
-        return this.calculateTarifTransportSimple();
+      tarif() {
+        if(this.$store.state.isTransport) {
+          return this.calculateTarifTransportSimple();
+        }
+        if(this.$store.state.isInventaire) {
+          return 0;
+        }
       }
     },
     directives: {
@@ -517,8 +539,16 @@ export default {
       font-size: 12px;
       padding: 5px;
     }
-    th, td {
-      width: 50%;
+    th {
+      width: 63%;
+    }
+    td {
+      width: 37%;
+    }
+
+    .isInInventaire {
+      background: #F6F4F4;
+      border: 3px solid #E85029;
     }
 
 }

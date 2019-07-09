@@ -5,14 +5,13 @@
           <div id="panel-demontage">
             <div class="columns is-multiline">
               <PanelElementDemontage id="panel-element-demontage" v-for="element in this.$store.getters.getInventaireUser"
+                v-show="element.canDisassemble && element.quantity > 0"
                 :key="element.id"
                 :element="element" />
             </div>
           </div>
         </div>
-        <div class="panel-info-commande">
-          <PanelInfoCommande />
-        </div>
+        <PanelInfoCommande id="panel-info-commande" />
         <ButtonSuivant id="button-suivant" :onClick="openPageDateDemenagement"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageInventaire"></ButtonPrecedent>
     </div>
@@ -40,7 +39,6 @@ export default {
   },
   methods: {
     openPageDateDemenagement() {
-      this.$store.commit('setTarifPrec', this.$store.state.tarif);
       this.$parent.$options.methods.openPageDateDemenagement();
     },
     returnPageInventaire() {
@@ -61,13 +59,14 @@ html, body {
 <style lang="scss" scoped>
 
 #app-demontage {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgray;
-  position: relative;
+  position: relative;*/
 
   #panel-dem {
 
@@ -88,10 +87,10 @@ html, body {
     }
   }
 
-  #app-demontage .panel-info-commande {
+  #panel-info-commande {
     position: absolute;
     right: 0;
-    bottom: 90px;
+    bottom: 100px;
   }
 
   #button-suivant {

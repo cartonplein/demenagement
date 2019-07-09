@@ -44,7 +44,9 @@ export default {
         element.quantity++;
         this.$store.commit('setNumberItems', this.$store.getters.getNumberItems+1);
         this.$store.commit('setVrTotalInventaire', Math.round((this.$store.state.vrTotalInventaire+element.vr)*100)/100);
-        this.$store.dispatch('calculateNumberMovers');
+        if(!this.$parent.$refs.checkboxOneMover.checked) {
+          this.$store.dispatch('calculateNumberMovers');
+        }
         //this.$store.commit('setTarif', this.$store.state.tarif + element.tarif);
         //this.updateElementQuantity(element, this.quantiteElement);
       },
@@ -58,7 +60,9 @@ export default {
           }
         }
         this.$store.commit('setVrTotalInventaire', Math.round((this.$store.state.vrTotalInventaire-element.vr)*100)/100);
-        this.$store.dispatch('calculateNumberMovers');
+        if(!this.$parent.$refs.checkboxOneMover.checked) {
+          this.$store.dispatch('calculateNumberMovers');
+        }
         if(this.$store.getters.getNumberItems == 0) {
           this.$parent.$refs.checkboxOneMover.checked = false;
         }
@@ -67,10 +71,6 @@ export default {
       },
       viewElementImage(element) {
         return element.image;
-      },
-      displayElementImage(element) {
-        window.open(element.image);
-        return false;
       },
       exceedTransportLimit(element) {
         return (element.vr + this.$store.state.vrTotalInventaire) > 1;
@@ -164,21 +164,6 @@ export default {
     .disableButton {
       pointer-events: none;
       opacity: 0.3;
-    }
-
-    .fa-trash {
-      position: absolute;
-      right: 10px;
-      bottom: 24px;
-      color: black;
-      &:hover {
-        cursor: pointer;
-        color: red;
-      }
-      &:active {
-        color: red;
-        transform: translateY(2px);
-      }
     }
 
     #element-image {

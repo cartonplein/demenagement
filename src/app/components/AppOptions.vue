@@ -6,9 +6,7 @@
             <PanelOptions />
           </div>
         </div>
-        <div class="panel-info-commande">
-          <PanelInfoCommande />
-        </div>
+        <PanelInfoCommande id="panel-info-commande" />
         <ButtonSuivant id="button-suivant" :onClick="openPageRecapitulatif"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageDateDemenagement"></ButtonPrecedent>
     </div>
@@ -58,16 +56,17 @@ html, body {
 <style lang="scss" scoped>
 
 #app-options {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgray;
-  position: relative;
+  position: relative;*/
 
 
-  #app-options .panel-info-commande {
+  #panel-info-commande {
     position: absolute;
     right: 0;
     bottom: 100px;

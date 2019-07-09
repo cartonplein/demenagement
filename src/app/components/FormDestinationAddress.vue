@@ -43,7 +43,8 @@
         -->
         <transition name="fade" mode="out-in">
           <div class="form-destination-address-logement" style="margin-top: 20px" v-show="isAddressAvailable">
-              <div class="form-destination-address-surface">
+
+              <!--<div class="form-destination-address-surface">
                   <label for="input-destination-address-surface">Surface (m²)<span style="color:red">*</span> :</label>
                   <select id="input-destination-address-surface" ref="destinationSurface" @change="isFormCompleted">
                       <option value="" disabled selected>Selectionner une surface</option>
@@ -54,7 +55,7 @@
                       <option value="50m²-60m²">50m²-60m²</option>
                       <option value=">60m²">&gt;60m²</option>
                   </select>
-              </div>
+              </div>-->
 
               <div class="form-destination-address-etage">
                   <label for="input-destination-address-etage">Étage<span style="color:red">*</span> :</label>
@@ -108,7 +109,7 @@ export default {
     data () {
         return {
           inputDestinationAddress: '',
-          choiceDestinationSurface: '',
+          //choiceDestinationSurface: '',
           choiceDestinationEtage: '',
           choiceDestinationAscenseur: '',
           choiceDestinationCave: '',
@@ -138,7 +139,6 @@ export default {
             this.errorDestinationAdresse = false;
           }
           this.$refs.destinationAddress.clear();
-          this.$store.commit('setFirstTarif', 0);
           this.$parent.$options.methods.initializeDestinationAddress();
           this.inputDestinationAddress = '';
           this.isFormCompleted();
@@ -146,18 +146,18 @@ export default {
 
         submitFormDestinationAddress () {
             //if (inputDestinationAdresse === '') return this.errorDestinationAdresse = true;
-            let destinationAddress = [this.inputDestinationAddress, this.$refs.destinationSurface.value, this.$refs.destinationEtage.value, this.$refs.destinationAscenseur.value, this.$refs.destinationCave.value];
+            let destinationAddress = [this.inputDestinationAddress, this.$refs.destinationEtage.value, this.$refs.destinationAscenseur.value, this.$refs.destinationCave.value];
             this.$store.commit('setDestinationAddressUser', destinationAddress);
             this.errorDestinationAdresse = false;
         },
 
         isFormCompleted() {
-          let choiceDestinationSurface = this.$refs.destinationSurface.value;
+          //let choiceDestinationSurface = this.$refs.destinationSurface.value;
           let choiceDestinationEtage = this.$refs.destinationEtage.value;
           let choiceDestinationAscenseur = this.$refs.destinationAscenseur.value;
           let choiceDestinationCave = this.$refs.destinationCave.value;
 
-          if(this.inputDestinationAddress == '' || choiceDestinationSurface == '' || choiceDestinationEtage == '' || choiceDestinationAscenseur == '' || choiceDestinationCave == '') {
+          if(this.inputDestinationAddress == '' || choiceDestinationEtage == '' || choiceDestinationAscenseur == '' || choiceDestinationCave == '') {
             this.$parent.setDestinationAddressCompleted(false);
           }
           else {

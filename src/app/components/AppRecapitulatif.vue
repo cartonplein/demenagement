@@ -2,7 +2,7 @@
     <div id="app-recapitulatif">
       <div>
         <div class="container">
-          <h1>Récapitulatif de votre commande : </h1>
+          <h1>Récapitulatif de votre déménagement : </h1>
           <PanelRecapitulatif class="panel-recapitulatif"></PanelRecapitulatif>
         </div>
 
@@ -90,7 +90,8 @@
 
 import PanelRecapitulatif from './PanelRecapitulatif.vue';
 import ButtonPrecedent from './ButtonPrecedent.vue';
-import image from "../../../public/images/carton_plein_logo_noir.jpg"
+import image from "../../../public/images/carton_plein_logo_noir.jpg";
+const fb = require('../../db/index.js');
 
 export default {
   name: 'AppRecapitulatif',
@@ -166,7 +167,31 @@ export default {
       // args - is an object containing the billing and shipping address if enabled
       this.$store.commit('setOrderDateTime', this.getCurrentDateTime());
       let ordersRef = fb.rootRef.child('orders');
-      ordersRef.push(this.$store.state.choicesUser);
+      ordersRef.child(this.$store.getters.getChoicesUser.contact.prenom+'-'+this.$store.getters.getChoicesUser.contact.nom+'-'+this.$store.getters.getOrderNumber).update({
+        orderNumber: this.$store.getters.getOrderNumber,
+        contact: this.$store.getters.getChoicesUser.contact,
+        dateDemenagement: this.$store.getters.getChoicesUser.dateDemenagement,
+        destinationAddress: this.$store.getters.getChoicesUser.destinationAddress,
+        pickupAddress: this.$store.getters.getChoicesUser.pickupAddress,
+        distance: this.$store.getters.getChoicesUser.distance,
+        direction: this.$store.getters.getChoicesUser.direction,
+        typeDemenagement: this.$store.getters.getChoicesUser.typeDemenagement,
+        tailleLogement: this.$store.getters.getChoicesUser.tailleLogement,
+        dureePrestation: this.$store.getters.getChoicesUser.dureePrestation,
+        inventaire: this.$store.getters.getChoicesUser.inventaire,
+        creneauDemenagement: this.$store.getters.getChoicesUser.creneauDemenagement,
+        options: this.$store.getters.getChoicesUser.options,
+        orderDateTime: this.$store.getters.getChoicesUser.orderDateTime,
+        numberMovers: this.$store.getters.getNumberMovers,
+        tarif: this.$store.getters.getTarif,
+        vrTotal: this.$store.getters.getVrTotalInventaire
+      },
+      function(error) {
+        if (error) {
+          alert(error.message);
+          console.log(error.message);
+        }
+      });
     },
 
     opened () {
@@ -207,13 +232,14 @@ html, body {
 <style lang="scss" scoped>
 
 #app-recapitulatif {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgray;
-  position: relative;
+  position: relative;*/
 
   #form-contact {
     background: #FFF;

@@ -22,7 +22,7 @@
                       }"
       >
       <div class="day-banner has-text-justified"><b>{{ day.number }}</b></div>
-      <span class="tarif-date" v-show="!(day.number < this.$parent.getActiveDay().number &&
+      <!--<span class="tarif-date" v-show="!(day.number < this.$parent.getActiveDay().number &&
                                                         day.currentMonth >= this.$parent.getActiveMonth().number &&
                                                         day.currentYear >= this.$parent.currentYear) &&
                                                         !((this.$parent.closedDates &&
@@ -34,7 +34,7 @@
                                                            this.$parent.reservedDates[this.$parent.getActiveMonth().number] &&
                                                            this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number] &&
                                                            this.$parent.reservedDates[this.$parent.getActiveMonth().number][day.number].hasOwnProperty(this.$parent.currentYear))
-                                                         )"><b>{{ tarifDate }}€</b></span>
+                                                         )"><b>{{ tarifDate }}€</b></span>-->
       <span class="tarif-date" style="color: red" v-show="!(day.number < this.$parent.getActiveDay().number &&
                                                         day.currentMonth >= this.$parent.getActiveMonth().number &&
                                                         day.currentYear >= this.$parent.currentYear) &&
@@ -64,7 +64,7 @@ export default {
     name: 'PanelJourCalendrier',
     data () {
       return {
-        tarif: '',
+        tarif: 0,
         dayNumber: this.day.number,
         dayName: this.day.name,
       };
@@ -95,7 +95,7 @@ export default {
             if(snapshot.val() && snapshot.val()[panelDay.$parent.currentYear].hasOwnProperty(panelDay.day.number)) {
               panelDay.tarif = snapshot.val()[panelDay.$parent.currentYear][panelDay.day.number].tarif;
               if(panelDay.day.selected) {
-                panelDay.$store.commit('setTarif', panelDay.$store.state.tarifPrec + panelDay.tarif + panelDay.$store.state.tarifOptions);
+                panelDay.$store.commit('setTarif', panelDay.$store.getters.getTarif + panelDay.tarif);
               }
             }
           }
@@ -107,12 +107,12 @@ export default {
         if(!this.day.selected) {
           this.$store.commit('unselectAllDays');
           this.$store.commit('setSelectedDay', this.dayNumber);
-          this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif + this.$store.state.tarifOptions);
+          this.$store.commit('setTarif', this.$store.getters.getTarif + this.tarif);
           this.$store.commit('setDateDemenagement', [this.day.number, this.$parent.getActiveMonth().number, this.$parent.currentYear]);
         }
         else {
           this.$store.commit('unselectDay', this.dayNumber);
-          //this.$store.commit('setTarif', this.$store.state.tarifPrec + this.tarif + this.$store.state.tarifOptions);
+          this.$store.commit('setTarif', this.$store.getters.getTarif - this.tarif);
           this.$store.commit('setDateDemenagement', []);
           this.$store.commit('setCreneauDemenagement', '');
           this.$parent.$parent.isCreneauMatin = false;
@@ -138,6 +138,7 @@ export default {
   border: 1px solid #E85029;
   border-radius: 0;
   color: #E85029;
+  cursor: pointer;
 
   padding: 10px;
   overflow: hidden;
@@ -157,13 +158,8 @@ export default {
     line-height: 16px;
     font-size: 16px;
   }
-
   &:hover {
-    //background: darken(#EFEFF0,1%);
     transform: translateY(2px);
-    cursor: pointer;
-  }
-  &:active {
     background-color: #EFEFF0;
   }
 }
@@ -180,7 +176,7 @@ export default {
 
 .styleWeekend {
   background-color: #DBDBDE;
-  &:active {
+  &:hover {
     background-color: #B8B8B9;
   }
 }

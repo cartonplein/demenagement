@@ -9,9 +9,7 @@
           <div class="choice-creneau has-text-centered" v-bind:class="{ 'creneau-selected': isCreneauMatin }" @click="setCreneau(1)">Entre 10h et 12h</div>
           <div class="choice-creneau has-text-centered" v-bind:class="{ 'creneau-selected': isCreneauSoir }" @click="setCreneau(2)">Entre 14h et 16h</div>
         </div>
-        <div class="panel-info-commande">
-          <PanelInfoCommande />
-        </div>
+        <PanelInfoCommande id="panel-info-commande" />
         <ButtonSuivant id="button-suivant" :onClick="openPageOptions" v-bind:class="{ 'disableButton': $store.getters.getCreneauDemenagementUser == '' }"></ButtonSuivant>
         <ButtonPrecedent id="button-precedent" :onClick="returnPageBeforeDateDemenagement"></ButtonPrecedent>
     </div>
@@ -57,12 +55,6 @@ export default {
       this.$parent.$options.methods.openPageOptions();
     },
     returnPageBeforeDateDemenagement() {
-      this.$store.commit('unselectAllDays');
-      this.$store.commit('setDateDemenagement', '');
-      this.$store.commit('setCreneauDemenagement', '');
-      this.$store.commit('emptyOptions');
-      this.$store.commit('setTarifOptions', 0);
-      //this.$store.commit('setTarifPrecDate', 0);
       this.$parent.$options.methods.returnPageBeforeDateDemenagement();
     }
   }
@@ -79,16 +71,17 @@ html, body {
 <style lang="scss" scoped>
 
 #app-date-demenagement {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgray;
-  position: relative;
+  position: relative;*/
 
 
-  #app-date-demenagement .panel-info-commande {
+  #panel-info-commande {
     position: absolute;
     right: 0;
     bottom: 100px;

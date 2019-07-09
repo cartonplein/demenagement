@@ -36,7 +36,6 @@ import FormPickupAddress from './FormPickupAddress.vue';
 import FormDestinationAddress from './FormDestinationAddress.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
 import { store } from '../store.js';
-import iconWarning from "../../../public/images/search-icon.png"
 
 import { config } from '../../db/index.js'
 
@@ -46,11 +45,11 @@ export default {
   name: 'AppAddress',
   data () {
     return {
-      originAdr: '',
-      originCoor: '',
+      originAdr: null,
+      originCoor: null,
 
-      destinationAdr: '',
-      destinationCoor: '',
+      destinationAdr: null,
+      destinationCoor: null,
 
       availablePostalCodes: [],
 
@@ -64,7 +63,7 @@ export default {
     ButtonSuivant
   },
   mounted() {
-    this.availablePostalCodes = this.getAvailablePostalCodes();
+    //this.availablePostalCodes = this.getAvailablePostalCodes();
   },
   methods: {
 
@@ -93,20 +92,34 @@ export default {
     calculateDirections () {
       let app = this;
       if(this.originAdr !== undefined && this.destinationAdr !== undefined) {
-        if(!this.getAvailablePostalCodes().includes(store.getters.getPickupAddressUser.cp) || !this.getAvailablePostalCodes().includes(store.getters.getDestinationAddressUser.cp)) {
-          document.getElementById('feasibility-trip-ko').style.display = "block";
-        }
-        else {
-          document.getElementById('feasibility-trip-ko').style.display = "none";
-          store.commit('setDirection', this.getDirection(this.originCoor, this.destinationCoor));
-          document.getElementById('iframe-map').src = this.getDirection(this.originCoor, this.destinationCoor);
-          store.commit('setAddressAvailable', true);
+        let cpPickup = parseInt(store.getters.getPickupAddressUser.cp, 10);
+        let cpDestination = parseInt(store.getters.getDestinationAddressUser.cp, 10);
+        if((cpPickup >= 92000 && cpPickup <= 94000) || (cpDestination >= 92000 && cpDestination <= 94000) || (cpPickup >= 75000 && cpPickup <= 75020) || (cpDestination >= 75000 && cpDestination <= 75020)) {
           this.calculateDistance(this.originCoor, this.destinationCoor).then( (distance) => {
-            store.commit('setDistanceAdressesUser', distance);
-            console.log(distance);
-            store.commit('setFirstTarif', store.state.firstTarif + this.calculateTarifByDistance(distance.value));
+            if((distance.value/1000) > 10) {
+              document.getElementById('feasibility-trip-ko').style.display = "block";
+              //store.commit('setAddressAvailable', false);
+            }
+            else {
+              //console.log(parseInt(store.getters.getPickupAddressUser.cp, 10));
+              document.getElementById('feasibility-trip-ko').style.display = "none";
+              store.commit('setDirection', this.getDirection(this.originCoor, this.destinationCoor));
+              document.getElementById('iframe-map').src = this.getDirection(this.originCoor, this.destinationCoor);
+              store.commit('setAddressAvailable', true);
+              store.commit('setDistanceAdressesUser', distance);
+            }
+
+            //console.log(distance);
           });
         }
+        else {
+          document.getElementById('feasibility-trip-ko').style.display = "block";
+        }
+
+        /*
+        if(!this.getAvailablePostalCodes().includes(store.getters.getPickupAddressUser.cp) || !this.getAvailablePostalCodes().includes(store.getters.getDestinationAddressUser.cp)) {
+          document.getElementById('feasibility-trip-ko').style.display = "block";
+        }*/
       }
       else {
         document.getElementById('iframe-map').src = '';
@@ -128,15 +141,10 @@ export default {
           if(status === 'OK') {
             resolve(response.rows[0].elements[0].distance);
           } else {
-            reject(new Error('Not OK'));
+            reject(new Error('Retrieve Distance Google : Not OK'));
           }
         });
       });
-    },
-
-    calculateTarifByDistance(distanceVal) {
-      let distanceKm = (distanceVal / 1000).toFixed(1);
-      return Math.ceil(distanceKm)*10;
     },
 
     initializePickupAddress() {
@@ -156,6 +164,7 @@ export default {
       this.$refs.formDestinationAddress.submitFormDestinationAddress();
     },
 
+    /*
     getAvailablePostalCodes () {
       let availablePostalCodes = [];
       fb.addressesRef.child('codesPostaux').on('child_added', function(snapshot) {
@@ -168,12 +177,10 @@ export default {
         availablePostalCodes = [];
       });
       return availablePostalCodes;
-    },
+    },*/
 
     openPageTypeDemenagement() {
       this.submitFormAddress();
-      this.$store.commit('setTarif', this.$store.state.firstTarif);
-      console.log(this.$store.state.choicesUser.destinationAddress);
       this.$parent.$options.methods.openPageTypeDemenagement();
     }
   },
@@ -198,19 +205,16 @@ html, body {
 <style lang="scss" scoped>
 
 #app-address {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
-  /*border-top: 1px solid lightgray;*/
-  position: relative;
+  border-top: 1px solid lightgray;
+  position: relative;*/
 
   #form-address {
-    height: 450px;
-    position: absolute;
-    top: 150px;
-    width: 100%;
 
     #panel-forms {
       opacity: 0.95;

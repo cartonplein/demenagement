@@ -16,9 +16,7 @@
             </div>
           </div>
         </div>
-        <div class="panel-info-commande">
-          <PanelInfoCommande />
-        </div>
+        <PanelInfoCommande id="panel-info-commande" />
         <ButtonPrecedent id="button-precedent" :onClick="returnPageAddress"></ButtonPrecedent>
     </div>
 </template>
@@ -85,15 +83,16 @@ html, body {
 
 <style lang="scss" scoped>
 #app-type-demenagement {
+  /*
   height: 690px;
   background: rgba(0, 0, 0, 0);
   grid-row: auto;
   display: flex;
   flex-direction: column;
   border-top: 1px solid lightgray;
-  position: relative;
+  position: relative;*/
 
-  #app-type-demenagement .panel-info-commande {
+  #panel-info-commande {
     position: absolute;
     right: 0;
     bottom: 100px;
