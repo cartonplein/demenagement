@@ -17,6 +17,7 @@ import PanelInfoCommande from './PanelInfoCommande.vue';
 import ButtonSuivant from './ButtonSuivant.vue';
 import ButtonPrecedent from './ButtonPrecedent.vue';
 
+
 export default {
   name: 'AppInventaire',
   data () {

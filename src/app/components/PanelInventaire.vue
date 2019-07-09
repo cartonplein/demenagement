@@ -376,7 +376,7 @@ export default {
 
       calculateTarifTransportSimple() {
         let tarifTransportSimple = this.calculateTarifHandling() + this.calculateTarifAccessibility() + this.calculateTarifDistance() + this.calculateTarifApproach();
-        tarifTransportSimple = parseFloat(Math.round(tarifTransportSimple * 100) / 100).toFixed(2);
+        tarifTransportSimple = parseFloat(Math.round(tarifTransportSimple * 100) / 100);
         this.$store.commit('setTarifTransportSimple', tarifTransportSimple);
         return tarifTransportSimple;
       },

@@ -16,7 +16,7 @@
       <div class="cell" style="width: 30%">
         <div id="choices-options">
           <span><b><ins>Vos options :</ins></b></span>
-          <p style="font-size: 13px;" v-show="!(Array.isArray(this.$store.state.choicesUser.options) && this.$store.state.choicesUser.options.length)">Ajoutez des options depuis le catalogue</p>
+          <p style="font-size: 13px;" v-show="!(Array.isArray(this.$store.state.choicesUser.options) && this.$store.state.choicesUser.options.length !== 0)">Ajoutez des options depuis le catalogue</p>
           <div id="choice-element" v-for="element in this.$store.state.choicesUser.options"
             :key="element.number"
             :element="element">

@@ -55,9 +55,11 @@
               <label for="six" style="font-size: 12px">
                 <input type="checkbox" name="input-response-enquete" v-model="inputReponseEnqueteSix" ref="reponseEnqueteSix" value="Autres" /> "Autres"
               </label>
-              <p style="color: red; font-size: 10px" v-if="errorSurvey">
-                  Veuillez répondre à l'enquête !
-              </p>
+              <transition name="fade" mode="out-in">
+                <p id="error-survey" style="color: red; font-size: 10px; display: none;">
+                    Veuillez répondre à l'enquête !
+                </p>
+              </transition>
             </div>
           </form>
         </div>
@@ -144,7 +146,7 @@ export default {
       let isReponseSixChecked = this.$refs.reponseEnqueteSix.checked;
 
       if (isReponseOneChecked || isReponseTwoChecked || isReponseThreeChecked || isReponseFourChecked || isReponseFiveChecked || isReponseSixChecked) {
-        this.errorSurvey = false;
+        document.getElementById("error-survey").style.display = "none";
         if(!(this.inputContactPrenom == '' || this.inputContactNom == '' || this.inputContactTelephone == '' || this.inputContactEmail == '')) {
           this.$store.commit('saveContactUser', [this.inputContactPrenom, this.inputContactNom, this.inputContactTelephone, this.inputContactEmail, this.getCheckedResponses()]);
           this.openPaymentForm();
@@ -152,9 +154,11 @@ export default {
         }
       }
       else {
-        this.errorSurvey = true;
+        document.getElementById("error-survey").style.display = "block";
+        setTimeout(function(){document.getElementById("error-survey").style.display = "none";}, 5000);
       }
     },
+
 
     async openPaymentForm() {
       // token - is the token object
@@ -341,6 +345,17 @@ html, body {
 
   label {
     color: #E85029;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+
+  .fade-enter,
+  .fade-leave-to
+  {
+    opacity: 0;
   }
 
 }

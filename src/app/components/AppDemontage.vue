@@ -44,7 +44,6 @@ export default {
     returnPageInventaire() {
       this.$parent.$options.methods.returnPageInventaire();
     }
-
   }
 }
 

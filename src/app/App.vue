@@ -11,16 +11,16 @@
         </div>
       </div>
       <AppAddress id="app-address" class="app-page" />
-      <AppTypeDemenagement id="app-type-demenagement" class="app-page" />
-      <AppInventaire id="app-inventaire" class="app-page" />
-      <AppDemontage id="app-demontage" class="app-page" />
+      <AppTypeDemenagement id="app-type-demenagement" class="app-page" style="display: none" />
+      <AppInventaire id="app-inventaire" class="app-page" style="display: none" />
+      <AppDemontage id="app-demontage" class="app-page" style="display: none" />
       <!-- style="display: none"
       <AppTailleLogement id="app-taille-logement" class="app-page" />
       <AppDureePrestation id="app-duree-prestation" class="app-page" />
       -->
-      <AppDateDemenagement id="app-date-demenagement" class="app-page" />
-      <AppOptions id="app-options" class="app-page" />
-      <AppRecapitulatif id="app-recapitulatif" class="app-page" />
+      <AppDateDemenagement id="app-date-demenagement" class="app-page" style="display: none" />
+      <AppOptions id="app-options" class="app-page" style="display: none" />
+      <AppRecapitulatif id="app-recapitulatif" class="app-page" style="display: none" />
     </div>
 
 </template>
@@ -64,9 +64,10 @@ export default {
         nextPage.style.display = "block";
       }
       nextPage.scrollIntoView({ block: 'end',  behavior: 'smooth' });
+      /*
       nextPage.style.opacity = "1";
-      nextPage.style.pointerEvents = "initial";
-      setTimeout(function() { currentPage.style.display = "none"; }, 500)
+      nextPage.style.pointerEvents = "initial";*/
+      setTimeout(function() { currentPage.style.display = "none"; }, 1000)
     },
 
     /*
@@ -95,7 +96,6 @@ export default {
           store.commit('addElementInInventaireUser', store.getters.getInventaire[i]);
         }
       }
-      console.log(store.getters.getInventaireUser);
       this.openPage("app-inventaire", "app-demontage");
     },
 

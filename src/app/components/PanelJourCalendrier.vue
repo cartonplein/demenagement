@@ -107,7 +107,8 @@ export default {
         if(!this.day.selected) {
           this.$store.commit('unselectAllDays');
           this.$store.commit('setSelectedDay', this.dayNumber);
-          this.$store.commit('setTarif', this.$store.getters.getTarif + this.tarif);
+          console.log(this.$store.getters.getTarifTransportSimple);
+          this.$store.commit('setTarif', this.$store.getters.getTarifTransportSimple + this.tarif);
           this.$store.commit('setDateDemenagement', [this.day.number, this.$parent.getActiveMonth().number, this.$parent.currentYear]);
         }
         else {
